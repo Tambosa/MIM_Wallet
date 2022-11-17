@@ -14,24 +14,17 @@ import javax.inject.Inject
 @HiltViewModel
 class CoinDetailsViewModel @Inject constructor(
     private val getCoinDetailsUseCase: GetCoinDetailsUseCase,
-    savedStateHandle: SavedStateHandle
 ) :
     ViewModel() {
 
-    private val _coins = MutableLiveData<CoinDetails>()
-    val coins: LiveData<CoinDetails> = _coins
+    private val _coinDetails = MutableLiveData<CoinDetails>()
+    val coinDetails: LiveData<CoinDetails> = _coinDetails
 
-    init {
-        savedStateHandle.get<String>(Constants.PARAM_COIN_SYMBOL)?.let { coinSymbol ->
-            getCoin(coinSymbol)
-        }
-    }
-
-    private fun getCoin(coinSymbol: String) {
+    fun getCoin(coinSymbol: String) {
         getCoinDetailsUseCase(coinSymbol).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    result.data.let { _coins.postValue(it) }
+                    result.data.let { _coinDetails.postValue(it) }
                 }
                 is Resource.Error -> {
                     result.message?.let { Log.d("@@@", it) }

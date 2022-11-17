@@ -1,7 +1,6 @@
 package com.aroman.mimwallet.domain.use_case.get_coin_details
 
 import com.aroman.mimwallet.common.Resource
-import com.aroman.mimwallet.data.remote.dto.coin_details_dto.toCoinDetails
 import com.aroman.mimwallet.domain.model.CoinDetails
 import com.aroman.mimwallet.domain.repository.CoinRepository
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +14,11 @@ class GetCoinDetailsUseCase @Inject constructor(private val repo: CoinRepository
         try {
             emit(Resource.Loading())
             val coin = repo.getCoinDetailsBySymbol(coinSymbol)
-            emit(Resource.Success(coin))
+            if (coin != null) {
+                emit(Resource.Success(coin))
+            } else {
+                emit(Resource.Error("Something is wrong with hashmap"))
+            }
         } catch (e: HttpException) {
             emit(Resource.Error(e.localizedMessage ?: "Unknown Error"))
         } catch (e: IOException) {

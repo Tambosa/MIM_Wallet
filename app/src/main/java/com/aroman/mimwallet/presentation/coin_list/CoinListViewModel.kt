@@ -20,11 +20,7 @@ class CoinListViewModel @Inject constructor(private val getCoinsUseCase: GetCoin
     private val _coins = MutableLiveData<List<Coin>>()
     val coins: LiveData<List<Coin>> = _coins
 
-    init {
-        getCoins()
-    }
-
-    private fun getCoins() {
+    fun getCoins() {
         getCoinsUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {

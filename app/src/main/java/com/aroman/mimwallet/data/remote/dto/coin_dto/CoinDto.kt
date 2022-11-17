@@ -1,6 +1,8 @@
 package com.aroman.mimwallet.data.remote.dto.coin_dto
 
+import com.google.gson.annotations.SerializedName
+
 data class CoinDto(
-    val `data`: List<Data>,
-    val status: Status
+    @SerializedName("data") val data: List<CoinDataDto>,
+    @SerializedName("status") val status: CoinStatusDto
 )

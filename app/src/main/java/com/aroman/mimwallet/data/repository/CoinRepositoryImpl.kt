@@ -1,9 +1,8 @@
 package com.aroman.mimwallet.data.repository
 
+import android.util.Log
 import com.aroman.mimwallet.data.remote.CoinMarketCapApi
-import com.aroman.mimwallet.data.remote.dto.coin_details_dto.CoinDetailsDto
 import com.aroman.mimwallet.data.remote.dto.coin_details_dto.toCoinDetails
-import com.aroman.mimwallet.data.remote.dto.coin_dto.CoinDto
 import com.aroman.mimwallet.data.remote.dto.coin_dto.toCoin
 import com.aroman.mimwallet.domain.model.Coin
 import com.aroman.mimwallet.domain.model.CoinDetails
@@ -15,7 +14,7 @@ class CoinRepositoryImpl @Inject constructor(private val api: CoinMarketCapApi) 
         return api.getCoins().data.map { it.toCoin() }
     }
 
-    override suspend fun getCoinDetailsBySymbol(symbol: String): CoinDetails {
-        return api.getCoinDetailBySymbol(symbol).data.toCoinDetails()
+    override suspend fun getCoinDetailsBySymbol(symbol: String): CoinDetails? {
+        return api.getCoinDetailBySymbol(symbol).data[symbol]?.toCoinDetails()
     }
 }
