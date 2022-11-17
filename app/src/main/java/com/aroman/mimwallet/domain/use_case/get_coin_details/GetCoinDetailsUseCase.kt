@@ -10,7 +10,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 class GetCoinDetailsUseCase @Inject constructor(private val repo: CoinRepository) {
-    operator fun invoke(coinSymbol: String): Flow<Resource<CoinDetails>> = flow {
+    operator fun invoke(coinSymbol: String): Flow<Resource<HashMap<String, CoinDetails>>> = flow {
         try {
             emit(Resource.Loading())
             val coin = repo.getCoinDetailsBySymbol(coinSymbol)

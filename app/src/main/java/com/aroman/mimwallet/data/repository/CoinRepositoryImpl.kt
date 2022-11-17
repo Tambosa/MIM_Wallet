@@ -13,8 +13,13 @@ class CoinRepositoryImpl @Inject constructor(private val api: CoinMarketCapApi) 
         return api.getCoins().data.map { it.toCoin() }
     }
 
-    override suspend fun getCoinDetailsBySymbol(symbol: String): CoinDetails {
-        return api.getCoinDetailBySymbol(symbol).data[symbol]?.toCoinDetails()!!
+    override suspend fun getCoinDetailsBySymbol(symbol: String): HashMap<String, CoinDetails> {
+        return hashMapOf<String, CoinDetails>(
+            Pair(
+                symbol,
+                api.getCoinDetailBySymbol(symbol).data[symbol]?.toCoinDetails()!!
+            )
+        )
     }
 
     override suspend fun getCoinDetailsByMultipleSymbols(vararg symbols: String): HashMap<String, CoinDetails> {

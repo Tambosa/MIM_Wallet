@@ -33,9 +33,10 @@ class CoinListFragment : Fragment() {
         coinListViewModel.coins.observe(viewLifecycleOwner) { coinList ->
 //            Log.d("@@@", coinList.toString())
             coinDetailsViewModel.coinDetails.observe(viewLifecycleOwner) { coinDetails ->
-                Log.d("@@@", "\n" + coinDetails.toString())
+                Log.d("@@@", "\n\n\n" + coinDetails.toString())
             }
-            coinDetailsViewModel.getCoin(coinList[0].symbol)
+            coinDetailsViewModel.getCoinDetails(coinList[0].symbol)
+            coinDetailsViewModel.getMultipleCoinDetails(coinList[0].symbol, coinList[1].symbol, coinList[2].symbol)
         }
         coinListViewModel.getCoins()
     }

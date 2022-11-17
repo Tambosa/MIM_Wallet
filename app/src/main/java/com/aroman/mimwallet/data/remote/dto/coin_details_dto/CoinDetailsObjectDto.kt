@@ -4,7 +4,7 @@ import com.aroman.mimwallet.domain.model.CoinDetails
 import com.google.gson.annotations.SerializedName
 
 data class CoinDetailsObjectDto(
-    @SerializedName("circulating_supply") val circulatingSupply: Int,
+    @SerializedName("circulating_supply") val circulatingSupply: Double,
     @SerializedName("cmc_rank") val cmcRank: Int,
     @SerializedName("date_added") val dateAdded: String,
     @SerializedName("id") val id: Int,
