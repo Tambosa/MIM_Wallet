@@ -1,4 +1,4 @@
-package com.aroman.mimwallet.domain.use_case.get_coin_details
+package com.aroman.mimwallet.domain.use_case.get_multiple_coin_details
 
 import com.aroman.mimwallet.common.Resource
 import com.aroman.mimwallet.domain.model.CoinDetails
@@ -9,11 +9,11 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-class GetCoinDetailsUseCase @Inject constructor(private val repo: CoinRepository) {
-    operator fun invoke(coinSymbol: String): Flow<Resource<CoinDetails>> = flow {
+class GetMultipleCoinDetailsUseCase@Inject constructor(private val repo: CoinRepository) {
+    operator fun invoke(vararg coinSymbols: String): Flow<Resource<HashMap<String, CoinDetails>>> = flow {
         try {
             emit(Resource.Loading())
-            val coin = repo.getCoinDetailsBySymbol(coinSymbol)
+            val coin = repo.getCoinDetailsByMultipleSymbols(*coinSymbols)
             emit(Resource.Success(coin))
         } catch (e: HttpException) {
             emit(Resource.Error(e.localizedMessage ?: "Unknown Error"))

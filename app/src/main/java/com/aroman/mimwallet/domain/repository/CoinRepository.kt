@@ -5,5 +5,6 @@ import com.aroman.mimwallet.domain.model.CoinDetails
 
 interface CoinRepository {
     suspend fun getCoins(): List<Coin>
-    suspend fun getCoinDetailsBySymbol(symbol: String): CoinDetails?
+    suspend fun getCoinDetailsBySymbol(symbol: String): CoinDetails
+    suspend fun getCoinDetailsByMultipleSymbols(vararg symbols: String): HashMap<String, CoinDetails>
 }
