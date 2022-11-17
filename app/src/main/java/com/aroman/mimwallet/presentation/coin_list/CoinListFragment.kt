@@ -1,5 +1,7 @@
 package com.aroman.mimwallet.presentation.coin_list
 
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,11 +31,14 @@ class CoinListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("@@@", "onViewCreated")
+        initViewModel()
+    }
+
+    private fun initViewModel() {
         coinListViewModel.coins.observe(viewLifecycleOwner) { coinList ->
-//            Log.d("@@@", coinList.toString())
+            Log.d("@@@", coinList.toString())
             coinDetailsViewModel.coinDetails.observe(viewLifecycleOwner) { coinDetails ->
-                Log.d("@@@", "\n\n\n" + coinDetails.toString())
+                Log.d("@@@", "\n" + coinDetails.toString())
             }
             coinDetailsViewModel.getCoinDetails(coinList[0].symbol)
             coinDetailsViewModel.getMultipleCoinDetails(coinList[0].symbol, coinList[1].symbol, coinList[2].symbol)

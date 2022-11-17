@@ -18,7 +18,12 @@ class GetCoinDetailsUseCase @Inject constructor(private val repo: CoinRepository
         } catch (e: HttpException) {
             emit(Resource.Error(e.localizedMessage ?: "Unknown Error"))
         } catch (e: IOException) {
-            emit(Resource.Error("Couldn't reach server. Check your internet connection"))
+            emit(
+                Resource.Error(
+                    e.message
+                        ?: "GetCoinDetailsUseCase: Couldn't reach server. Check your internet connection"
+                )
+            )
         }
     }
 }

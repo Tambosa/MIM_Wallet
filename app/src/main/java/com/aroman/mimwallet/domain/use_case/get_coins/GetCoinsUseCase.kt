@@ -1,7 +1,6 @@
 package com.aroman.mimwallet.domain.use_case.get_coins
 
 import com.aroman.mimwallet.common.Resource
-import com.aroman.mimwallet.data.remote.dto.coin_dto.toCoin
 import com.aroman.mimwallet.domain.model.Coin
 import com.aroman.mimwallet.domain.repository.CoinRepository
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +18,12 @@ class GetCoinsUseCase @Inject constructor(private val repo: CoinRepository) {
         } catch (e: HttpException) {
             emit(Resource.Error(e.localizedMessage ?: "Unknown Error"))
         } catch (e: IOException) {
-            emit(Resource.Error("Couldn't reach server. Check your internet connection"))
+            emit(
+                Resource.Error(
+                    e.message
+                        ?: "GetCoinsUseCase: Couldn't reach server. Check your internet connection"
+                )
+            )
         }
     }
 }
