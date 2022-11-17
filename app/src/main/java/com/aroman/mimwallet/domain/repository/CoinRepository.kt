@@ -1,9 +1,9 @@
 package com.aroman.mimwallet.domain.repository
 
-import com.aroman.mimwallet.data.remote.dto.coin_details_dto.CoinDetailsDto
-import com.aroman.mimwallet.data.remote.dto.coin_dto.CoinDto
+import com.aroman.mimwallet.domain.model.Coin
+import com.aroman.mimwallet.domain.model.CoinDetails
 
 interface CoinRepository {
-    suspend fun getCoins(): CoinDto
-    suspend fun getCoinDetailsBySymbol(symbol: String): CoinDetailsDto
+    suspend fun getCoins(): List<Coin>
+    suspend fun getCoinDetailsBySymbol(symbol: String): CoinDetails
 }

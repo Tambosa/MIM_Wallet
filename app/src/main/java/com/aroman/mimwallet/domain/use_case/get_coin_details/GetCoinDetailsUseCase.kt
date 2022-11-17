@@ -14,7 +14,7 @@ class GetCoinDetailsUseCase @Inject constructor(private val repo: CoinRepository
     operator fun invoke(coinSymbol: String): Flow<Resource<CoinDetails>> = flow {
         try {
             emit(Resource.Loading())
-            val coin = repo.getCoinDetailsBySymbol(coinSymbol).data.toCoinDetails()
+            val coin = repo.getCoinDetailsBySymbol(coinSymbol)
             emit(Resource.Success(coin))
         } catch (e: HttpException) {
             emit(Resource.Error(e.localizedMessage ?: "Unknown Error"))
