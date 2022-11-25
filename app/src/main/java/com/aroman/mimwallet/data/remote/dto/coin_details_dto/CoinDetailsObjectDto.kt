@@ -30,4 +30,10 @@ fun CoinDetailsObjectDto.toCoinDetails() = CoinDetails(
     name = name,
     symbol = symbol,
     price = quote.usd.price,
+    percentChange1h = quote.usd.percentChange1h,
+    percentChange24h = quote.usd.percentChange24h,
+    percentChange7d = quote.usd.percentChange7d,
+    percentChange30d = quote.usd.percentChange30d,
+    percentChange60d = quote.usd.percentChange60d,
+    percentChange90d = quote.usd.percentChange90d,
 )
