@@ -2,7 +2,7 @@ package com.aroman.mimwallet.presentation.coin_details
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.aroman.mimwallet.common.Resource
+import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.domain.model.CoinDetails
 import com.aroman.mimwallet.domain.use_case.get_coin_details.GetCoinDetailsUseCase
 import com.aroman.mimwallet.domain.use_case.get_multiple_coin_details.GetMultipleCoinDetailsUseCase
@@ -23,13 +23,13 @@ class CoinDetailsViewModel @Inject constructor(
     fun getCoinDetails(coinSymbol: String) {
         getCoinDetailsUseCase(coinSymbol).onEach { result ->
             when (result) {
-                is Resource.Success -> {
+                is ViewState.Success -> {
                     result.data.let { _coinDetails.postValue(it) }
                 }
-                is Resource.Error -> {
+                is ViewState.Error -> {
                     result.message?.let { Log.d("@@@", it) }
                 }
-                is Resource.Loading -> {
+                is ViewState.Loading -> {
                 }
             }
         }.launchIn(viewModelScope)
@@ -38,13 +38,13 @@ class CoinDetailsViewModel @Inject constructor(
     fun getMultipleCoinDetails(vararg coinSymbols: String) {
         getMultipleCoinDetailsUseCase(*coinSymbols).onEach { result ->
             when (result) {
-                is Resource.Success -> {
+                is ViewState.Success -> {
                     result.data.let { _coinDetails.postValue(it) }
                 }
-                is Resource.Error -> {
+                is ViewState.Error -> {
                     result.message?.let { Log.d("@@@", it) }
                 }
-                is Resource.Loading -> {
+                is ViewState.Loading -> {
                 }
             }
         }.launchIn(viewModelScope)

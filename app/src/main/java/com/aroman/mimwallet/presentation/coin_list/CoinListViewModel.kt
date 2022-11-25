@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aroman.mimwallet.common.Resource
+import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.domain.model.Coin
 import com.aroman.mimwallet.domain.use_case.get_coins.GetCoinsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,13 +23,13 @@ class CoinListViewModel @Inject constructor(private val getCoinsUseCase: GetCoin
     fun getCoins() {
         getCoinsUseCase().onEach { result ->
             when (result) {
-                is Resource.Success -> {
+                is ViewState.Success -> {
                     _coins.postValue(result.data ?: emptyList())
                 }
-                is Resource.Error -> {
+                is ViewState.Error -> {
                     result.message?.let { Log.d("@@@", it) }
                 }
-                is Resource.Loading -> {
+                is ViewState.Loading -> {
                 }
             }
         }.launchIn(viewModelScope)
