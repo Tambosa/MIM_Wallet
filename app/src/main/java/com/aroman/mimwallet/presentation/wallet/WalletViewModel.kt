@@ -1,4 +1,4 @@
-package com.aroman.mimwallet.presentation.coin_list
+package com.aroman.mimwallet.presentation.wallet
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
-class CoinListViewModel @Inject constructor(private val getCoinsUseCase: GetCoinsUseCase) :
+class WalletViewModel @Inject constructor(private val getCoinsUseCase: GetCoinsUseCase) :
     ViewModel() {
 
     private val _coins = MutableLiveData<List<Coin>>()

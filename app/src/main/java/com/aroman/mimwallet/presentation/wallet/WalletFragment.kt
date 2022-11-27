@@ -1,7 +1,5 @@
-package com.aroman.mimwallet.presentation.coin_list
+package com.aroman.mimwallet.presentation.wallet
 
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,15 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.aroman.mimwallet.databinding.FragmentCoinListFragmentBinding
+import com.aroman.mimwallet.databinding.FragmentWalletBinding
 import com.aroman.mimwallet.presentation.coin_details.CoinDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CoinListFragment : Fragment() {
-    private var _binding: FragmentCoinListFragmentBinding? = null
+class WalletFragment : Fragment() {
+    private var _binding: FragmentWalletBinding? = null
     private val binding get() = _binding!!
-    private val coinListViewModel by viewModels<CoinListViewModel>()
+    private val walletViewModel by viewModels<WalletViewModel>()
     private val coinDetailsViewModel by viewModels<CoinDetailsViewModel>()
 
     override fun onCreateView(
@@ -25,7 +23,7 @@ class CoinListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentCoinListFragmentBinding.inflate(inflater, container, false)
+        _binding = FragmentWalletBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -35,15 +33,19 @@ class CoinListFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        coinListViewModel.coins.observe(viewLifecycleOwner) { coinList ->
+        walletViewModel.coins.observe(viewLifecycleOwner) { coinList ->
             Log.d("@@@", coinList.toString())
             coinDetailsViewModel.coinDetails.observe(viewLifecycleOwner) { coinDetails ->
                 Log.d("@@@", "\n" + coinDetails.toString())
             }
             coinDetailsViewModel.getCoinDetails(coinList[0].symbol)
-            coinDetailsViewModel.getMultipleCoinDetails(coinList[0].symbol, coinList[1].symbol, coinList[2].symbol)
+            coinDetailsViewModel.getMultipleCoinDetails(
+                coinList[0].symbol,
+                coinList[1].symbol,
+                coinList[2].symbol
+            )
         }
-        coinListViewModel.getCoins()
+        walletViewModel.getCoins()
     }
 
     override fun onDestroy() {

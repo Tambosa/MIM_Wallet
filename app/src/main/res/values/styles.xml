@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TextTitleStyleOnPrimary">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorOnPrimaryContainer</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
+    <style name="TextLargeOnPrimary">
+        <item name="android:textColor">?attr/colorOnPrimaryContainer</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
+    <style name="TextLargeOnTertiary">
+        <item name="android:textColor">?attr/colorOnTertiaryContainer</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="TextRecyclerItemPrimary">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextRecyclerItemSecondary">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+</resources>

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MIM Wallet</string>
+    <string name="portfolio">Portfolio</string>
+    <string name="extra">Extra</string>
+    <string name="coins">Coins</string>
+    <string name="settings">Settings</string>
 </resources>

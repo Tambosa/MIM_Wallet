@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_horizontal_view_children">12dp</dimen>
+    <dimen name="padding_tertiary_container">5dp</dimen>
+    <dimen name="padding_vertical_header">15dp</dimen>
+    <dimen name="size_add_button">50dp</dimen>
+    <dimen name="margin_bottom_recycler_item">5dp</dimen>
+    <dimen name="padding_horizontal_recycler_item">20dp</dimen>
+    <dimen name="padding_vertical_recycler_item">10dp</dimen>
+    <dimen name="navigation_bar_height">56dp</dimen>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_portfolio"
+        android:icon="@drawable/ic_baseline_account_balance_wallet_24"
+        android:title="@string/portfolio"
+        android:iconTint="?attr/colorOnSurface"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_coins"
+        android:icon="@drawable/ic_baseline_donut_large_24"
+        android:title="@string/coins"
+        android:iconTint="?attr/colorOnSurface"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="@string/settings"
+        android:iconTint="?attr/colorOnSurface"
+        app:showAsAction="ifRoom" />
+</menu>
