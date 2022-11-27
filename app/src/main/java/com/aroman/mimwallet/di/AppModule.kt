@@ -1,10 +1,16 @@
 package com.aroman.mimwallet.di
 
 import android.content.Context
+import androidx.room.Room
 import com.aroman.mimwallet.common.Constants
+import com.aroman.mimwallet.data.local.PortfolioRepositoryImpl
+import com.aroman.mimwallet.data.local.RoomDb
+import com.aroman.mimwallet.data.local.dao.CoinDao
+import com.aroman.mimwallet.data.local.tables.RoomConst
 import com.aroman.mimwallet.data.remote.CoinMarketCapApi
 import com.aroman.mimwallet.data.repository.CoinRepositoryImpl
 import com.aroman.mimwallet.domain.repository.CoinRepository
+import com.aroman.mimwallet.domain.repository.PortfolioRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,5 +48,29 @@ object AppModule {
         @ApplicationContext context: Context
     ): CoinRepository {
         return CoinRepositoryImpl(api, context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRoomDb(@ApplicationContext context: Context): RoomDb {
+        return Room.databaseBuilder(
+            context,
+            RoomDb::class.java,
+            RoomConst.DB_NAME
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCoinDao(db: RoomDb): CoinDao {
+        return db.coinDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providePortfolioRepository(
+        dao: CoinDao
+    ): PortfolioRepository {
+        return PortfolioRepositoryImpl(dao)
     }
 }
