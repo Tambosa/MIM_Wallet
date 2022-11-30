@@ -6,9 +6,9 @@ import com.aroman.mimwallet.databinding.ItemInsertBinding
 import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.DisplayableItem
 import com.aroman.mimwallet.domain.model.Insert
+import com.aroman.mimwallet.utils.animateNumbers
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import java.text.DecimalFormat
-import java.util.Objects
 
 fun coinAdapterDelegate(
     onItemClicked: (position: Int) -> Unit,
@@ -22,9 +22,13 @@ fun coinAdapterDelegate(
         bind {
             binding.coinName.text = item.name
             binding.coinCount.text = "${item.count} ${item.symbol}"
-            binding.singleCoinPrice.text = DecimalFormat("$#,###,###.00").format(item.price)
-            binding.totalPrice.text = DecimalFormat("$#,###,###.00").format(item.price * item.count)
-            binding.totalPrice24hChange.text = item.percentChange24h.toString()
+//            binding.singleCoinPrice.text = DecimalFormat("$#,###,###.00").format(item.price)
+            binding.totalPrice.animateNumbers(
+                2000,
+                item.price * item.count,
+                DecimalFormat("$#,###,###.00")
+            )
+            binding.totalPrice24hChange.text = DecimalFormat("#,##%").format(item.percentChange24h)
 
             if (item.percentChange24h > 0) {
                 binding.totalPrice24hChange.setTextColor(Color.GREEN)
@@ -35,14 +39,14 @@ fun coinAdapterDelegate(
     }
 
 fun insertAdapterDelegate(
-    onItemClicked: (position: Int) -> Unit
+    onItemClicked: () -> Unit
 ) =
     adapterDelegateViewBinding<Insert, DisplayableItem, ItemInsertBinding>({ layoutInflater, root ->
         ItemInsertBinding.inflate(layoutInflater, root, false)
     }) {
         bind {
             binding.buttonAddNewCoin.setOnClickListener {
-                onItemClicked(layoutPosition)
+                onItemClicked()
             }
         }
     }

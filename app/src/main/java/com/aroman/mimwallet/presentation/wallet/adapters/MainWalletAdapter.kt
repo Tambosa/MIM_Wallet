@@ -5,7 +5,7 @@ import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 
 class MainWalletAdapter(
     onItemClicked: (position: Int) -> Unit,
-    onInsertClicked: (position: Int) -> Unit,
+    onInsertClicked: () -> Unit,
 ) : ListDelegationAdapter<List<DisplayableItem>>(
     coinAdapterDelegate(onItemClicked),
     insertAdapterDelegate(onInsertClicked)

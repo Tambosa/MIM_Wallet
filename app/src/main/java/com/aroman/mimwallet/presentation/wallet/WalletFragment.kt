@@ -17,6 +17,7 @@ import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.DisplayableItem
 import com.aroman.mimwallet.domain.model.Insert
 import com.aroman.mimwallet.presentation.wallet.adapters.MainWalletAdapter
+import com.aroman.mimwallet.utils.animateNumbers
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,7 +31,7 @@ class WalletFragment : Fragment() {
     private val walletViewModel by viewModels<WalletViewModel>()
     private val portfolioAdapter = MainWalletAdapter(
         { position -> onItemClicked(position) },
-        { position -> onInsertClicked(position) })
+        { onInsertClicked() })
 
     private var coinList = listOf<DisplayableCoin>()
 
@@ -81,7 +82,7 @@ class WalletFragment : Fragment() {
 
         val priceFormat = DecimalFormat("$#.##")
         priceFormat.roundingMode = RoundingMode.CEILING
-        binding.includedHeader.textTotalValue.text = priceFormat.format(totalPrice)
+        binding.includedHeader.textTotalValue.animateNumbers(2500, totalPrice, priceFormat)
 
         val gainFormat = DecimalFormat("#.##%")
         gainFormat.roundingMode = RoundingMode.CEILING
@@ -106,7 +107,7 @@ class WalletFragment : Fragment() {
         _binding = null
     }
 
-    private fun onInsertClicked(position: Int) {
+    private fun onInsertClicked() {
         showInsertDialog()
     }
 
