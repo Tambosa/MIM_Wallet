@@ -39,11 +39,6 @@ class WalletFragment : Fragment() {
                 Log.d("@@@", "\n" + coinDetails.toString())
             }
             coinDetailsViewModel.getCoinDetails(coinList[0].symbol)
-            coinDetailsViewModel.getMultipleCoinDetails(
-                coinList[0].symbol,
-                coinList[1].symbol,
-                coinList[2].symbol
-            )
         }
         walletViewModel.getCoins()
     }

@@ -1,7 +1,7 @@
 package com.aroman.mimwallet.domain.use_case.get_coins
 
 import com.aroman.mimwallet.common.ViewState
-import com.aroman.mimwallet.domain.model.Coin
+import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.repository.CoinRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -10,7 +10,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 class GetCoinsUseCase @Inject constructor(private val repo: CoinRepository) {
-    operator fun invoke(): Flow<ViewState<List<Coin>>> = flow {
+    operator fun invoke(): Flow<ViewState<List<DisplayableCoin>>> = flow {
         try {
             emit(ViewState.Loading())
             val coins = repo.getCoins()
