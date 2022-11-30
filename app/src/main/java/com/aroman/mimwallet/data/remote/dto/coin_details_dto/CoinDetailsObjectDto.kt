@@ -11,7 +11,7 @@ data class CoinDetailsObjectDto(
     @SerializedName("is_active") val isActive: Int,
     @SerializedName("is_fiat") val isFiat: Int,
     @SerializedName("last_updated") val lastUpdated: String,
-    @SerializedName("max_supply") val maxSupply: Int,
+    @SerializedName("max_supply") val maxSupply: Double,
     @SerializedName("name") val name: String,
     @SerializedName("num_market_pairs") val numMarketPairs: Int,
     @SerializedName("platform") val platform: Any,
@@ -21,7 +21,7 @@ data class CoinDetailsObjectDto(
     @SerializedName("slug") val slug: String,
     @SerializedName("symbol") val symbol: String,
     @SerializedName("tags") val tags: List<String>,
-    @SerializedName("total_supply") val totalSupply: Int,
+    @SerializedName("total_supply") val totalSupply: Double,
     @SerializedName("tvl_ratio") val tvlRatio: Any
 )
 
