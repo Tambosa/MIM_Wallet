@@ -61,14 +61,16 @@ class WalletViewModel @Inject constructor(
     }
 
     fun insertCoin(coin: DisplayableCoin) {
-        viewModelScope.launch { localRepo.saveCoin(coin) }
+        viewModelScope.launch {
+            localRepo.saveCoin(coin)
+            getPortfolio()
+        }
     }
 
     fun deleteCoin(coin: DisplayableCoin) {
-        viewModelScope.launch { localRepo.deleteCoin(coin) }
-    }
-
-    fun updateCoin(coin: DisplayableCoin) {
-        viewModelScope.launch { localRepo.updateCoin(coin) }
+        viewModelScope.launch {
+            localRepo.deleteCoin(coin)
+            getPortfolio()
+        }
     }
 }

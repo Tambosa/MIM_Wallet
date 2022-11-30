@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +19,7 @@ import com.aroman.mimwallet.domain.model.DisplayableItem
 import com.aroman.mimwallet.domain.model.Insert
 import com.aroman.mimwallet.presentation.wallet.adapters.MainWalletAdapter
 import com.aroman.mimwallet.utils.animateNumbers
+import com.aroman.mimwallet.utils.attachLeftSwipeHelper
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -99,6 +101,9 @@ class WalletFragment : Fragment() {
         binding.recyclerViewCoin.adapter = portfolioAdapter
         binding.recyclerViewCoin.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.recyclerViewCoin.attachLeftSwipeHelper { vh ->
+            walletViewModel.deleteCoin(walletViewModel.portfolio.value!![vh.layoutPosition])
+        }
         portfolioAdapter.items = listOf<DisplayableItem>(Insert)
     }
 
@@ -111,13 +116,15 @@ class WalletFragment : Fragment() {
         showInsertDialog()
     }
 
-    private fun showInsertDialog() {
+    private fun showInsertDialog(id: Int = 1, qnt: Double = 1.0) {
         val dialogBinding = BottomSheetInsertBinding.inflate(LayoutInflater.from(requireContext()))
         val dialogInsert = BottomSheetDialog(requireContext()).apply {
             setContentView(dialogBinding.root)
         }
-
         initSpinner(coinList.map { it.name + ": " + it.symbol }, dialogBinding.spinnerCoins)
+
+        dialogBinding.editTextCoinAmount.setText(qnt.toString(), TextView.BufferType.EDITABLE)
+        dialogBinding.spinnerCoins.setSelection(id)
         initSave(dialogInsert, dialogBinding, coinList)
         dialogInsert.show()
     }
@@ -156,6 +163,9 @@ class WalletFragment : Fragment() {
     }
 
     private fun onItemClicked(position: Int) {
-
+        showInsertDialog(
+            walletViewModel.portfolio.value!![position].id - 1,
+            walletViewModel.portfolio.value!![position].count
+        )
     }
 }
