@@ -7,14 +7,14 @@ import com.aroman.mimwallet.data.local.tables.RoomConst
 @Dao
 interface CoinDao {
     @Query("SELECT * FROM ${RoomConst.TABLE_COIN}")
-    fun getAllCoins(): List<CoinRoomEntity>
+    suspend fun getAllCoins(): List<CoinRoomEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCoin(coin: CoinRoomEntity)
+    suspend fun insertCoin(coin: CoinRoomEntity)
 
     @Update
-    fun updateCoin(coin: CoinRoomEntity)
+    suspend fun updateCoin(coin: CoinRoomEntity)
 
     @Delete
-    fun deleteCoin(coin: CoinRoomEntity)
+    suspend fun deleteCoin(coin: CoinRoomEntity)
 }

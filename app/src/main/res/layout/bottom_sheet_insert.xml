@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bottom_sheet_background">
+
+    <TextView
+        android:id="@+id/text_select_coin"
+        style="@style/TextOnSurface"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_bottom_sheet"
+        android:layout_marginTop="@dimen/margin_bottom_sheet"
+        android:text="@string/select_coin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_enter_amount"
+        style="@style/TextOnSurface"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_bottom_sheet"
+        android:layout_marginEnd="@dimen/margin_bottom_sheet"
+        android:text="@string/enter_amount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edit_text_coin_amount"
+        style="@style/TextOnSurface"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_bottom_sheet"
+        android:layout_marginEnd="@dimen/margin_bottom_sheet"
+        android:inputType="numberDecimal"
+        android:maxLength="20"
+        android:maxLines="1"
+        android:minWidth="150dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_enter_amount" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinner_coins"
+        style="@style/TextOnSurface"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_bottom_sheet"
+        android:layout_marginTop="@dimen/margin_bottom_sheet"
+        android:layout_marginEnd="@dimen/margin_bottom_sheet"
+        android:gravity="center_vertical"
+        android:textAlignment="viewStart"
+        app:layout_constraintEnd_toStartOf="@id/edit_text_coin_amount"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_select_coin" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_bottom_sheet"
+        android:layout_marginBottom="@dimen/margin_bottom_sheet"
+        android:background="@drawable/shape_medium_rounded_corners"
+        android:backgroundTint="?attr/colorOnPrimaryContainer"
+        android:padding="15dp"
+        android:src="@drawable/ic_baseline_check_24"
+        android:tint="?attr/colorOnPrimarySurface"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_coin_amount" />
+</androidx.constraintlayout.widget.ConstraintLayout>
