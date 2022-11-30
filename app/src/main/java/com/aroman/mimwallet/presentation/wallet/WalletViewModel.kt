@@ -45,9 +45,19 @@ class WalletViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun getLocalCoins() {
-        viewModelScope.launch {
-        }
+    fun getPortfolio() {
+        getPortfolioUseCase().onEach { result ->
+            when (result) {
+                is ViewState.Success -> {
+                    _portfolio.postValue(result.data ?: emptyList())
+                }
+                is ViewState.Error -> {
+                    result.message?.let { Log.d("@@@", it) }
+                }
+                is ViewState.Loading -> {
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 
     fun insertCoin(coin: DisplayableCoin) {

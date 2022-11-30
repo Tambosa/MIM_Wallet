@@ -1,6 +1,7 @@
 package com.aroman.mimwallet.presentation.wallet
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,6 +51,17 @@ class WalletFragment : Fragment() {
             this.coinList = coinList
         }
 //        walletViewModel.getCoins()
+        walletViewModel.portfolio.observe(viewLifecycleOwner) { portfolio ->
+            Log.d("@@@", portfolio.toString())
+
+            val data = mutableListOf<DisplayableItem>().also {
+                it.addAll(portfolio)
+                it.add(Insert())
+            }
+            portfolioAdapter.items = data
+            portfolioAdapter.notifyDataSetChanged()
+        }
+        walletViewModel.getPortfolio()
     }
 
     private fun initRecycler() {

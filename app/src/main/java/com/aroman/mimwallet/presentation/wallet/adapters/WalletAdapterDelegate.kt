@@ -3,6 +3,7 @@ package com.aroman.mimwallet.presentation.wallet.adapters
 import com.aroman.mimwallet.databinding.ItemCoinBinding
 import com.aroman.mimwallet.databinding.ItemInsertBinding
 import com.aroman.mimwallet.domain.model.CoinDetails
+import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.DisplayableItem
 import com.aroman.mimwallet.domain.model.Insert
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
@@ -11,7 +12,7 @@ import java.text.DecimalFormat
 fun coinAdapterDelegate(
     onItemClicked: (position: Int) -> Unit,
 ) =
-    adapterDelegateViewBinding<CoinDetails, DisplayableItem, ItemCoinBinding>({ layoutInflater, root ->
+    adapterDelegateViewBinding<DisplayableCoin, DisplayableItem, ItemCoinBinding>({ layoutInflater, root ->
         ItemCoinBinding.inflate(layoutInflater, root, false)
     }) {
         binding.itemCoin.setOnClickListener {
