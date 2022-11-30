@@ -8,6 +8,7 @@ import com.aroman.mimwallet.domain.model.DisplayableItem
 import com.aroman.mimwallet.domain.model.Insert
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import java.text.DecimalFormat
+import java.util.Objects
 
 fun coinAdapterDelegate(
     onItemClicked: (position: Int) -> Unit,

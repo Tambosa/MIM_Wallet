@@ -62,7 +62,7 @@ class WalletFragment : Fragment() {
 
             val recyclerList = mutableListOf<DisplayableItem>().also {
                 it.addAll(portfolio)
-                it.add(Insert())
+                it.add(Insert)
             }
             portfolioAdapter.items = recyclerList
             portfolioAdapter.notifyDataSetChanged()
@@ -98,7 +98,7 @@ class WalletFragment : Fragment() {
         binding.recyclerViewCoin.adapter = portfolioAdapter
         binding.recyclerViewCoin.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        portfolioAdapter.items = listOf<DisplayableItem>(Insert())
+        portfolioAdapter.items = listOf<DisplayableItem>(Insert)
     }
 
     override fun onDestroy() {
