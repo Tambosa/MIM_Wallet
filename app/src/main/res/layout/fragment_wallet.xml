@@ -42,7 +42,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_fragment_title">
 
-        <include layout="@layout/header_simple" />
+        <include
+            android:id="@+id/included_header"
+            layout="@layout/header_simple" />
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView

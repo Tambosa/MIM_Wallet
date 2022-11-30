@@ -1,5 +1,6 @@
 package com.aroman.mimwallet.presentation.wallet
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,6 +20,8 @@ import com.aroman.mimwallet.presentation.wallet.adapters.MainWalletAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 @AndroidEntryPoint
 class WalletFragment : Fragment() {
@@ -50,18 +53,45 @@ class WalletFragment : Fragment() {
         walletViewModel.coins.observe(viewLifecycleOwner) { coinList ->
             this.coinList = coinList
         }
-//        walletViewModel.getCoins()
+        walletViewModel.getCoins()
+
         walletViewModel.portfolio.observe(viewLifecycleOwner) { portfolio ->
             Log.d("@@@", portfolio.toString())
 
-            val data = mutableListOf<DisplayableItem>().also {
+            setHeader(portfolio)
+
+            val recyclerList = mutableListOf<DisplayableItem>().also {
                 it.addAll(portfolio)
                 it.add(Insert())
             }
-            portfolioAdapter.items = data
+            portfolioAdapter.items = recyclerList
             portfolioAdapter.notifyDataSetChanged()
         }
         walletViewModel.getPortfolio()
+    }
+
+    private fun setHeader(portfolio: List<DisplayableCoin>) {
+        var totalPrice = 0.0
+        var oldTotalPrice = 0.0
+        for (coin in portfolio) {
+            totalPrice += coin.count * coin.price
+            val differ = (coin.count * coin.price * (coin.percentChange24h / 100))
+            oldTotalPrice += (coin.count * coin.price) + differ
+        }
+
+        val priceFormat = DecimalFormat("$#.##")
+        priceFormat.roundingMode = RoundingMode.CEILING
+        binding.includedHeader.textTotalValue.text = priceFormat.format(totalPrice)
+
+        val gainFormat = DecimalFormat("#.##%")
+        gainFormat.roundingMode = RoundingMode.CEILING
+        binding.includedHeader.text24hGain.text =
+            gainFormat.format((totalPrice / oldTotalPrice) - 1)
+        if (((totalPrice / oldTotalPrice) - 1) > 0) {
+            binding.includedHeader.text24hGain.setTextColor(Color.GREEN)
+        } else {
+            binding.includedHeader.text24hGain.setTextColor(Color.RED)
+        }
     }
 
     private fun initRecycler() {

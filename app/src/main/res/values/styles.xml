@@ -9,7 +9,7 @@
 
     <style name="TextLargeOnPrimary">
         <item name="android:textColor">?attr/colorOnPrimaryContainer</item>
-        <item name="android:textSize">36sp</item>
+        <item name="android:textSize">32sp</item>
     </style>
 
     <style name="TextLargeOnTertiary">

@@ -1,8 +1,8 @@
 package com.aroman.mimwallet.presentation.wallet.adapters
 
+import android.graphics.Color
 import com.aroman.mimwallet.databinding.ItemCoinBinding
 import com.aroman.mimwallet.databinding.ItemInsertBinding
-import com.aroman.mimwallet.domain.model.CoinDetails
 import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.DisplayableItem
 import com.aroman.mimwallet.domain.model.Insert
@@ -24,6 +24,12 @@ fun coinAdapterDelegate(
             binding.singleCoinPrice.text = DecimalFormat("$#,###,###.00").format(item.price)
             binding.totalPrice.text = DecimalFormat("$#,###,###.00").format(item.price * item.count)
             binding.totalPrice24hChange.text = item.percentChange24h.toString()
+
+            if (item.percentChange24h > 0) {
+                binding.totalPrice24hChange.setTextColor(Color.GREEN)
+            } else {
+                binding.totalPrice24hChange.setTextColor(Color.RED)
+            }
         }
     }
 
