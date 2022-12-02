@@ -1,7 +1,5 @@
 package com.aroman.mimwallet.presentation.wallet
 
-import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -24,39 +22,21 @@ class WalletViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private val _coins = MutableLiveData<List<DisplayableCoin>>()
-    val coins: LiveData<List<DisplayableCoin>> = _coins
+    private val _coins = MutableLiveData<ViewState<List<DisplayableCoin>>>()
+    val coins = _coins
 
-    private val _portfolio = MutableLiveData<List<DisplayableCoin>>()
+    private val _portfolio = MutableLiveData<ViewState<List<DisplayableCoin>>>()
     val portfolio = _portfolio
 
     fun getCoins() {
         getCoinsUseCase().onEach { result ->
-            when (result) {
-                is ViewState.Success -> {
-                    _coins.postValue(result.data ?: emptyList())
-                }
-                is ViewState.Error -> {
-                    result.message?.let { Log.d("@@@", it) }
-                }
-                is ViewState.Loading -> {
-                }
-            }
+            _coins.postValue(result)
         }.launchIn(viewModelScope)
     }
 
     fun getPortfolio() {
         getPortfolioUseCase().onEach { result ->
-            when (result) {
-                is ViewState.Success -> {
-                    _portfolio.postValue(result.data ?: emptyList())
-                }
-                is ViewState.Error -> {
-                    result.message?.let { Log.d("@@@", it) }
-                }
-                is ViewState.Loading -> {
-                }
-            }
+            _portfolio.postValue(result)
         }.launchIn(viewModelScope)
     }
 

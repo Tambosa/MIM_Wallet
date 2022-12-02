@@ -9,9 +9,11 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.databinding.BottomSheetInsertBinding
 import com.aroman.mimwallet.databinding.FragmentWalletBinding
 import com.aroman.mimwallet.domain.model.DisplayableCoin
@@ -20,6 +22,8 @@ import com.aroman.mimwallet.domain.model.Insert
 import com.aroman.mimwallet.presentation.wallet.adapters.MainWalletAdapter
 import com.aroman.mimwallet.utils.animateNumbers
 import com.aroman.mimwallet.utils.attachLeftSwipeHelper
+import com.aroman.mimwallet.utils.disableTouch
+import com.aroman.mimwallet.utils.enableTouch
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,22 +57,52 @@ class WalletFragment : Fragment() {
     }
 
     private fun initViewModel() {
+        subscribeToCoinList()
+        subscribeToPortfolio()
+    }
+
+    private fun subscribeToCoinList() {
         walletViewModel.coins.observe(viewLifecycleOwner) { coinList ->
-            this.coinList = coinList
+            when (coinList) {
+                is ViewState.Success -> {
+                    requireActivity().enableTouch()
+                    this.coinList = coinList.data ?: emptyList()
+                }
+                is ViewState.Loading -> {
+                    requireActivity().disableTouch()
+                }
+                is ViewState.Error -> Toast.makeText(
+                    requireContext(),
+                    coinList.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
         walletViewModel.getCoins()
+    }
 
+    private fun subscribeToPortfolio() {
         walletViewModel.portfolio.observe(viewLifecycleOwner) { portfolio ->
-            Log.d("@@@", portfolio.toString())
+            when (portfolio) {
+                is ViewState.Success -> {
+                    Log.d("@@@", portfolio.toString())
+                    setHeader(portfolio.data ?: emptyList())
+                    val recyclerList = mutableListOf<DisplayableItem>().also {
+                        it.addAll(portfolio.data ?: emptyList())
+                        it.add(Insert)
+                    }
+                    portfolioAdapter.items = recyclerList
+                    portfolioAdapter.notifyDataSetChanged()
+                }
+                is ViewState.Loading -> {
 
-            setHeader(portfolio)
-
-            val recyclerList = mutableListOf<DisplayableItem>().also {
-                it.addAll(portfolio)
-                it.add(Insert)
+                }
+                is ViewState.Error -> Toast.makeText(
+                    requireContext(),
+                    portfolio.message,
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-            portfolioAdapter.items = recyclerList
-            portfolioAdapter.notifyDataSetChanged()
         }
         walletViewModel.getPortfolio()
     }
@@ -98,11 +132,15 @@ class WalletFragment : Fragment() {
     }
 
     private fun initRecycler() {
-        binding.recyclerViewCoin.adapter = portfolioAdapter
-        binding.recyclerViewCoin.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        binding.recyclerViewCoin.attachLeftSwipeHelper { vh ->
-            walletViewModel.deleteCoin(walletViewModel.portfolio.value!![vh.layoutPosition])
+        binding.recyclerViewCoin.apply {
+            adapter = portfolioAdapter
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            attachLeftSwipeHelper { vh ->
+                walletViewModel.deleteCoin(
+                    walletViewModel.portfolio.value!!.data!![vh.layoutPosition]
+                )
+            }
         }
         portfolioAdapter.items = listOf<DisplayableItem>(Insert)
     }
@@ -164,8 +202,8 @@ class WalletFragment : Fragment() {
 
     private fun onItemClicked(position: Int) {
         showInsertDialog(
-            walletViewModel.portfolio.value!![position].id - 1,
-            walletViewModel.portfolio.value!![position].count
+            walletViewModel.portfolio.value!!.data!![position].id - 1,
+            walletViewModel.portfolio.value!!.data!![position].count
         )
     }
 }
