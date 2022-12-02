@@ -28,7 +28,7 @@ fun coinAdapterDelegate(
                 item.price * item.count,
                 DecimalFormat("$#,###,###.00")
             )
-            binding.totalPrice24hChange.text = DecimalFormat("#,##%").format(item.percentChange24h)
+            binding.totalPrice24hChange.text = DecimalFormat("0.##'%'").format(item.percentChange24h)
 
             if (item.percentChange24h > 0) {
                 binding.totalPrice24hChange.setTextColor(Color.GREEN)

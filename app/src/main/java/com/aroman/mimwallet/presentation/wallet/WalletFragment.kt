@@ -79,18 +79,18 @@ class WalletFragment : Fragment() {
         for (coin in portfolio) {
             totalPrice += coin.count * coin.price
             val differ = (coin.count * coin.price * (coin.percentChange24h / 100))
-            oldTotalPrice += (coin.count * coin.price) + differ
+            oldTotalPrice += ((coin.count * coin.price) + differ)
         }
+        val change = ((oldTotalPrice - totalPrice) / totalPrice) * 100
 
         val priceFormat = DecimalFormat("$#.##")
         priceFormat.roundingMode = RoundingMode.CEILING
         binding.includedHeader.textTotalValue.animateNumbers(2500, totalPrice, priceFormat)
 
-        val gainFormat = DecimalFormat("#.##%")
+        val gainFormat = DecimalFormat("0.##'%'")
         gainFormat.roundingMode = RoundingMode.CEILING
-        binding.includedHeader.text24hGain.text =
-            gainFormat.format((totalPrice / oldTotalPrice) - 1)
-        if (((totalPrice / oldTotalPrice) - 1) > 0) {
+        binding.includedHeader.text24hGain.text = gainFormat.format(change)
+        if (change > 0) {
             binding.includedHeader.text24hGain.setTextColor(Color.GREEN)
         } else {
             binding.includedHeader.text24hGain.setTextColor(Color.RED)
