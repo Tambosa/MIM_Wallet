@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,10 +19,7 @@ import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.DisplayableItem
 import com.aroman.mimwallet.domain.model.Insert
 import com.aroman.mimwallet.presentation.wallet.adapters.MainWalletAdapter
-import com.aroman.mimwallet.utils.animateNumbers
-import com.aroman.mimwallet.utils.attachLeftSwipeHelper
-import com.aroman.mimwallet.utils.disableTouch
-import com.aroman.mimwallet.utils.enableTouch
+import com.aroman.mimwallet.utils.*
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,14 +64,8 @@ class WalletFragment : Fragment() {
                     requireActivity().enableTouch()
                     this.coinList = coinList.data ?: emptyList()
                 }
-                is ViewState.Loading -> {
-                    requireActivity().disableTouch()
-                }
-                is ViewState.Error -> Toast.makeText(
-                    requireContext(),
-                    coinList.message,
-                    Toast.LENGTH_SHORT
-                ).show()
+                is ViewState.Loading -> requireActivity().disableTouch()
+                is ViewState.Error -> requireActivity().showMessage(coinList.message)
             }
         }
         walletViewModel.getCoins()
@@ -84,27 +74,23 @@ class WalletFragment : Fragment() {
     private fun subscribeToPortfolio() {
         walletViewModel.portfolio.observe(viewLifecycleOwner) { portfolio ->
             when (portfolio) {
-                is ViewState.Success -> {
-                    Log.d("@@@", portfolio.toString())
-                    setHeader(portfolio.data ?: emptyList())
-                    val recyclerList = mutableListOf<DisplayableItem>().also {
-                        it.addAll(portfolio.data ?: emptyList())
-                        it.add(Insert)
-                    }
-                    portfolioAdapter.items = recyclerList
-                    portfolioAdapter.notifyDataSetChanged()
-                }
-                is ViewState.Loading -> {
-
-                }
-                is ViewState.Error -> Toast.makeText(
-                    requireContext(),
-                    portfolio.message,
-                    Toast.LENGTH_SHORT
-                ).show()
+                is ViewState.Success -> handleSuccessPortfolio(portfolio)
+                is ViewState.Loading -> {}
+                is ViewState.Error -> requireActivity().showMessage(portfolio.message)
             }
         }
         walletViewModel.getPortfolio()
+    }
+
+    private fun handleSuccessPortfolio(portfolio: ViewState.Success<List<DisplayableCoin>>) {
+        Log.d("@@@", portfolio.toString())
+        setHeader(portfolio.data ?: emptyList())
+        val recyclerList = mutableListOf<DisplayableItem>().also {
+            it.addAll(portfolio.data ?: emptyList())
+            it.add(Insert)
+        }
+        portfolioAdapter.items = recyclerList
+        portfolioAdapter.notifyDataSetChanged()
     }
 
     private fun setHeader(portfolio: List<DisplayableCoin>) {
