@@ -27,33 +27,47 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/edit_text_coin_amount"
-        style="@style/TextOnSurface"
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/qnt_input_layout"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_bottom_sheet"
         android:layout_marginTop="@dimen/margin_bottom_sheet"
         android:layout_marginEnd="@dimen/margin_bottom_sheet"
-        android:inputType="numberDecimal"
-        android:maxLength="20"
-        android:maxLines="1"
-        android:minWidth="150dp"
+        app:errorEnabled="true"
+        app:layout_constraintBottom_toBottomOf="@id/coin_input_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_enter_amount" />
+        app:layout_constraintTop_toBottomOf="@id/text_enter_amount">
 
-    <androidx.appcompat.widget.AppCompatSpinner
-        android:id="@+id/spinner_coins"
-        style="@style/TextOnSurface"
+        <EditText
+            android:id="@+id/edit_text_coin_amount"
+            style="@style/TextOnSurface"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="numberDecimal"
+            android:maxLength="20"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/coin_input_layout"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_bottom_sheet"
         android:layout_marginTop="@dimen/margin_bottom_sheet"
         android:layout_marginEnd="@dimen/margin_bottom_sheet"
-        android:gravity="center_vertical"
-        android:textAlignment="viewStart"
-        app:layout_constraintEnd_toStartOf="@id/edit_text_coin_amount"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toStartOf="@id/qnt_input_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_select_coin" />
+        app:layout_constraintTop_toBottomOf="@id/text_select_coin">
+
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/autocomplete_coin"
+            style="@style/TextOnSurface"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/button_save"
@@ -69,5 +83,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_text_coin_amount" />
+        app:layout_constraintTop_toBottomOf="@id/qnt_input_layout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

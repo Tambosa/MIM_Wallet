@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Spinner
 import android.widget.TextView
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -140,17 +140,57 @@ class WalletFragment : Fragment() {
         showInsertDialog()
     }
 
-    private fun showInsertDialog(id: Int = 1, qnt: Double = 1.0) {
+    private fun showInsertDialog(qnt: Double = 1.0) {
         val dialogBinding = BottomSheetInsertBinding.inflate(LayoutInflater.from(requireContext()))
         val dialogInsert = BottomSheetDialog(requireContext()).apply {
             setContentView(dialogBinding.root)
         }
-        initSpinner(coinList.map { it.name + ": " + it.symbol }, dialogBinding.spinnerCoins)
 
-        dialogBinding.editTextCoinAmount.setText(qnt.toString(), TextView.BufferType.EDITABLE)
-        dialogBinding.spinnerCoins.setSelection(id)
+        initAutoCompleteCoin(coinList.map { it.name + ": " + it.symbol }, dialogBinding)
+        initEditTextCoinAmount(dialogBinding, qnt)
         initSave(dialogInsert, dialogBinding, coinList)
+
         dialogInsert.show()
+    }
+
+    private fun initEditTextCoinAmount(dialogBinding: BottomSheetInsertBinding, qnt: Double) {
+        dialogBinding.editTextCoinAmount.setText(qnt.toString(), TextView.BufferType.EDITABLE)
+        dialogBinding.editTextCoinAmount.addTextChangedListener { enteredText ->
+            if (enteredText != null) {
+                if (enteredText.isNotEmpty() && enteredText.toString().toDouble() != 0.0) {
+                    dialogBinding.buttonSave.isEnabled = true
+                    dialogBinding.qntInputLayout.boxStrokeColor = (Color.GREEN)
+                    dialogBinding.qntInputLayout.error = null
+                } else {
+                    dialogBinding.buttonSave.isEnabled = false
+                    dialogBinding.qntInputLayout.boxStrokeColor = (Color.RED)
+                    dialogBinding.qntInputLayout.error = "Enter valid amount"
+                }
+            }
+        }
+    }
+
+    private fun initAutoCompleteCoin(
+        stringArray: List<String>,
+        dialogBinding: BottomSheetInsertBinding
+    ) {
+        ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            stringArray
+        ).also { adapter ->
+            dialogBinding.autocompleteCoin.setAdapter(adapter)
+        }
+        dialogBinding.autocompleteCoin.addTextChangedListener { enteredText ->
+            if (coinList.map { it.symbol }.contains(enteredText?.takeLast(3).toString())) {
+                dialogBinding.buttonSave.isEnabled = true
+                dialogBinding.coinInputLayout.boxStrokeColor = (Color.GREEN)
+                dialogBinding.coinInputLayout.error = null
+            } else {
+                dialogBinding.buttonSave.isEnabled = false
+                dialogBinding.coinInputLayout.error = "Enter valid coin"
+            }
+        }
     }
 
     private fun initSave(
@@ -160,7 +200,7 @@ class WalletFragment : Fragment() {
     ) {
         if (coinList.isNotEmpty()) {
             dialogBinding.buttonSave.setOnClickListener {
-                val selectedSymbol = dialogBinding.spinnerCoins.selectedItem.toString().takeLast(3)
+                val selectedSymbol = dialogBinding.autocompleteCoin.text.toString().takeLast(3)
                 walletViewModel.insertCoin(
                     DisplayableCoin(
                         id = coinList.find { it.symbol == selectedSymbol }!!.id,
@@ -175,21 +215,7 @@ class WalletFragment : Fragment() {
         }
     }
 
-    private fun initSpinner(stringArray: List<String>, spinner: Spinner) {
-        ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            stringArray
-        ).also { adapter ->
-            adapter.setDropDownViewResource(com.ismaeldivita.chipnavigation.R.layout.support_simple_spinner_dropdown_item)
-            spinner.adapter = adapter
-        }
-    }
-
     private fun onItemClicked(position: Int) {
-        showInsertDialog(
-            walletViewModel.portfolio.value!!.data!![position].id - 1,
-            walletViewModel.portfolio.value!!.data!![position].count
-        )
+        showInsertDialog(walletViewModel.portfolio.value!!.data!![position].count)
     }
 }
