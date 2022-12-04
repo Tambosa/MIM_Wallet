@@ -9,4 +9,5 @@
     <dimen name="padding_vertical_recycler_item">10dp</dimen>
     <dimen name="navigation_bar_height">56dp</dimen>
     <dimen name="margin_bottom_sheet">20dp</dimen>
+    <dimen name="pie_chart_height">200dp</dimen>
 </resources>

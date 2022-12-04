@@ -20,11 +20,13 @@ import com.aroman.mimwallet.domain.model.DisplayableItem
 import com.aroman.mimwallet.domain.model.Insert
 import com.aroman.mimwallet.presentation.wallet.adapters.MainWalletAdapter
 import com.aroman.mimwallet.utils.*
+import com.aroman.mimwallet.utils.pie_chart_view.PieData
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.math.RoundingMode
 import java.text.DecimalFormat
+
 
 @AndroidEntryPoint
 class WalletFragment : Fragment() {
@@ -91,6 +93,19 @@ class WalletFragment : Fragment() {
         }
         portfolioAdapter.items = recyclerList
         portfolioAdapter.notifyDataSetChanged()
+
+        portfolio.data?.let { initPieChart(it) }
+        binding.switchPieChart.setOnCheckedChangeListener { _, isChecked ->
+            binding.pieChart.visibility = if (isChecked) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun initPieChart(portfolio: List<DisplayableCoin>) {
+        val pieData = PieData()
+        for (coin in portfolio) {
+            pieData.add(coin.symbol, coin.price * coin.count)
+        }
+        binding.pieChart.setData(pieData)
     }
 
     private fun setHeader(portfolio: List<DisplayableCoin>) {

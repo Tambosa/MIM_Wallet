@@ -18,6 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_pie_chart"
         style="@style/TextLargeOnTertiary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,6 +33,18 @@
         app:thumbTint="?attr/colorOnTertiaryContainer"
         app:trackTint="?attr/colorTertiary" />
 
+    <com.aroman.mimwallet.utils.pie_chart_view.PieChartView
+        android:id="@+id/pie_chart"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/pie_chart_height"
+        android:visibility="gone"
+        android:layout_marginStart="@dimen/margin_horizontal_view_children"
+        android:layout_marginTop="@dimen/margin_horizontal_view_children"
+        android:layout_marginEnd="@dimen/margin_horizontal_view_children"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_fragment_title" />
+
     <FrameLayout
         android:id="@+id/container_header"
         android:layout_width="match_parent"
@@ -40,7 +53,7 @@
         android:paddingBottom="@dimen/padding_vertical_header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_fragment_title">
+        app:layout_constraintTop_toBottomOf="@id/pie_chart">
 
         <include
             android:id="@+id/included_header"
