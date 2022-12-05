@@ -26,7 +26,7 @@
         android:background="@drawable/shape_medium_rounded_corners"
         android:backgroundTint="?attr/colorTertiaryContainer"
         android:padding="@dimen/padding_tertiary_container"
-        android:text="@string/extra"
+        android:text="@string/details"
         android:textStyle=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/text_fragment_title"

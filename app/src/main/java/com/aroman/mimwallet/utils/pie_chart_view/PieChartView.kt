@@ -9,15 +9,11 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
-import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.MotionEvent
 import android.view.View
-import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
-import com.aroman.mimwallet.R
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -71,7 +67,11 @@ class PieChartView @JvmOverloads constructor(
             style = Paint.Style.FILL
             isAntiAlias = true
             val typedValue = TypedValue()
-            context.theme.resolveAttribute(com.google.android.material.R.attr.colorPrimaryContainer, typedValue, true)
+            context.theme.resolveAttribute(
+                com.google.android.material.R.attr.colorPrimaryContainer,
+                typedValue,
+                true
+            )
             color = typedValue.data
         }
         setupAnimations()
@@ -125,7 +125,7 @@ class PieChartView @JvmOverloads constructor(
     }
 
     private fun setGraphicSizes() {
-        mainTextPaint.textSize = height / 10f
+        mainTextPaint.textSize = height / 20f
         borderPaint.strokeWidth = height / 80f
         linePaint.strokeWidth = height / 120f
         indicatorCircleRadius = height / 70f
@@ -202,19 +202,8 @@ class PieChartView @JvmOverloads constructor(
         )
     }
 
-//    override fun onTouchEvent(event: MotionEvent?): Boolean {
-//        if (event?.action == MotionEvent.ACTION_DOWN) return true
-//        if (event?.action == MotionEvent.ACTION_UP) {
-//            when (pieState) {
-//                PieState.MINIMIZED -> expandPieChart()
-//                PieState.EXPANDED -> collapsePieChart()
-//            }
-//        }
-//        return super.onTouchEvent(event)
-//    }
-
     fun expandPieChart() {
-        expandAnimator.setIntValues(layoutParams.height, (width / 2.5).toInt())
+        expandAnimator.setIntValues(layoutParams.height, (width / 2))
         textAlpha.setIntValues(0, 255)
         animateExpansion.start()
     }
@@ -249,7 +238,7 @@ class PieChartView @JvmOverloads constructor(
             }
         })
 
-        collapseAnimator.duration = ANIMATION_DURATION
+        collapseAnimator.duration = ANIMATION_DURATION / 2
         collapseAnimator.interpolator = DecelerateInterpolator()
         collapseAnimator.addUpdateListener {
             layoutParams.height = it.animatedValue as Int

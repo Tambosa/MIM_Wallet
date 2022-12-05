@@ -155,13 +155,14 @@ class WalletFragment : Fragment() {
         showInsertDialog()
     }
 
-    private fun showInsertDialog(qnt: Double = 1.0) {
+    private fun showInsertDialog(symbol: String = "", qnt: Double = 1.0) {
         val dialogBinding = BottomSheetInsertBinding.inflate(LayoutInflater.from(requireContext()))
         val dialogInsert = BottomSheetDialog(requireContext()).apply {
             setContentView(dialogBinding.root)
         }
 
         initAutoCompleteCoin(coinList.map { it.name + ": " + it.symbol }, dialogBinding)
+        dialogBinding.autocompleteCoin.setText(symbol)
         initEditTextCoinAmount(dialogBinding, qnt)
         initSave(dialogInsert, dialogBinding, coinList)
 
@@ -197,7 +198,8 @@ class WalletFragment : Fragment() {
             dialogBinding.autocompleteCoin.setAdapter(adapter)
         }
         dialogBinding.autocompleteCoin.addTextChangedListener { enteredText ->
-            if (coinList.map { it.symbol }.contains(enteredText?.takeLast(3).toString())) {
+            if (coinList.map { it.symbol }
+                    .contains(enteredText?.takeLastWhile { it != ' ' }.toString())) {
                 dialogBinding.buttonSave.isEnabled = true
                 dialogBinding.coinInputLayout.boxStrokeColor = (Color.GREEN)
                 dialogBinding.coinInputLayout.error = null
@@ -215,7 +217,8 @@ class WalletFragment : Fragment() {
     ) {
         if (coinList.isNotEmpty()) {
             dialogBinding.buttonSave.setOnClickListener {
-                val selectedSymbol = dialogBinding.autocompleteCoin.text.toString().takeLast(3)
+                val selectedSymbol =
+                    dialogBinding.autocompleteCoin.text.toString().takeLastWhile { it != ' ' }
                 walletViewModel.insertCoin(
                     DisplayableCoin(
                         id = coinList.find { it.symbol == selectedSymbol }!!.id,
@@ -231,6 +234,8 @@ class WalletFragment : Fragment() {
     }
 
     private fun onItemClicked(position: Int) {
-        showInsertDialog(walletViewModel.portfolio.value!!.data!![position].count)
+        showInsertDialog(
+            walletViewModel.portfolio.value!!.data!![position].symbol,
+            walletViewModel.portfolio.value!!.data!![position].count)
     }
 }
