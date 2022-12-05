@@ -96,7 +96,7 @@ class WalletFragment : Fragment() {
 
         portfolio.data?.let { initPieChart(it) }
         binding.switchPieChart.setOnCheckedChangeListener { _, isChecked ->
-            binding.pieChart.visibility = if (isChecked) View.VISIBLE else View.GONE
+            if (isChecked) binding.pieChart.expandPieChart() else binding.pieChart.collapsePieChart()
         }
     }
 

@@ -9,11 +9,15 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
+import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
+import com.aroman.mimwallet.R
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -31,6 +35,8 @@ class PieChartView @JvmOverloads constructor(
     private var indicatorCircleRadius = 0f
     private val mainTextPaint = Paint()
     private val oval = RectF()
+    private val innerOval = RectF()
+    private val innerOvalPaint = Paint()
 
     private val expandAnimator = ValueAnimator.ofInt()
     private val collapseAnimator = ValueAnimator.ofInt()
@@ -61,6 +67,13 @@ class PieChartView @JvmOverloads constructor(
             color = Color.BLACK
             alpha = 0
         }
+        innerOvalPaint.apply {
+            style = Paint.Style.FILL
+            isAntiAlias = true
+            val typedValue = TypedValue()
+            context.theme.resolveAttribute(com.google.android.material.R.attr.colorPrimaryContainer, typedValue, true)
+            color = typedValue.data
+        }
         setupAnimations()
     }
 
@@ -86,10 +99,10 @@ class PieChartView @JvmOverloads constructor(
             val middleAngle = it.sweepAngle / 2 + it.startAngle
 
             it.indicatorCircleLocation.x =
-                (layoutParams.height.toFloat() / 2 - layoutParams.height / 8) *
+                (layoutParams.height.toFloat() / 1.8f - layoutParams.height / 8) *
                         cos(Math.toRadians(middleAngle.toDouble())).toFloat() + width / 2
             it.indicatorCircleLocation.y =
-                (layoutParams.height.toFloat() / 2 - layoutParams.height / 8) *
+                (layoutParams.height.toFloat() / 1.8f - layoutParams.height / 8) *
                         sin(Math.toRadians(middleAngle.toDouble()))
                             .toFloat() + layoutParams.height / 2
         }
@@ -104,10 +117,15 @@ class PieChartView @JvmOverloads constructor(
         oval.bottom = bottom
         oval.left = left
         oval.right = right
+
+        innerOval.left = (width / 2) - (layoutParams.height / 3).toFloat()
+        innerOval.top = layoutParams.height.toFloat() / 6
+        innerOval.right = (width / 2) + (layoutParams.height / 3).toFloat()
+        innerOval.bottom = layoutParams.height.toFloat() - layoutParams.height.toFloat() / 6
     }
 
     private fun setGraphicSizes() {
-        mainTextPaint.textSize = height / 15f
+        mainTextPaint.textSize = height / 10f
         borderPaint.strokeWidth = height / 80f
         linePaint.strokeWidth = height / 120f
         indicatorCircleRadius = height / 70f
@@ -124,7 +142,6 @@ class PieChartView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-
         data?.pieSlices?.let { slices ->
             slices.forEach {
                 canvas?.drawArc(
@@ -134,10 +151,12 @@ class PieChartView @JvmOverloads constructor(
                     true,
                     it.value.paint
                 )
-                canvas?.drawArc(oval, it.value.startAngle, it.value.sweepAngle, true, borderPaint)
+//                border if needed
+//                canvas?.drawArc(oval, it.value.startAngle, it.value.sweepAngle, false, borderPaint)
                 drawIndicators(canvas, it.value)
             }
         }
+        canvas?.drawArc(innerOval, 0f, 360f, false, innerOvalPaint)
     }
 
     private fun drawIndicators(canvas: Canvas?, pieItem: PieSlice) {
@@ -183,24 +202,24 @@ class PieChartView @JvmOverloads constructor(
         )
     }
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (event?.action == MotionEvent.ACTION_DOWN) return true
-        if (event?.action == MotionEvent.ACTION_UP) {
-            when (pieState) {
-                PieState.MINIMIZED -> expandPieChart()
-                PieState.EXPANDED -> collapsePieChart()
-            }
-        }
-        return super.onTouchEvent(event)
-    }
+//    override fun onTouchEvent(event: MotionEvent?): Boolean {
+//        if (event?.action == MotionEvent.ACTION_DOWN) return true
+//        if (event?.action == MotionEvent.ACTION_UP) {
+//            when (pieState) {
+//                PieState.MINIMIZED -> expandPieChart()
+//                PieState.EXPANDED -> collapsePieChart()
+//            }
+//        }
+//        return super.onTouchEvent(event)
+//    }
 
-    private fun expandPieChart() {
+    fun expandPieChart() {
         expandAnimator.setIntValues(layoutParams.height, (width / 2.5).toInt())
         textAlpha.setIntValues(0, 255)
         animateExpansion.start()
     }
 
-    private fun collapsePieChart() {
+    fun collapsePieChart() {
         initialHeight?.let {
             collapseAnimator.setIntValues(layoutParams.height, it)
             textAlpha.setIntValues(255, 0)

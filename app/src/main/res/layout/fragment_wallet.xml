@@ -37,7 +37,6 @@
         android:id="@+id/pie_chart"
         android:layout_width="0dp"
         android:layout_height="@dimen/pie_chart_height"
-        android:visibility="gone"
         android:layout_marginStart="@dimen/margin_horizontal_view_children"
         android:layout_marginTop="@dimen/margin_horizontal_view_children"
         android:layout_marginEnd="@dimen/margin_horizontal_view_children"
