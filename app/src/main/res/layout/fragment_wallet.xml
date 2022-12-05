@@ -6,69 +6,79 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
 
-    <TextView
-        android:id="@+id/text_fragment_title"
-        style="@style/TextTitleStyleOnPrimary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_horizontal_view_children"
-        android:layout_marginTop="20dp"
-        android:text="@string/portfolio"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/switch_pie_chart"
-        style="@style/TextLargeOnTertiary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_horizontal_view_children"
-        android:background="@drawable/shape_medium_rounded_corners"
-        android:backgroundTint="?attr/colorTertiaryContainer"
-        android:padding="@dimen/padding_tertiary_container"
-        android:text="@string/details"
-        android:textStyle=""
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/text_fragment_title"
-        app:thumbTint="?attr/colorOnTertiaryContainer"
-        app:trackTint="?attr/colorTertiary" />
-
-    <com.aroman.mimwallet.utils.pie_chart_view.PieChartView
-        android:id="@+id/pie_chart"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/pie_chart_height"
-        android:layout_marginStart="@dimen/margin_horizontal_view_children"
-        android:layout_marginTop="@dimen/margin_horizontal_view_children"
-        android:layout_marginEnd="@dimen/margin_horizontal_view_children"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_fragment_title" />
-
-    <FrameLayout
-        android:id="@+id/container_header"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/padding_vertical_header"
-        android:paddingBottom="@dimen/padding_vertical_header"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pie_chart">
+        android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/included_header"
-            layout="@layout/header_simple" />
-    </FrameLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_coin"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/margin_horizontal_view_children"
-        android:layout_marginEnd="@dimen/margin_horizontal_view_children"
-        android:layout_marginBottom="@dimen/navigation_bar_height"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/container_header"
-        tools:listitem="@layout/item_coin" />
+            <TextView
+                android:id="@+id/text_fragment_title"
+                style="@style/TextTitleStyleOnPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_horizontal_view_children"
+                android:layout_marginTop="20dp"
+                android:text="@string/portfolio"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_pie_chart"
+                style="@style/TextLargeOnTertiary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_horizontal_view_children"
+                android:background="@drawable/shape_medium_rounded_corners"
+                android:backgroundTint="?attr/colorTertiaryContainer"
+                android:padding="@dimen/padding_tertiary_container"
+                android:text="@string/details"
+                android:textStyle=""
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/text_fragment_title"
+                app:thumbTint="?attr/colorOnTertiaryContainer"
+                app:trackTint="?attr/colorTertiary" />
+
+            <com.aroman.mimwallet.utils.pie_chart_view.PieChartView
+                android:id="@+id/pie_chart"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/pie_chart_height"
+                android:layout_marginStart="@dimen/margin_horizontal_view_children"
+                android:layout_marginTop="@dimen/margin_horizontal_view_children"
+                android:layout_marginEnd="@dimen/margin_horizontal_view_children"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_fragment_title" />
+
+            <FrameLayout
+                android:id="@+id/container_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/padding_vertical_header"
+                android:paddingBottom="@dimen/padding_vertical_header"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pie_chart">
+
+                <include
+                    android:id="@+id/included_header"
+                    layout="@layout/header_simple" />
+            </FrameLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_coin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_horizontal_view_children"
+                android:layout_marginEnd="@dimen/margin_horizontal_view_children"
+                android:layout_marginBottom="@dimen/navigation_bar_height"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/container_header"
+                tools:listitem="@layout/item_coin" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
