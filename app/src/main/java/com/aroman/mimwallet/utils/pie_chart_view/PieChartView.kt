@@ -1,12 +1,19 @@
 package com.aroman.mimwallet.utils.pie_chart_view
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.OvershootInterpolator
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -15,12 +22,21 @@ class PieChartView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
     private var data: PieData? = null
 
+    private var pieState = PieState.MINIMIZED
+    private var initialHeight: Int? = null
+
     private val borderPaint = Paint()
     private val linePaint = Paint()
     private val indicatorCirclePaint = Paint()
     private var indicatorCircleRadius = 0f
     private val mainTextPaint = Paint()
     private val oval = RectF()
+
+    private val expandAnimator = ValueAnimator.ofInt()
+    private val collapseAnimator = ValueAnimator.ofInt()
+    private val textAlpha = ValueAnimator.ofInt()
+    private val animateExpansion = AnimatorSet()
+    private val animateCollapse = AnimatorSet()
 
     init {
         borderPaint.apply {
@@ -45,6 +61,7 @@ class PieChartView @JvmOverloads constructor(
             color = Color.BLACK
             alpha = 0
         }
+        setupAnimations()
     }
 
     fun setData(data: PieData) {
@@ -110,7 +127,13 @@ class PieChartView @JvmOverloads constructor(
 
         data?.pieSlices?.let { slices ->
             slices.forEach {
-                canvas?.drawArc(oval, it.value.startAngle, it.value.sweepAngle, true, it.value.paint)
+                canvas?.drawArc(
+                    oval,
+                    it.value.startAngle,
+                    it.value.sweepAngle,
+                    true,
+                    it.value.paint
+                )
                 canvas?.drawArc(oval, it.value.startAngle, it.value.sweepAngle, true, borderPaint)
                 drawIndicators(canvas, it.value)
             }
@@ -118,37 +141,133 @@ class PieChartView @JvmOverloads constructor(
     }
 
     private fun drawIndicators(canvas: Canvas?, pieItem: PieSlice) {
-        // draw line & text for indicator circle if on left side of the pie chart
         if (pieItem.indicatorCircleLocation.x < width / 2) {
             drawIndicatorLine(canvas, pieItem, IndicatorAlignment.LEFT)
             drawIndicatorText(canvas, pieItem, IndicatorAlignment.LEFT)
-            // draw line & text for indicator circle if on right side of the pie chart
         } else {
             drawIndicatorLine(canvas, pieItem, IndicatorAlignment.RIGHT)
             drawIndicatorText(canvas, pieItem, IndicatorAlignment.RIGHT)
         }
-        // draw indicator circles for pie slice
-        canvas?.drawCircle(pieItem.indicatorCircleLocation.x, pieItem.indicatorCircleLocation.y,
-            indicatorCircleRadius, indicatorCirclePaint)
-    }
-
-    private fun drawIndicatorLine(canvas: Canvas?, pieItem: PieSlice, alignment: IndicatorAlignment) {
-        val xOffset = if (alignment == IndicatorAlignment.LEFT) width / 4 * -1 else width / 4
-        canvas?.drawLine(
+        canvas?.drawCircle(
             pieItem.indicatorCircleLocation.x, pieItem.indicatorCircleLocation.y,
-            pieItem.indicatorCircleLocation.x + xOffset, pieItem.indicatorCircleLocation.y, linePaint
+            indicatorCircleRadius, indicatorCirclePaint
         )
     }
 
-    private fun drawIndicatorText(canvas: Canvas?, pieItem: PieSlice, alignment: IndicatorAlignment) {
+    private fun drawIndicatorLine(
+        canvas: Canvas?,
+        pieItem: PieSlice,
+        alignment: IndicatorAlignment
+    ) {
+        val xOffset = if (alignment == IndicatorAlignment.LEFT) width / 4 * -1 else width / 4
+        canvas?.drawLine(
+            pieItem.indicatorCircleLocation.x,
+            pieItem.indicatorCircleLocation.y,
+            pieItem.indicatorCircleLocation.x + xOffset,
+            pieItem.indicatorCircleLocation.y,
+            linePaint
+        )
+    }
+
+    private fun drawIndicatorText(
+        canvas: Canvas?,
+        pieItem: PieSlice,
+        alignment: IndicatorAlignment
+    ) {
         val xOffset = if (alignment == IndicatorAlignment.LEFT) width / 4 * -1 else width / 4
         if (alignment == IndicatorAlignment.LEFT) mainTextPaint.textAlign = Paint.Align.LEFT
         else mainTextPaint.textAlign = Paint.Align.RIGHT
-        canvas?.drawText(pieItem.name, pieItem.indicatorCircleLocation.x + xOffset,
-            pieItem.indicatorCircleLocation.y - 10, mainTextPaint)
+        canvas?.drawText(
+            pieItem.name, pieItem.indicatorCircleLocation.x + xOffset,
+            pieItem.indicatorCircleLocation.y - 10, mainTextPaint
+        )
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.action == MotionEvent.ACTION_DOWN) return true
+        if (event?.action == MotionEvent.ACTION_UP) {
+            when (pieState) {
+                PieState.MINIMIZED -> expandPieChart()
+                PieState.EXPANDED -> collapsePieChart()
+            }
+        }
+        return super.onTouchEvent(event)
+    }
+
+    private fun expandPieChart() {
+        expandAnimator.setIntValues(layoutParams.height, (width / 2.5).toInt())
+        textAlpha.setIntValues(0, 255)
+        animateExpansion.start()
+    }
+
+    private fun collapsePieChart() {
+        initialHeight?.let {
+            collapseAnimator.setIntValues(layoutParams.height, it)
+            textAlpha.setIntValues(255, 0)
+            animateCollapse.start()
+        }
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        if (initialHeight == null) initialHeight = layoutParams.height
+    }
+
+    private fun setupAnimations() {
+        expandAnimator.duration = ANIMATION_DURATION
+        expandAnimator.interpolator = OvershootInterpolator()
+        expandAnimator.addUpdateListener {
+            layoutParams.height = it.animatedValue as Int
+            requestLayout()
+            setCircleBounds()
+            setPieSliceDimensions()
+            invalidate()
+        }
+        expandAnimator.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator?) {
+                super.onAnimationEnd(animation)
+                pieState = PieState.EXPANDED
+            }
+        })
+
+        collapseAnimator.duration = ANIMATION_DURATION
+        collapseAnimator.interpolator = DecelerateInterpolator()
+        collapseAnimator.addUpdateListener {
+            layoutParams.height = it.animatedValue as Int
+            requestLayout()
+            setCircleBounds()
+            setPieSliceDimensions()
+            invalidate()
+        }
+        collapseAnimator.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator?) {
+                super.onAnimationEnd(animation)
+                pieState = PieState.MINIMIZED
+            }
+        })
+
+        textAlpha.duration = ANIMATION_DURATION
+        textAlpha.interpolator = DecelerateInterpolator()
+        textAlpha.addUpdateListener {
+            mainTextPaint.alpha = it.animatedValue as Int
+            linePaint.alpha = it.animatedValue as Int
+            indicatorCirclePaint.alpha = it.animatedValue as Int
+            invalidate()
+        }
+
+        animateExpansion.play(expandAnimator).with(textAlpha)
+        animateCollapse.play(collapseAnimator).with(textAlpha)
     }
 
     enum class IndicatorAlignment {
         LEFT, RIGHT
+    }
+
+    enum class PieState {
+        MINIMIZED, EXPANDED
+    }
+
+    companion object {
+        const val ANIMATION_DURATION = 800L
     }
 }
