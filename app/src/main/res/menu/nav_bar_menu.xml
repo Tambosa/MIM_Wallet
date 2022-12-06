@@ -2,23 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_portfolio"
+        android:id="@+id/walletFragment"
         android:icon="@drawable/ic_baseline_account_balance_wallet_24"
+        android:iconTint="?attr/colorOnSurface"
         android:title="@string/portfolio"
-        android:iconTint="?attr/colorOnSurface"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/menu_coins"
-        android:icon="@drawable/ic_baseline_donut_large_24"
-        android:title="@string/coins"
+        android:id="@+id/alertFragment"
+        android:icon="@drawable/ic_baseline_notifications_24"
         android:iconTint="?attr/colorOnSurface"
+        android:title="@string/alerts"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/menu_settings"
+        android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_baseline_settings_24"
-        android:title="@string/settings"
         android:iconTint="?attr/colorOnSurface"
+        android:title="@string/settings"
         app:showAsAction="ifRoom" />
 </menu>
