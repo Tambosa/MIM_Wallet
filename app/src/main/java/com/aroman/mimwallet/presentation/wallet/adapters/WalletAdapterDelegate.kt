@@ -2,10 +2,12 @@ package com.aroman.mimwallet.presentation.wallet.adapters
 
 import android.graphics.Color
 import com.aroman.mimwallet.databinding.ItemCoinBinding
+import com.aroman.mimwallet.databinding.ItemGettingStartedBinding
 import com.aroman.mimwallet.databinding.ItemInsertBinding
 import com.aroman.mimwallet.domain.model.DisplayableCoin
+import com.aroman.mimwallet.domain.model.DisplayableGettingStarted
+import com.aroman.mimwallet.domain.model.DisplayableInsert
 import com.aroman.mimwallet.domain.model.DisplayableItem
-import com.aroman.mimwallet.domain.model.Insert
 import com.aroman.mimwallet.utils.animateNumbers
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import java.text.DecimalFormat
@@ -28,7 +30,8 @@ fun coinAdapterDelegate(
                 item.price * item.count,
                 DecimalFormat("$#,###,###.00")
             )
-            binding.totalPrice24hChange.text = DecimalFormat("0.##'%'").format(item.percentChange24h)
+            binding.totalPrice24hChange.text =
+                DecimalFormat("0.##'%'").format(item.percentChange24h)
 
             if (item.percentChange24h > 0) {
                 binding.totalPrice24hChange.setTextColor(Color.GREEN)
@@ -41,7 +44,7 @@ fun coinAdapterDelegate(
 fun insertAdapterDelegate(
     onItemClicked: () -> Unit
 ) =
-    adapterDelegateViewBinding<Insert, DisplayableItem, ItemInsertBinding>({ layoutInflater, root ->
+    adapterDelegateViewBinding<DisplayableInsert, DisplayableItem, ItemInsertBinding>({ layoutInflater, root ->
         ItemInsertBinding.inflate(layoutInflater, root, false)
     }) {
         bind {
@@ -49,4 +52,12 @@ fun insertAdapterDelegate(
                 onItemClicked()
             }
         }
+    }
+
+fun gettingStartedAdapterDelegate() =
+    adapterDelegateViewBinding<DisplayableGettingStarted, DisplayableItem, ItemGettingStartedBinding>(
+        { layoutInflater, root ->
+            ItemGettingStartedBinding.inflate(layoutInflater, root, false)
+        }) {
+        bind {}
     }

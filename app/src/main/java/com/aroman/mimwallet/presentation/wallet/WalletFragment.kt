@@ -16,8 +16,9 @@ import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.databinding.BottomSheetInsertBinding
 import com.aroman.mimwallet.databinding.FragmentWalletBinding
 import com.aroman.mimwallet.domain.model.DisplayableCoin
+import com.aroman.mimwallet.domain.model.DisplayableGettingStarted
 import com.aroman.mimwallet.domain.model.DisplayableItem
-import com.aroman.mimwallet.domain.model.Insert
+import com.aroman.mimwallet.domain.model.DisplayableInsert
 import com.aroman.mimwallet.presentation.wallet.adapters.MainWalletAdapter
 import com.aroman.mimwallet.utils.*
 import com.aroman.mimwallet.utils.pie_chart_view.PieData
@@ -89,7 +90,7 @@ class WalletFragment : Fragment() {
         setHeader(portfolio.data ?: emptyList())
         val recyclerList = mutableListOf<DisplayableItem>().also {
             it.addAll(portfolio.data ?: emptyList())
-            it.add(Insert)
+            it.add(DisplayableInsert)
         }
         portfolioAdapter.items = recyclerList
         portfolioAdapter.notifyDataSetChanged()
@@ -143,7 +144,7 @@ class WalletFragment : Fragment() {
                 )
             }
         }
-        portfolioAdapter.items = listOf<DisplayableItem>(Insert)
+        portfolioAdapter.items = listOf<DisplayableItem>(DisplayableGettingStarted, DisplayableInsert)
     }
 
     override fun onDestroy() {

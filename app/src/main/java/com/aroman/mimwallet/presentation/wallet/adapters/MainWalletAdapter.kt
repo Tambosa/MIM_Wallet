@@ -8,5 +8,6 @@ class MainWalletAdapter(
     onInsertClicked: () -> Unit,
 ) : ListDelegationAdapter<List<DisplayableItem>>(
     coinAdapterDelegate(onItemClicked),
-    insertAdapterDelegate(onInsertClicked)
+    insertAdapterDelegate(onInsertClicked),
+    gettingStartedAdapterDelegate()
 )
