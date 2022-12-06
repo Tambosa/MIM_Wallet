@@ -5,16 +5,29 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/night_mode_switch"
-        style="@style/TextLargeOnTertiary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/shape_medium_rounded_corners"
-        android:backgroundTint="?attr/colorTertiaryContainer"
-        android:padding="@dimen/padding_tertiary_container"
-        android:text="@string/dark_mode"
-        app:thumbTint="?attr/colorOnTertiaryContainer"
-        app:trackTint="?attr/colorTertiary" />
+    <LinearLayout
+        android:id="@+id/container"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/night_mode_switch"
+            style="@style/TextLargeOnTertiary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_medium_rounded_corners"
+            android:backgroundTint="?attr/colorTertiaryContainer"
+            android:padding="@dimen/padding_tertiary_container"
+            android:text="@string/dark_mode"
+            app:thumbTint="?attr/colorOnTertiaryContainer"
+            app:trackTint="?attr/colorTertiary" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/shadow_theme_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 </FrameLayout>

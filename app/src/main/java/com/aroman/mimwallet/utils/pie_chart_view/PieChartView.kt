@@ -60,7 +60,13 @@ class PieChartView @JvmOverloads constructor(
         }
         mainTextPaint.apply {
             isAntiAlias = true
-            color = Color.BLACK
+            val typedValue = TypedValue()
+            context.theme.resolveAttribute(
+                com.google.android.material.R.attr.colorOnPrimaryContainer,
+                typedValue,
+                true
+            )
+            color = typedValue.data
             alpha = 0
         }
         innerOvalPaint.apply {
