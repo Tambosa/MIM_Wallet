@@ -2,10 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?attr/colorPrimaryContainer">
+    android:layout_height="wrap_content">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/text_total_value"
         style="@style/TextLargeOnPrimary"
         android:layout_width="wrap_content"
@@ -14,7 +13,7 @@
         android:layout_marginStart="@dimen/margin_horizontal_view_children"
         tools:text="$ 268,200" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/text_24h_gain"
         style="@style/TextLargeOnPrimary"
         android:layout_width="wrap_content"
@@ -22,5 +21,4 @@
         android:layout_gravity="end|center"
         android:layout_marginEnd="@dimen/margin_horizontal_view_children"
         tools:text="+4.2%" />
-
 </FrameLayout>

@@ -1,13 +1,18 @@
 package com.aroman.mimwallet.presentation.wallet
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewAnimationUtils
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.core.animation.doOnEnd
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -17,16 +22,18 @@ import com.aroman.mimwallet.databinding.BottomSheetInsertBinding
 import com.aroman.mimwallet.databinding.FragmentWalletBinding
 import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.DisplayableGettingStarted
-import com.aroman.mimwallet.domain.model.DisplayableItem
 import com.aroman.mimwallet.domain.model.DisplayableInsert
+import com.aroman.mimwallet.domain.model.DisplayableItem
 import com.aroman.mimwallet.presentation.wallet.adapters.MainWalletAdapter
 import com.aroman.mimwallet.utils.*
 import com.aroman.mimwallet.utils.pie_chart_view.PieData
+import com.aroman.mimwallet.utils.theming.ThemeManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import kotlin.math.hypot
 
 
 @AndroidEntryPoint
@@ -53,6 +60,53 @@ class WalletFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViewModel()
         initRecycler()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.darkModeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) setTheme(ThemeManager.Theme.DARK)
+            else setTheme(ThemeManager.Theme.LIGHT)
+        }
+    }
+
+    private fun setTheme(theme: ThemeManager.Theme, animate: Boolean = true) {
+        if (!animate) {
+            ThemeManager.theme = theme
+            return
+        }
+
+        if (binding.shadowThemeImageView.isVisible) {
+            return
+        }
+
+        val w = binding.container.measuredWidth
+        val h = binding.container.measuredHeight
+
+        val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        binding.container.draw(canvas)
+
+        binding.shadowThemeImageView.setImageBitmap(bitmap)
+        binding.shadowThemeImageView.visibility = View.VISIBLE
+
+        val finalRadius = hypot(w.toFloat(), h.toFloat())
+
+        ThemeManager.theme = theme
+
+        val anim = ViewAnimationUtils.createCircularReveal(
+            binding.shadowThemeImageView,
+            w / 2,
+            h / 2,
+            finalRadius,
+            0f
+        )
+        anim.duration = 400L
+        anim.doOnEnd {
+            binding.shadowThemeImageView.setImageDrawable(null)
+            binding.shadowThemeImageView.visibility = View.GONE
+        }
+        anim.start()
     }
 
     private fun initViewModel() {
@@ -96,9 +150,6 @@ class WalletFragment : Fragment() {
         portfolioAdapter.notifyDataSetChanged()
 
         portfolio.data?.let { initPieChart(it) }
-        binding.switchPieChart.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) binding.pieChart.expandPieChart() else binding.pieChart.collapsePieChart()
-        }
     }
 
     private fun initPieChart(portfolio: List<DisplayableCoin>) {
@@ -144,7 +195,8 @@ class WalletFragment : Fragment() {
                 )
             }
         }
-        portfolioAdapter.items = listOf<DisplayableItem>(DisplayableGettingStarted, DisplayableInsert)
+        portfolioAdapter.items =
+            listOf<DisplayableItem>(DisplayableGettingStarted, DisplayableInsert)
     }
 
     override fun onDestroy() {
@@ -237,6 +289,7 @@ class WalletFragment : Fragment() {
     private fun onItemClicked(position: Int) {
         showInsertDialog(
             walletViewModel.portfolio.value!!.data!![position].symbol,
-            walletViewModel.portfolio.value!!.data!![position].count)
+            walletViewModel.portfolio.value!!.data!![position].count
+        )
     }
 }

@@ -11,6 +11,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.MotionEvent
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
@@ -162,7 +163,8 @@ class PieChartView @JvmOverloads constructor(
                 drawIndicators(canvas, it.value)
             }
         }
-        canvas?.drawArc(innerOval, 0f, 360f, false, innerOvalPaint)
+//        innerCircle
+//        canvas?.drawArc(innerOval, 0f, 360f, false, innerOvalPaint)
     }
 
     private fun drawIndicators(canvas: Canvas?, pieItem: PieSlice) {
@@ -208,13 +210,24 @@ class PieChartView @JvmOverloads constructor(
         )
     }
 
-    fun expandPieChart() {
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.action == MotionEvent.ACTION_DOWN) return true
+        if (event?.action == MotionEvent.ACTION_UP) {
+            when (pieState) {
+                PieState.MINIMIZED -> expandPieChart()
+                PieState.EXPANDED -> collapsePieChart()
+            }
+        }
+        return super.onTouchEvent(event)
+    }
+
+    private fun expandPieChart() {
         expandAnimator.setIntValues(layoutParams.height, (width / 2))
         textAlpha.setIntValues(0, 255)
         animateExpansion.start()
     }
 
-    fun collapsePieChart() {
+    private fun collapsePieChart() {
         initialHeight?.let {
             collapseAnimator.setIntValues(layoutParams.height, it)
             textAlpha.setIntValues(255, 0)

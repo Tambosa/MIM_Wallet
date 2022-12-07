@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/transparent">
+    android:id="@+id/container"
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/text_fragment_title"
                 style="@style/TextTitleStyleOnPrimary"
                 android:layout_width="wrap_content"
@@ -26,19 +26,20 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switch_pie_chart"
+                android:id="@+id/dark_mode_switch"
                 style="@style/TextLargeOnTertiary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_horizontal_view_children"
                 android:background="@drawable/shape_medium_rounded_corners"
-                android:backgroundTint="?attr/colorTertiaryContainer"
+                android:backgroundTint="@color/md_theme_dark_tertiaryContainer"
                 android:padding="@dimen/padding_tertiary_container"
-                android:text="@string/details"
+                android:text="@string/dark_mode"
+                android:textColor="@color/md_theme_dark_onTertiaryContainer"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/text_fragment_title"
-                app:thumbTint="?attr/colorOnTertiaryContainer"
-                app:trackTint="?attr/colorTertiary" />
+                app:thumbTint="@color/md_theme_dark_onTertiaryContainer"
+                app:trackTint="@color/md_theme_dark_tertiary" />
 
             <com.aroman.mimwallet.utils.pie_chart_view.PieChartView
                 android:id="@+id/pie_chart"
@@ -79,4 +80,11 @@
                 tools:listitem="@layout/item_coin" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <ImageView
+        android:elevation="1dp"
+        android:id="@+id/shadow_theme_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>
