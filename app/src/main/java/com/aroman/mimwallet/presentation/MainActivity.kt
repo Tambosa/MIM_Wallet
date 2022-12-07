@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.LayoutInflaterCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.databinding.ActivityMainBinding
 import com.aroman.mimwallet.presentation.wallet.WalletFragment
@@ -39,6 +38,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-
 }

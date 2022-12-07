@@ -73,10 +73,10 @@ class WalletFragment : Fragment() {
         binding.darkModeSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 sharedPreferences.edit().putInt(NIGHT_MODE, 1).apply()
-                setTheme(ThemeManager.Theme.DARK)
+                setTheme(ThemeManager.Theme.DARK, false)
             } else {
                 sharedPreferences.edit().putInt(NIGHT_MODE, 0).apply()
-                setTheme(ThemeManager.Theme.LIGHT)
+                setTheme(ThemeManager.Theme.LIGHT, false)
             }
         }
     }
@@ -87,11 +87,11 @@ class WalletFragment : Fragment() {
         when (sharedPreferences.getInt(NIGHT_MODE, 0)) {
             0 -> {
                 setTheme(ThemeManager.Theme.LIGHT, false)
-                binding.darkModeSwitch.isSelected = false
+                binding.darkModeSwitch.isChecked = false
             }
             else -> {
                 setTheme(ThemeManager.Theme.DARK, false)
-                binding.darkModeSwitch.isSelected = true
+                binding.darkModeSwitch.isChecked = true
             }
         }
     }
@@ -102,19 +102,14 @@ class WalletFragment : Fragment() {
             return
         }
 
-        if (binding.shadowThemeImageView.isVisible) {
-            return
-        }
-
         requireActivity().disableTouch()
-        val container = requireActivity().findViewById<ConstraintLayout>(R.id.container)
 
-        val w = container.measuredWidth
-        val h = container.measuredHeight
+        val w = binding.container.measuredWidth
+        val h = binding.container.measuredHeight
 
         val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        container.draw(canvas)
+        binding.container.draw(canvas)
 
         binding.shadowThemeImageView.setImageBitmap(bitmap)
         binding.shadowThemeImageView.visibility = View.VISIBLE
@@ -125,8 +120,8 @@ class WalletFragment : Fragment() {
 
         val anim = ViewAnimationUtils.createCircularReveal(
             binding.shadowThemeImageView,
-            w / 2,
-            h / 2,
+            w / 8,
+            h / 8,
             finalRadius,
             0f
         )
@@ -243,6 +238,8 @@ class WalletFragment : Fragment() {
         val dialogInsert = BottomSheetDialog(requireContext()).apply {
             setContentView(dialogBinding.root)
         }
+
+        dialogInsert.window?.setDimAmount(0f)
 
         initAutoCompleteCoin(coinList.map { it.name + ": " + it.symbol }, dialogBinding)
         dialogBinding.autocompleteCoin.setText(symbol)

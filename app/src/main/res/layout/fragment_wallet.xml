@@ -11,6 +11,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
+            android:id="@+id/container"
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -95,12 +96,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/container_header"
                 tools:listitem="@layout/item_coin" />
+
+            <ImageView
+                android:id="@+id/shadow_theme_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
-    <ImageView
-        android:id="@+id/shadow_theme_image_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>
