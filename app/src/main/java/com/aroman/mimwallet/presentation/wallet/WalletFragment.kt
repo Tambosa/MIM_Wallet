@@ -1,5 +1,7 @@
 package com.aroman.mimwallet.presentation.wallet
 
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -11,12 +13,14 @@ import android.view.ViewAnimationUtils
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.aroman.mimwallet.R
 import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.databinding.BottomSheetInsertBinding
 import com.aroman.mimwallet.databinding.FragmentWalletBinding
@@ -40,6 +44,7 @@ import kotlin.math.hypot
 class WalletFragment : Fragment() {
     private var _binding: FragmentWalletBinding? = null
     private val binding get() = _binding!!
+    private lateinit var sharedPreferences: SharedPreferences
     private val walletViewModel by viewModels<WalletViewModel>()
     private val portfolioAdapter = MainWalletAdapter(
         { position -> onItemClicked(position) },
@@ -64,9 +69,30 @@ class WalletFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        checkPrefsForTheme()
         binding.darkModeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) setTheme(ThemeManager.Theme.DARK)
-            else setTheme(ThemeManager.Theme.LIGHT)
+            if (isChecked) {
+                sharedPreferences.edit().putInt(NIGHT_MODE, 1).apply()
+                setTheme(ThemeManager.Theme.DARK)
+            } else {
+                sharedPreferences.edit().putInt(NIGHT_MODE, 0).apply()
+                setTheme(ThemeManager.Theme.LIGHT)
+            }
+        }
+    }
+
+    private fun checkPrefsForTheme() {
+        sharedPreferences =
+            requireActivity().getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE)
+        when (sharedPreferences.getInt(NIGHT_MODE, 0)) {
+            0 -> {
+                setTheme(ThemeManager.Theme.LIGHT, false)
+                binding.darkModeSwitch.isSelected = false
+            }
+            else -> {
+                setTheme(ThemeManager.Theme.DARK, false)
+                binding.darkModeSwitch.isSelected = true
+            }
         }
     }
 
@@ -80,12 +106,15 @@ class WalletFragment : Fragment() {
             return
         }
 
-        val w = binding.container.measuredWidth
-        val h = binding.container.measuredHeight
+        requireActivity().disableTouch()
+        val container = requireActivity().findViewById<ConstraintLayout>(R.id.container)
+
+        val w = container.measuredWidth
+        val h = container.measuredHeight
 
         val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        binding.container.draw(canvas)
+        container.draw(canvas)
 
         binding.shadowThemeImageView.setImageBitmap(bitmap)
         binding.shadowThemeImageView.visibility = View.VISIBLE
@@ -105,6 +134,7 @@ class WalletFragment : Fragment() {
         anim.doOnEnd {
             binding.shadowThemeImageView.setImageDrawable(null)
             binding.shadowThemeImageView.visibility = View.GONE
+            requireActivity().enableTouch()
         }
         anim.start()
     }
@@ -172,15 +202,15 @@ class WalletFragment : Fragment() {
 
         val priceFormat = DecimalFormat("$#.##")
         priceFormat.roundingMode = RoundingMode.CEILING
-        binding.includedHeader.textTotalValue.animateNumbers(2500, totalPrice, priceFormat)
+        binding.textTotalValue.animateNumbers(2500, totalPrice, priceFormat)
 
         val gainFormat = DecimalFormat("0.##'%'")
         gainFormat.roundingMode = RoundingMode.CEILING
-        binding.includedHeader.text24hGain.text = gainFormat.format(change)
+        binding.text24hGain.text = gainFormat.format(change)
         if (change > 0) {
-            binding.includedHeader.text24hGain.setTextColor(Color.GREEN)
+            binding.text24hGain.setTextColor(Color.GREEN)
         } else {
-            binding.includedHeader.text24hGain.setTextColor(Color.RED)
+            binding.text24hGain.setTextColor(Color.RED)
         }
     }
 
@@ -291,5 +321,9 @@ class WalletFragment : Fragment() {
             walletViewModel.portfolio.value!!.data!![position].symbol,
             walletViewModel.portfolio.value!!.data!![position].count
         )
+    }
+
+    companion object {
+        const val NIGHT_MODE = "night mode"
     }
 }

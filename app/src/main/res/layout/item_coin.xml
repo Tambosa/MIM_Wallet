@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_bottom_recycler_item"
+    android:background="@android:color/transparent"
     android:orientation="horizontal"
     android:paddingStart="@dimen/padding_horizontal_recycler_item"
     android:paddingTop="@dimen/padding_vertical_recycler_item"
@@ -16,6 +17,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@android:color/transparent"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -41,6 +43,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:background="@android:color/transparent"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -58,6 +61,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@android:color/transparent"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.AppCompatTextView

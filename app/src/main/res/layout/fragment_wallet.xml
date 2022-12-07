@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:id="@+id/container"
     android:layout_height="match_parent">
 
     <ScrollView
@@ -52,20 +51,38 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text_fragment_title" />
 
-            <FrameLayout
+            <LinearLayout
                 android:id="@+id/container_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:orientation="horizontal"
                 android:paddingTop="@dimen/padding_vertical_header"
                 android:paddingBottom="@dimen/padding_vertical_header"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pie_chart">
 
-                <include
-                    android:id="@+id/included_header"
-                    layout="@layout/header_simple" />
-            </FrameLayout>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/text_total_value"
+                    style="@style/TextLargeOnPrimary"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_horizontal_view_children"
+                    android:layout_weight="2"
+                    android:gravity="start"
+                    tools:text="$ 268,200" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/text_24h_gain"
+                    style="@style/TextLargeOnPrimary"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_horizontal_view_children"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    tools:text="+4.2%" />
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_coin"
@@ -82,7 +99,6 @@
     </ScrollView>
 
     <ImageView
-        android:elevation="1dp"
         android:id="@+id/shadow_theme_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

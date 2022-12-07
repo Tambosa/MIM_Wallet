@@ -19,7 +19,6 @@ class DynamicLayoutInflater (
     ): View? {
         return when (name) {
             "TextView" -> DynamicTextView(context, attrs)
-            "LinearLayout" -> DynamicLinearLayout(context, attrs)
             "ConstraintLayout" -> DynamicConstraintLayout(context, attrs)
             "FrameLayout" -> DynamicFrameLayout(context, attrs)
             "BottomNavigationView" -> DynamicBottomNavigationView(context, attrs)
