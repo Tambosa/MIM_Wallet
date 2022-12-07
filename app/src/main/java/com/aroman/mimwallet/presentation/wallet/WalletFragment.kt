@@ -3,7 +3,6 @@ package com.aroman.mimwallet.presentation.wallet
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -13,9 +12,7 @@ import android.view.ViewAnimationUtils
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
-import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -34,6 +31,7 @@ import com.aroman.mimwallet.utils.pie_chart_view.PieData
 import com.aroman.mimwallet.utils.theming.ThemeManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
+import com.jraska.falcon.Falcon
 import dagger.hilt.android.AndroidEntryPoint
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -73,10 +71,10 @@ class WalletFragment : Fragment() {
         binding.darkModeSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 sharedPreferences.edit().putInt(NIGHT_MODE, 1).apply()
-                setTheme(ThemeManager.Theme.DARK, false)
+                setTheme(ThemeManager.Theme.DARK, true)
             } else {
                 sharedPreferences.edit().putInt(NIGHT_MODE, 0).apply()
-                setTheme(ThemeManager.Theme.LIGHT, false)
+                setTheme(ThemeManager.Theme.LIGHT, true)
             }
         }
     }
@@ -107,9 +105,16 @@ class WalletFragment : Fragment() {
         val w = binding.container.measuredWidth
         val h = binding.container.measuredHeight
 
-        val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        binding.container.draw(canvas)
+        //get status bar height
+        var statusBarHeight = 0
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            statusBarHeight = resources.getDimensionPixelSize(resourceId)
+        }
+
+        //take bitmap screenshot
+        val windowBitmap = Falcon.takeScreenshotBitmap(activity)
+        val bitmap = Bitmap.createBitmap(windowBitmap, 0, statusBarHeight, w, h, null, true)
 
         binding.shadowThemeImageView.setImageBitmap(bitmap)
         binding.shadowThemeImageView.visibility = View.VISIBLE
@@ -120,12 +125,12 @@ class WalletFragment : Fragment() {
 
         val anim = ViewAnimationUtils.createCircularReveal(
             binding.shadowThemeImageView,
-            w / 8,
-            h / 8,
+            w / 2,
+            h / 2,
             finalRadius,
             0f
         )
-        anim.duration = 400L
+        anim.duration = 800L
         anim.doOnEnd {
             binding.shadowThemeImageView.setImageDrawable(null)
             binding.shadowThemeImageView.visibility = View.GONE
