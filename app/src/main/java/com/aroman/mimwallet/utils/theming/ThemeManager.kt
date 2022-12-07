@@ -26,26 +26,17 @@ object ThemeManager {
         val backgroundColor: Int
     )
 
-    data class BottomNavigationViewTheme(
-        @ColorRes
-        val backgroundColor: Int,
-    )
-
     enum class Theme(
         val textViewTheme: TextViewTheme,
         val viewGroupTheme: ViewGroupTheme,
-        val bottomNavigationViewTheme: BottomNavigationViewTheme,
     ) {
         DARK(
             textViewTheme = TextViewTheme(
                 textColor = R.color.md_theme_dark_onPrimaryContainer
             ),
             viewGroupTheme = ViewGroupTheme(
-                backgroundColor = R.color.md_theme_dark_primaryContainer
+                backgroundColor = R.color.md_theme_light_onPrimaryContainer
             ),
-            bottomNavigationViewTheme = BottomNavigationViewTheme(
-                backgroundColor = R.color.md_theme_dark_surfaceTint
-            )
         ),
         LIGHT(
             textViewTheme = TextViewTheme(
@@ -54,9 +45,6 @@ object ThemeManager {
             viewGroupTheme = ViewGroupTheme(
                 backgroundColor = R.color.md_theme_light_primaryContainer
             ),
-            bottomNavigationViewTheme = BottomNavigationViewTheme(
-                backgroundColor = R.color.md_theme_light_surfaceTint
-            )
         )
     }
 

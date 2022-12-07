@@ -3,6 +3,7 @@ package com.aroman.mimwallet.presentation
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.LayoutInflaterCompat
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.databinding.ActivityMainBinding
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
             LayoutInflater.from(this),
             DynamicLayoutInflater(delegate)
         )
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         checkPrefsForTheme()
 
         super.onCreate(savedInstanceState)

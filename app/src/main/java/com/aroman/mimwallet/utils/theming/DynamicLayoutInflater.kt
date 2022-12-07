@@ -21,7 +21,6 @@ class DynamicLayoutInflater (
             "androidx.appcompat.widget.AppCompatTextView" -> DynamicTextView(context, attrs)
             "ConstraintLayout" -> DynamicConstraintLayout(context, attrs)
             "FrameLayout" -> DynamicFrameLayout(context, attrs)
-            "BottomNavigationView" -> DynamicBottomNavigationView(context, attrs)
             else -> delegate.createView(parent, name, context, attrs)
         }
     }
