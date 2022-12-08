@@ -81,8 +81,16 @@ class WalletFragment : Fragment() {
         sharedPreferences =
             requireActivity().getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE)
         when (sharedPreferences.getInt(NIGHT_MODE, 0)) {
-            0 -> ThemeManager.theme = ThemeManager.Theme.LIGHT
-            else -> ThemeManager.theme = ThemeManager.Theme.DARK
+            0 -> {
+                ThemeManager.theme = ThemeManager.Theme.LIGHT
+                binding.darkModeButton.background =
+                    resources.getDrawable(R.drawable.ic_baseline_nights_stay_24, null)
+            }
+            else -> {
+                ThemeManager.theme = ThemeManager.Theme.DARK
+                binding.darkModeButton.background =
+                    resources.getDrawable(R.drawable.ic_baseline_wb_sunny_24, null)
+            }
         }
     }
 
@@ -161,9 +169,9 @@ class WalletFragment : Fragment() {
                 binding.shadowThemeImageView.visibility = View.GONE
                 when (ThemeManager.theme) {
                     ThemeManager.Theme.DARK -> binding.darkModeButton.background =
-                        resources.getDrawable(R.drawable.ic_baseline_nights_stay_24, null)
-                    ThemeManager.Theme.LIGHT -> binding.darkModeButton.background =
                         resources.getDrawable(R.drawable.ic_baseline_wb_sunny_24, null)
+                    ThemeManager.Theme.LIGHT -> binding.darkModeButton.background =
+                        resources.getDrawable(R.drawable.ic_baseline_nights_stay_24, null)
                 }
                 requireActivity().enableTouch()
             }
