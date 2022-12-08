@@ -18,7 +18,8 @@ class DynamicLayoutInflater (
         attrs: AttributeSet
     ): View? {
         return when (name) {
-            "androidx.appcompat.widget.AppCompatTextView" -> DynamicTextView(context, attrs)
+            "androidx.appcompat.widget.AppCompatTextView" -> DynamicAppCompatTextView(context, attrs)
+            "androidx.appcompat.widget.AppCompatImageButton" -> DynamicAppCompatImageButton(context, attrs)
             "ConstraintLayout" -> DynamicConstraintLayout(context, attrs)
             "FrameLayout" -> DynamicFrameLayout(context, attrs)
             else -> delegate.createView(parent, name, context, attrs)

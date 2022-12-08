@@ -10,9 +10,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -67,77 +71,107 @@ class WalletFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        checkPrefsForTheme()
-        binding.darkModeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                sharedPreferences.edit().putInt(NIGHT_MODE, 1).apply()
-                setTheme(ThemeManager.Theme.DARK, true)
-            } else {
-                sharedPreferences.edit().putInt(NIGHT_MODE, 0).apply()
-                setTheme(ThemeManager.Theme.LIGHT, true)
-            }
-        }
+        restoreTheme()
+        initThemeSwitch()
     }
 
-    private fun checkPrefsForTheme() {
+    //region theme
+
+    private fun restoreTheme() {
         sharedPreferences =
             requireActivity().getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE)
         when (sharedPreferences.getInt(NIGHT_MODE, 0)) {
-            0 -> {
-                setTheme(ThemeManager.Theme.LIGHT, false)
-                binding.darkModeSwitch.isChecked = false
-            }
-            else -> {
-                setTheme(ThemeManager.Theme.DARK, false)
-                binding.darkModeSwitch.isChecked = true
+            0 -> ThemeManager.theme = ThemeManager.Theme.LIGHT
+            else -> ThemeManager.theme = ThemeManager.Theme.DARK
+        }
+    }
+
+    private fun initThemeSwitch() {
+        binding.darkModeButton.setOnClickListener {
+            when (ThemeManager.theme) {
+                ThemeManager.Theme.DARK -> {
+                    setTheme(ThemeManager.Theme.LIGHT)
+                    sharedPreferences.edit().putInt(NIGHT_MODE, 0).apply()
+                }
+                ThemeManager.Theme.LIGHT -> {
+                    setTheme(ThemeManager.Theme.DARK)
+                    sharedPreferences.edit().putInt(NIGHT_MODE, 1).apply()
+                }
             }
         }
     }
 
-    private fun setTheme(theme: ThemeManager.Theme, animate: Boolean = true) {
-        if (!animate) {
-            ThemeManager.theme = theme
-            return
-        }
+    private fun setTheme(theme: ThemeManager.Theme) {
+        initScreenShot()
+        ThemeManager.theme = theme
+        initThemeAnimations()
+    }
 
-        requireActivity().disableTouch()
-
-        val w = binding.container.measuredWidth
-        val h = binding.container.measuredHeight
-
-        //get status bar height
+    private fun initScreenShot() {
         var statusBarHeight = 0
         val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
         if (resourceId > 0) {
             statusBarHeight = resources.getDimensionPixelSize(resourceId)
         }
-
-        //take bitmap screenshot
         val windowBitmap = Falcon.takeScreenshotBitmap(activity)
-        val bitmap = Bitmap.createBitmap(windowBitmap, 0, statusBarHeight, w, h, null, true)
-
+        val bitmap = Bitmap.createBitmap(
+            windowBitmap,
+            0,
+            statusBarHeight,
+            binding.container.measuredWidth,
+            binding.container.measuredHeight,
+            null,
+            true
+        )
         binding.shadowThemeImageView.setImageBitmap(bitmap)
         binding.shadowThemeImageView.visibility = View.VISIBLE
-
-        val finalRadius = hypot(w.toFloat(), h.toFloat())
-
-        ThemeManager.theme = theme
-
-        val anim = ViewAnimationUtils.createCircularReveal(
-            binding.shadowThemeImageView,
-            w / 2,
-            h / 2,
-            finalRadius,
-            0f
-        )
-        anim.duration = 800L
-        anim.doOnEnd {
-            binding.shadowThemeImageView.setImageDrawable(null)
-            binding.shadowThemeImageView.visibility = View.GONE
-            requireActivity().enableTouch()
-        }
-        anim.start()
     }
+
+    private fun initThemeAnimations() {
+        binding.darkModeButton.startAnimation(
+            RotateAnimation(
+                0f,
+                360f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f
+            ).apply {
+                duration = 1000L
+                interpolator = LinearInterpolator()
+            }
+        )
+
+        ViewAnimationUtils.createCircularReveal(
+            binding.shadowThemeImageView,
+            binding.darkModeButton.x.toInt() + 30,
+            binding.darkModeButton.y.toInt() + 30,
+            hypot(
+                binding.container.measuredWidth.toFloat(),
+                binding.container.measuredHeight.toFloat()
+            ),
+            0f
+        ).apply {
+            duration = 800L
+            doOnStart {
+                requireActivity().disableTouch()
+            }
+            doOnEnd {
+                binding.shadowThemeImageView.setImageDrawable(null)
+                binding.shadowThemeImageView.visibility = View.GONE
+                when (ThemeManager.theme) {
+                    ThemeManager.Theme.DARK -> binding.darkModeButton.background =
+                        resources.getDrawable(R.drawable.ic_baseline_nights_stay_24, null)
+                    ThemeManager.Theme.LIGHT -> binding.darkModeButton.background =
+                        resources.getDrawable(R.drawable.ic_baseline_wb_sunny_24, null)
+                }
+                requireActivity().enableTouch()
+            }
+            start()
+        }
+    }
+
+    //endregion
 
     private fun initViewModel() {
         subscribeToCoinList()
@@ -223,6 +257,9 @@ class WalletFragment : Fragment() {
                 walletViewModel.deleteCoin(
                     walletViewModel.portfolio.value!!.data!![vh.layoutPosition]
                 )
+            }
+            viewTreeObserver.addOnGlobalLayoutListener {
+                restoreTheme()
             }
         }
         portfolioAdapter.items =

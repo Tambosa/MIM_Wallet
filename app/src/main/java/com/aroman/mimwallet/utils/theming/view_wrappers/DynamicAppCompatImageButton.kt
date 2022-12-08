@@ -1,17 +1,19 @@
 package com.aroman.mimwallet.utils.theming.view_wrappers
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.ContextCompat
 import com.aroman.mimwallet.utils.theming.ThemeManager
 
-class DynamicTextView @JvmOverloads
+class DynamicAppCompatImageButton
+@JvmOverloads
 constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : AppCompatTextView(context, attrs, defStyleAttr),
+) : AppCompatImageButton(context, attrs, defStyleAttr),
     ThemeManager.ThemeChangedListener {
 
     override fun onFinishInflate() {
@@ -30,10 +32,10 @@ constructor(
     }
 
     override fun onThemeChanged(theme: ThemeManager.Theme) {
-        setTextColor(
+        backgroundTintList = ColorStateList.valueOf(
             ContextCompat.getColor(
                 context,
-                theme.textViewTheme.textColor
+                theme.imageButtonTheme.backgroundTint
             )
         )
     }

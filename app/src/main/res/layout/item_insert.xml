@@ -13,7 +13,6 @@
         android:layout_height="@dimen/size_add_button"
         android:layout_gravity="center"
         android:background="@drawable/ic_baseline_add_circle_outline_24"
-        android:backgroundTint="?attr/colorPrimary"
         android:clickable="true"
         android:focusable="true"
         android:paddingBottom="@dimen/navigation_bar_height" />

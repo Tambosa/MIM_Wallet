@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/container"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ScrollView
@@ -25,21 +25,31 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/dark_mode_switch"
-                style="@style/TextLargeOnTertiary"
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/dark_mode_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_horizontal_view_children"
-                android:background="@drawable/shape_medium_rounded_corners"
-                android:backgroundTint="@color/md_theme_dark_tertiaryContainer"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/ic_baseline_wb_sunny_24"
                 android:padding="@dimen/padding_tertiary_container"
-                android:text="@string/dark_mode"
-                android:textColor="@color/md_theme_dark_onTertiaryContainer"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/text_fragment_title"
-                app:thumbTint="@color/md_theme_dark_onTertiaryContainer"
-                app:trackTint="@color/md_theme_dark_tertiary" />
+                app:layout_constraintTop_toTopOf="@id/text_fragment_title" />
+
+            <!--            <androidx.appcompat.widget.SwitchCompat-->
+            <!--                android:id="@+id/dark_mode_switch"-->
+            <!--                style="@style/TextLargeOnTertiary"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginEnd="@dimen/margin_horizontal_view_children"-->
+            <!--                android:background="@drawable/shape_medium_rounded_corners"-->
+            <!--                android:backgroundTint="@color/md_theme_dark_tertiaryContainer"-->
+            <!--                android:padding="@dimen/padding_tertiary_container"-->
+            <!--                android:text="@string/dark_mode"-->
+            <!--                android:textColor="@color/md_theme_dark_onTertiaryContainer"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintTop_toTopOf="@id/text_fragment_title"-->
+            <!--                app:thumbTint="@color/md_theme_dark_onTertiaryContainer"-->
+            <!--                app:trackTint="@color/md_theme_dark_tertiary" />-->
 
             <com.aroman.mimwallet.utils.pie_chart_view.PieChartView
                 android:id="@+id/pie_chart"
@@ -74,7 +84,7 @@
                     android:gravity="start"
                     tools:text="$ 268,200" />
 
-                <androidx.appcompat.widget.AppCompatTextView
+                <TextView
                     android:id="@+id/text_24h_gain"
                     style="@style/TextLargeOnPrimary"
                     android:layout_width="0dp"

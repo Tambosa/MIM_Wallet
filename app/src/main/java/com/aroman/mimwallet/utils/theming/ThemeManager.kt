@@ -21,6 +21,12 @@ object ThemeManager {
         val textColor: Int
     )
 
+    data class ImageButtonTheme(
+        @ColorRes
+        val backgroundTint: Int
+    )
+
+
     data class ViewGroupTheme(
         @ColorRes
         val backgroundColor: Int
@@ -29,6 +35,7 @@ object ThemeManager {
     enum class Theme(
         val textViewTheme: TextViewTheme,
         val viewGroupTheme: ViewGroupTheme,
+        val imageButtonTheme: ImageButtonTheme,
     ) {
         DARK(
             textViewTheme = TextViewTheme(
@@ -37,6 +44,9 @@ object ThemeManager {
             viewGroupTheme = ViewGroupTheme(
                 backgroundColor = R.color.md_theme_light_onPrimaryContainer
             ),
+            imageButtonTheme = ImageButtonTheme(
+                backgroundTint = R.color.md_theme_dark_primary
+            )
         ),
         LIGHT(
             textViewTheme = TextViewTheme(
@@ -45,6 +55,9 @@ object ThemeManager {
             viewGroupTheme = ViewGroupTheme(
                 backgroundColor = R.color.md_theme_light_primaryContainer
             ),
+            imageButtonTheme = ImageButtonTheme(
+                backgroundTint = R.color.md_theme_light_primary
+            )
         )
     }
 

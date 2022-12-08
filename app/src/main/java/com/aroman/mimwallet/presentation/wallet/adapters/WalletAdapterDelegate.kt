@@ -9,6 +9,7 @@ import com.aroman.mimwallet.domain.model.DisplayableGettingStarted
 import com.aroman.mimwallet.domain.model.DisplayableInsert
 import com.aroman.mimwallet.domain.model.DisplayableItem
 import com.aroman.mimwallet.utils.animateNumbers
+import com.aroman.mimwallet.utils.theming.DynamicLayoutInflater
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import java.text.DecimalFormat
 
@@ -24,7 +25,6 @@ fun coinAdapterDelegate(
         bind {
             binding.coinName.text = item.name
             binding.coinCount.text = "${item.count} ${item.symbol}"
-//            binding.singleCoinPrice.text = DecimalFormat("$#,###,###.00").format(item.price)
             binding.totalPrice.animateNumbers(
                 2000,
                 item.price * item.count,
