@@ -213,18 +213,26 @@ class WalletFragment : Fragment() {
 
     private fun handleSuccessPortfolio(portfolio: ViewState.Success<List<DisplayableCoin>>) {
         Log.d("@@@", portfolio.toString())
-        setHeader(portfolio.data ?: emptyList())
-        val recyclerList = mutableListOf<DisplayableItem>().also {
-            it.addAll(portfolio.data ?: emptyList())
-            it.add(DisplayableInsert)
+        val recyclerList = mutableListOf<DisplayableItem>()
+        if (portfolio.data.isNullOrEmpty()) {
+            binding.textTotalValue.visibility = View.GONE
+            binding.text24hGain.visibility = View.GONE
+            binding.pieChart.visibility = View.GONE
+            recyclerList.add(DisplayableGettingStarted)
+            recyclerList.add(DisplayableInsert)
+        } else {
+            setHeader(portfolio.data)
+            recyclerList.addAll(portfolio.data)
+            recyclerList.add(DisplayableInsert)
+            initPieChart(portfolio.data)
         }
+
         portfolioAdapter.items = recyclerList
         portfolioAdapter.notifyDataSetChanged()
-
-        portfolio.data?.let { initPieChart(it) }
     }
 
     private fun initPieChart(portfolio: List<DisplayableCoin>) {
+        binding.pieChart.visibility = View.VISIBLE
         val pieData = PieData()
         for (coin in portfolio) {
             pieData.add(coin.symbol, coin.price * coin.count)
@@ -233,6 +241,8 @@ class WalletFragment : Fragment() {
     }
 
     private fun setHeader(portfolio: List<DisplayableCoin>) {
+        binding.textTotalValue.visibility = View.VISIBLE
+        binding.text24hGain.visibility = View.VISIBLE
         var totalPrice = 0.0
         var oldTotalPrice = 0.0
         for (coin in portfolio) {

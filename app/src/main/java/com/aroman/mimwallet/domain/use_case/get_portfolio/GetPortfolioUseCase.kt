@@ -17,27 +17,30 @@ class GetPortfolioUseCase @Inject constructor(
         try {
             emit(ViewState.Loading())
             val localCoins = localRepo.getAll()
-            val coinSymbols = localCoins.joinToString(separator = ",", transform = { it.symbol })
-            val coinDetailsList = remoteRepo.getCoinDetailsBySymbol(coinSymbols)
-            val resultList = mutableListOf<DisplayableCoin>()
-            for (localCoin in localCoins) {
-                resultList.add(
-                    DisplayableCoin(
-                        id = localCoin.id,
-                        name = localCoin.name,
-                        symbol = localCoin.symbol,
-                        count = localCoin.count,
-                        price = coinDetailsList[localCoin.symbol]!!.price,
-                        percentChange1h = coinDetailsList[localCoin.symbol]!!.percentChange1h,
-                        percentChange24h = coinDetailsList[localCoin.symbol]!!.percentChange24h,
-                        percentChange7d = coinDetailsList[localCoin.symbol]!!.percentChange7d,
-                        percentChange30d = coinDetailsList[localCoin.symbol]!!.percentChange30d,
-                        percentChange60d = coinDetailsList[localCoin.symbol]!!.percentChange60d,
-                        percentChange90d = coinDetailsList[localCoin.symbol]!!.percentChange90d,
+            if (localCoins.isNotEmpty()) {
+                val coinSymbols =
+                    localCoins.joinToString(separator = ",", transform = { it.symbol })
+                val coinDetailsList = remoteRepo.getCoinDetailsBySymbol(coinSymbols)
+                val resultList = mutableListOf<DisplayableCoin>()
+                for (localCoin in localCoins) {
+                    resultList.add(
+                        DisplayableCoin(
+                            id = localCoin.id,
+                            name = localCoin.name,
+                            symbol = localCoin.symbol,
+                            count = localCoin.count,
+                            price = coinDetailsList[localCoin.symbol]!!.price,
+                            percentChange1h = coinDetailsList[localCoin.symbol]!!.percentChange1h,
+                            percentChange24h = coinDetailsList[localCoin.symbol]!!.percentChange24h,
+                            percentChange7d = coinDetailsList[localCoin.symbol]!!.percentChange7d,
+                            percentChange30d = coinDetailsList[localCoin.symbol]!!.percentChange30d,
+                            percentChange60d = coinDetailsList[localCoin.symbol]!!.percentChange60d,
+                            percentChange90d = coinDetailsList[localCoin.symbol]!!.percentChange90d,
+                        )
                     )
-                )
-            }
-            emit(ViewState.Success(resultList))
+                }
+                emit(ViewState.Success(resultList))
+            } else emit(ViewState.Success(emptyList()))
         } catch (e: HttpException) {
             emit(ViewState.Error(e.localizedMessage ?: "Unknown Error"))
         } catch (e: IOException) {
