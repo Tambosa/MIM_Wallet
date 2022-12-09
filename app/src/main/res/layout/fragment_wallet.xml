@@ -70,7 +70,7 @@
                     tools:text="$ 268,200" />
 
                 <TextView
-                    android:id="@+id/text_24h_gain"
+                    android:id="@+id/text_timed_gain"
                     style="@style/TextLargeOnPrimary"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -79,6 +79,82 @@
                     android:gravity="end"
                     tools:text="+4.2%" />
             </LinearLayout>
+
+            <HorizontalScrollView
+                android:id="@+id/container_chip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:paddingStart="@dimen/padding_horizontal_recycler_item"
+                android:paddingTop="@dimen/padding_vertical_recycler_item"
+                android:paddingBottom="@dimen/padding_vertical_recycler_item"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/container_header">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group_gain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:checkedChip="@+id/chip_24h"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_1h"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/padding_horizontal_recycler_item"
+                        android:backgroundTint="@color/md_theme_dark_onSurface"
+                        android:text="@string/_1h" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_24h"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/padding_horizontal_recycler_item"
+                        android:backgroundTint="@color/md_theme_dark_onSurface"
+                        android:text="@string/_24h" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_7d"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/padding_horizontal_recycler_item"
+                        android:backgroundTint="@color/md_theme_dark_onSurface"
+                        android:text="@string/_7d" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_30d"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/padding_horizontal_recycler_item"
+                        android:backgroundTint="@color/md_theme_dark_onSurface"
+                        android:text="@string/_30d" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_60d"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/padding_horizontal_recycler_item"
+                        android:backgroundTint="@color/md_theme_dark_onSurface"
+                        android:text="@string/_60d" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_90d"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/padding_horizontal_recycler_item"
+                        android:backgroundTint="@color/md_theme_dark_onSurface"
+                        android:text="@string/_90d" />
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_coin"
@@ -89,7 +165,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/container_header"
+                app:layout_constraintTop_toBottomOf="@id/container_chip"
                 tools:listitem="@layout/item_coin" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

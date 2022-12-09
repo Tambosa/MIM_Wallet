@@ -12,10 +12,10 @@ import java.text.DecimalFormat
 
 fun TextView.animateNumbers(duration: Long, number: Double, formatter: DecimalFormat) {
     ValueAnimator().apply {
-        setObjectValues(0.0, number)
+        setObjectValues(number*0.9, number)
         setDuration(duration)
         addUpdateListener {
-            this@animateNumbers.text = String.format("%.2f", it.animatedValue)
+            this@animateNumbers.text = String.format("$%.2f", it.animatedValue)
         }
         setEvaluator(TypeEvaluator<Double> { fraction, startValue, endValue ->
             startValue + (endValue - startValue) * fraction

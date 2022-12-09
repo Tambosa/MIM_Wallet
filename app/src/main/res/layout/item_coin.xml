@@ -59,7 +59,7 @@
             tools:text="84.2 K" />
 
         <TextView
-            android:id="@+id/total_price_24h_change"
+            android:id="@+id/total_price_timed_change"
             style="@style/TextRecyclerItemSecondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

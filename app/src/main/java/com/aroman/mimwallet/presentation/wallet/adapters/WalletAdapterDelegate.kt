@@ -8,13 +8,14 @@ import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.DisplayableGettingStarted
 import com.aroman.mimwallet.domain.model.DisplayableInsert
 import com.aroman.mimwallet.domain.model.DisplayableItem
+import com.aroman.mimwallet.presentation.wallet.WalletFragment
 import com.aroman.mimwallet.utils.animateNumbers
-import com.aroman.mimwallet.utils.theming.DynamicLayoutInflater
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import java.text.DecimalFormat
 
 fun coinAdapterDelegate(
     onItemClicked: (position: Int) -> Unit,
+    onChipSelected: (DisplayableCoin) -> Double,
 ) =
     adapterDelegateViewBinding<DisplayableCoin, DisplayableItem, ItemCoinBinding>({ layoutInflater, root ->
         ItemCoinBinding.inflate(layoutInflater, root, false)
@@ -26,17 +27,16 @@ fun coinAdapterDelegate(
             binding.coinName.text = item.name
             binding.coinCount.text = "${item.count} ${item.symbol}"
             binding.totalPrice.animateNumbers(
-                2000,
+                WalletFragment.NUMBER_ANIMATION_LENGTH,
                 item.price * item.count,
                 DecimalFormat("$#,###,###.00")
             )
-            binding.totalPrice24hChange.text =
-                DecimalFormat("0.##'%'").format(item.percentChange24h)
-
-            if (item.percentChange24h > 0) {
-                binding.totalPrice24hChange.setTextColor(Color.GREEN)
+            val percentGain = onChipSelected(item)
+            binding.totalPriceTimedChange.text = DecimalFormat("0.##'%'").format(percentGain)
+            if (percentGain > 0) {
+                binding.totalPriceTimedChange.setTextColor(Color.GREEN)
             } else {
-                binding.totalPrice24hChange.setTextColor(Color.RED)
+                binding.totalPriceTimedChange.setTextColor(Color.RED)
             }
         }
     }

@@ -50,9 +50,12 @@ class WalletFragment : Fragment() {
     private val walletViewModel by viewModels<WalletViewModel>()
     private val portfolioAdapter = MainWalletAdapter(
         { position -> onItemClicked(position) },
-        { onInsertClicked() })
+        { coin -> onChipChecked(coin) },
+        { onInsertClicked() }
+    )
 
     private var coinList = listOf<DisplayableCoin>()
+    private var checkedChip = R.id.chip_7d
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -216,12 +219,14 @@ class WalletFragment : Fragment() {
         val recyclerList = mutableListOf<DisplayableItem>()
         if (portfolio.data.isNullOrEmpty()) {
             binding.textTotalValue.visibility = View.GONE
-            binding.text24hGain.visibility = View.GONE
+            binding.textTimedGain.visibility = View.GONE
             binding.pieChart.visibility = View.GONE
+            binding.containerChip.visibility = View.GONE
             recyclerList.add(DisplayableGettingStarted)
             recyclerList.add(DisplayableInsert)
         } else {
             setHeader(portfolio.data)
+            initChips()
             recyclerList.addAll(portfolio.data)
             recyclerList.add(DisplayableInsert)
             initPieChart(portfolio.data)
@@ -229,6 +234,18 @@ class WalletFragment : Fragment() {
 
         portfolioAdapter.items = recyclerList
         portfolioAdapter.notifyDataSetChanged()
+    }
+
+    private fun initChips() {
+        binding.containerChip.visibility = View.VISIBLE
+        binding.chipGroupGain.setOnCheckedStateChangeListener { _, checkedIds ->
+            if (checkedIds.isNotEmpty()) {
+                checkedChip = checkedIds[0]
+                portfolioAdapter.notifyDataSetChanged()
+            } else {
+                binding.chipGroupGain.check(checkedChip)
+            }
+        }
     }
 
     private fun initPieChart(portfolio: List<DisplayableCoin>) {
@@ -242,27 +259,38 @@ class WalletFragment : Fragment() {
 
     private fun setHeader(portfolio: List<DisplayableCoin>) {
         binding.textTotalValue.visibility = View.VISIBLE
-        binding.text24hGain.visibility = View.VISIBLE
+        binding.textTimedGain.visibility = View.VISIBLE
         var totalPrice = 0.0
         var oldTotalPrice = 0.0
         for (coin in portfolio) {
             totalPrice += coin.count * coin.price
-            val differ = (coin.count * coin.price * (coin.percentChange24h / 100))
+            val differ = (coin.count * coin.price * (when (checkedChip) {
+                R.id.chip_1h -> coin.percentChange1h
+                R.id.chip_7d -> coin.percentChange7d
+                R.id.chip_30d -> coin.percentChange30d
+                R.id.chip_60d -> coin.percentChange60d
+                R.id.chip_90d -> coin.percentChange90d
+                else -> coin.percentChange24h
+            } / 100))
             oldTotalPrice += ((coin.count * coin.price) + differ)
         }
         val change = ((oldTotalPrice - totalPrice) / totalPrice) * 100
 
         val priceFormat = DecimalFormat("$#.##")
         priceFormat.roundingMode = RoundingMode.CEILING
-        binding.textTotalValue.animateNumbers(2500, totalPrice, priceFormat)
+        binding.textTotalValue.animateNumbers(
+            WalletFragment.NUMBER_ANIMATION_LENGTH,
+            totalPrice,
+            priceFormat
+        )
 
         val gainFormat = DecimalFormat("0.##'%'")
         gainFormat.roundingMode = RoundingMode.CEILING
-        binding.text24hGain.text = gainFormat.format(change)
+        binding.textTimedGain.text = gainFormat.format(change)
         if (change > 0) {
-            binding.text24hGain.setTextColor(Color.GREEN)
+            binding.textTimedGain.setTextColor(Color.GREEN)
         } else {
-            binding.text24hGain.setTextColor(Color.RED)
+            binding.textTimedGain.setTextColor(Color.RED)
         }
     }
 
@@ -281,7 +309,7 @@ class WalletFragment : Fragment() {
             }
         }
         portfolioAdapter.items =
-            listOf<DisplayableItem>(DisplayableGettingStarted, DisplayableInsert)
+            listOf(DisplayableGettingStarted, DisplayableInsert)
     }
 
     override fun onDestroy() {
@@ -380,7 +408,20 @@ class WalletFragment : Fragment() {
         )
     }
 
+    private fun onChipChecked(coin: DisplayableCoin): Double {
+        walletViewModel.portfolio.value?.data?.let { setHeader(it) }
+        return when (checkedChip) {
+            R.id.chip_1h -> coin.percentChange1h
+            R.id.chip_7d -> coin.percentChange7d
+            R.id.chip_30d -> coin.percentChange30d
+            R.id.chip_60d -> coin.percentChange60d
+            R.id.chip_90d -> coin.percentChange90d
+            else -> coin.percentChange24h
+        }
+    }
+
     companion object {
         const val NIGHT_MODE = "night mode"
+        const val NUMBER_ANIMATION_LENGTH = 800L
     }
 }
