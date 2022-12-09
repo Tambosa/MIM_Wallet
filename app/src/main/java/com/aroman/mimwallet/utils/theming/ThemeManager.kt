@@ -32,10 +32,20 @@ object ThemeManager {
         val backgroundColor: Int
     )
 
+    data class ChipTheme(
+        @ColorRes
+        val backgroundTint: Int,
+        @ColorRes
+        val selectedBackgroundTint: Int,
+        @ColorRes
+        val textColor: Int
+    )
+
     enum class Theme(
         val textViewTheme: TextViewTheme,
         val viewGroupTheme: ViewGroupTheme,
         val imageButtonTheme: ImageButtonTheme,
+        val chipTheme: ChipTheme,
     ) {
         DARK(
             textViewTheme = TextViewTheme(
@@ -46,6 +56,11 @@ object ThemeManager {
             ),
             imageButtonTheme = ImageButtonTheme(
                 backgroundTint = R.color.md_theme_dark_primary
+            ),
+            chipTheme = ChipTheme(
+                backgroundTint = R.color.md_theme_dark_secondaryContainer,
+                selectedBackgroundTint = R.color.md_theme_dark_tertiaryContainer,
+                textColor = R.color.md_theme_dark_onSecondaryContainer
             )
         ),
         LIGHT(
@@ -57,6 +72,11 @@ object ThemeManager {
             ),
             imageButtonTheme = ImageButtonTheme(
                 backgroundTint = R.color.md_theme_light_primary
+            ),
+            chipTheme = ChipTheme(
+                backgroundTint = R.color.md_theme_light_secondaryContainer,
+                selectedBackgroundTint = R.color.md_theme_light_tertiaryContainer,
+                textColor = R.color.md_theme_light_onSecondaryContainer
             )
         )
     }

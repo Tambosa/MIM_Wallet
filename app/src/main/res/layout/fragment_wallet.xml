@@ -106,7 +106,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/padding_horizontal_recycler_item"
-                        android:backgroundTint="@color/md_theme_dark_onSurface"
                         android:text="@string/_1h" />
 
                     <com.google.android.material.chip.Chip
@@ -115,7 +114,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/padding_horizontal_recycler_item"
-                        android:backgroundTint="@color/md_theme_dark_onSurface"
                         android:text="@string/_24h" />
 
                     <com.google.android.material.chip.Chip
@@ -124,7 +122,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/padding_horizontal_recycler_item"
-                        android:backgroundTint="@color/md_theme_dark_onSurface"
                         android:text="@string/_7d" />
 
                     <com.google.android.material.chip.Chip
@@ -133,7 +130,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/padding_horizontal_recycler_item"
-                        android:backgroundTint="@color/md_theme_dark_onSurface"
                         android:text="@string/_30d" />
 
                     <com.google.android.material.chip.Chip
@@ -142,7 +138,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/padding_horizontal_recycler_item"
-                        android:backgroundTint="@color/md_theme_dark_onSurface"
                         android:text="@string/_60d" />
 
                     <com.google.android.material.chip.Chip
@@ -151,7 +146,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/padding_horizontal_recycler_item"
-                        android:backgroundTint="@color/md_theme_dark_onSurface"
                         android:text="@string/_90d" />
                 </com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>

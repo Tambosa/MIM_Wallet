@@ -22,6 +22,7 @@ class DynamicLayoutInflater (
             "androidx.appcompat.widget.AppCompatImageButton" -> DynamicAppCompatImageButton(context, attrs)
             "ConstraintLayout" -> DynamicConstraintLayout(context, attrs)
             "FrameLayout" -> DynamicFrameLayout(context, attrs)
+            "com.google.android.material.chip.Chip" -> DynamicChip(context, attrs)
             else -> delegate.createView(parent, name, context, attrs)
         }
     }
