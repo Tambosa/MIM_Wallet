@@ -2,27 +2,23 @@ package com.aroman.mimwallet.utils
 
 import android.animation.Animator
 import android.animation.Animator.AnimatorListener
-import android.animation.AnimatorListenerAdapter
 import android.animation.TypeEvaluator
 import android.animation.ValueAnimator
 import android.widget.TextView
-import androidx.core.animation.addListener
-import androidx.core.animation.doOnEnd
-import java.text.DecimalFormat
 
-fun TextView.animateNumbers(duration: Long, number: Double, formatter: DecimalFormat) {
+fun TextView.animatePriceNumbers(duration: Long, number: Double) {
     ValueAnimator().apply {
         setObjectValues(number*0.9, number)
         setDuration(duration)
         addUpdateListener {
-            this@animateNumbers.text = String.format("$%.2f", it.animatedValue)
+            this@animatePriceNumbers.text = String.format("$%.2f", it.animatedValue)
         }
         setEvaluator(TypeEvaluator<Double> { fraction, startValue, endValue ->
             startValue + (endValue - startValue) * fraction
         })
         addListener(object: AnimatorListener {
             override fun onAnimationEnd(p0: Animator?) {
-                this@animateNumbers.text = formatter.format(number)
+                this@animatePriceNumbers.text = String.format("$%.2f", number)
             }
 
             override fun onAnimationStart(p0: Animator?) {}

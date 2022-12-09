@@ -257,7 +257,7 @@ class WalletFragment : Fragment() {
         binding.pieChart.setData(pieData)
     }
 
-    private fun setHeader(portfolio: List<DisplayableCoin>) {
+    private fun setHeader(portfolio: List<DisplayableCoin>, animateNumber: Boolean = true) {
         binding.textTotalValue.visibility = View.VISIBLE
         binding.textTimedGain.visibility = View.VISIBLE
         var totalPrice = 0.0
@@ -276,13 +276,14 @@ class WalletFragment : Fragment() {
         }
         val change = ((oldTotalPrice - totalPrice) / totalPrice) * 100
 
-        val priceFormat = DecimalFormat("$#.##")
-        priceFormat.roundingMode = RoundingMode.CEILING
-        binding.textTotalValue.animateNumbers(
-            WalletFragment.NUMBER_ANIMATION_LENGTH,
-            totalPrice,
-            priceFormat
-        )
+        if (animateNumber) {
+            binding.textTotalValue.animatePriceNumbers(
+                NUMBER_ANIMATION_LENGTH,
+                totalPrice,
+            )
+        } else {
+            binding.textTotalValue.text = String.format("$%.2f", totalPrice)
+        }
 
         val gainFormat = DecimalFormat("0.##'%'")
         gainFormat.roundingMode = RoundingMode.CEILING
@@ -409,7 +410,7 @@ class WalletFragment : Fragment() {
     }
 
     private fun onChipChecked(coin: DisplayableCoin): Double {
-        walletViewModel.portfolio.value?.data?.let { setHeader(it) }
+        walletViewModel.portfolio.value?.data?.let { setHeader(it, false) }
         return when (checkedChip) {
             R.id.chip_1h -> coin.percentChange1h
             R.id.chip_7d -> coin.percentChange7d

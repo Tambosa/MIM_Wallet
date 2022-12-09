@@ -9,7 +9,6 @@ import com.aroman.mimwallet.domain.model.DisplayableGettingStarted
 import com.aroman.mimwallet.domain.model.DisplayableInsert
 import com.aroman.mimwallet.domain.model.DisplayableItem
 import com.aroman.mimwallet.presentation.wallet.WalletFragment
-import com.aroman.mimwallet.utils.animateNumbers
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import java.text.DecimalFormat
 
@@ -26,11 +25,8 @@ fun coinAdapterDelegate(
         bind {
             binding.coinName.text = item.name
             binding.coinCount.text = "${item.count} ${item.symbol}"
-            binding.totalPrice.animateNumbers(
-                WalletFragment.NUMBER_ANIMATION_LENGTH,
-                item.price * item.count,
-                DecimalFormat("$#,###,###.00")
-            )
+            binding.totalPrice.text = DecimalFormat("$#,###,###.00").format(item.price * item.count)
+
             val percentGain = onChipSelected(item)
             binding.totalPriceTimedChange.text = DecimalFormat("0.##'%'").format(percentGain)
             if (percentGain > 0) {
