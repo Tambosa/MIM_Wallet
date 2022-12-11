@@ -25,10 +25,7 @@ import com.aroman.mimwallet.R
 import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.databinding.BottomSheetInsertBinding
 import com.aroman.mimwallet.databinding.FragmentWalletBinding
-import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.domain.model.DisplayableGettingStarted
-import com.aroman.mimwallet.domain.model.DisplayableInsert
-import com.aroman.mimwallet.domain.model.DisplayableItem
+import com.aroman.mimwallet.domain.model.*
 import com.aroman.mimwallet.presentation.wallet.adapters.MainWalletAdapter
 import com.aroman.mimwallet.utils.*
 import com.aroman.mimwallet.utils.pie_chart_view.PieData
@@ -55,7 +52,7 @@ class WalletFragment : Fragment() {
     )
 
     private var coinList = listOf<DisplayableCoin>()
-    private var checkedChip = R.id.chip_7d
+    private var checkedChip = R.id.chip_24h
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -206,7 +203,7 @@ class WalletFragment : Fragment() {
     private fun subscribeToPortfolio() {
         walletViewModel.portfolio.observe(viewLifecycleOwner) { portfolio ->
             when (portfolio) {
-                is ViewState.Success -> handleSuccessPortfolio(portfolio)
+                is ViewState.Success -> portfolio.data?.let { handleSuccessPortfolio(it) }
                 is ViewState.Loading -> {}
                 is ViewState.Error -> requireActivity().showMessage(portfolio.message)
             }
@@ -214,10 +211,10 @@ class WalletFragment : Fragment() {
         walletViewModel.getPortfolio()
     }
 
-    private fun handleSuccessPortfolio(portfolio: ViewState.Success<List<DisplayableCoin>>) {
+    private fun handleSuccessPortfolio(portfolio: Portfolio) {
         Log.d("@@@", portfolio.toString())
         val recyclerList = mutableListOf<DisplayableItem>()
-        if (portfolio.data.isNullOrEmpty()) {
+        if (portfolio.coinList.isNullOrEmpty()) {
             binding.textTotalValue.visibility = View.GONE
             binding.textTimedGain.visibility = View.GONE
             binding.pieChart.visibility = View.GONE
@@ -225,11 +222,11 @@ class WalletFragment : Fragment() {
             recyclerList.add(DisplayableGettingStarted)
             recyclerList.add(DisplayableInsert)
         } else {
-            setHeader(portfolio.data)
+            setHeader(portfolio)
             initChips()
-            recyclerList.addAll(portfolio.data)
+            recyclerList.addAll(portfolio.coinList)
             recyclerList.add(DisplayableInsert)
-            initPieChart(portfolio.data)
+            initPieChart(portfolio.coinList)
         }
 
         portfolioAdapter.items = recyclerList
@@ -257,38 +254,32 @@ class WalletFragment : Fragment() {
         binding.pieChart.setData(pieData)
     }
 
-    private fun setHeader(portfolio: List<DisplayableCoin>, animateNumber: Boolean = true) {
+    private fun setHeader(portfolio: Portfolio, animateNumber: Boolean = true) {
         binding.textTotalValue.visibility = View.VISIBLE
         binding.textTimedGain.visibility = View.VISIBLE
-        var totalPrice = 0.0
-        var oldTotalPrice = 0.0
-        for (coin in portfolio) {
-            totalPrice += coin.count * coin.price
-            val differ = (coin.count * coin.price * (when (checkedChip) {
-                R.id.chip_1h -> coin.percentChange1h
-                R.id.chip_7d -> coin.percentChange7d
-                R.id.chip_30d -> coin.percentChange30d
-                R.id.chip_60d -> coin.percentChange60d
-                R.id.chip_90d -> coin.percentChange90d
-                else -> coin.percentChange24h
-            } / 100))
-            oldTotalPrice += ((coin.count * coin.price) + differ)
+
+        val percentChange = when (checkedChip) {
+            R.id.chip_1h -> portfolio.totalPercentChange1h
+            R.id.chip_7d -> portfolio.totalPercentChange7d
+            R.id.chip_30d -> portfolio.totalPercentChange30d
+            R.id.chip_60d -> portfolio.totalPercentChange60d
+            R.id.chip_90d -> portfolio.totalPercentChange90d
+            else -> portfolio.totalPercentChange24h
         }
-        val change = ((oldTotalPrice - totalPrice) / totalPrice) * 100
 
         if (animateNumber) {
             binding.textTotalValue.animatePriceNumbers(
                 NUMBER_ANIMATION_LENGTH,
-                totalPrice,
+                portfolio.totalPrice,
             )
         } else {
-            binding.textTotalValue.text = String.format("$%.2f", totalPrice)
+            binding.textTotalValue.text = String.format("$%.2f", portfolio.totalPrice)
         }
 
-        val gainFormat = DecimalFormat("0.##'%'")
-        gainFormat.roundingMode = RoundingMode.CEILING
-        binding.textTimedGain.text = gainFormat.format(change)
-        if (change > 0) {
+        val percentFormat = DecimalFormat("0.##'%'")
+        percentFormat.roundingMode = RoundingMode.CEILING
+        binding.textTimedGain.text = percentFormat.format(percentChange)
+        if (percentChange > 0) {
             binding.textTimedGain.setTextColor(Color.GREEN)
         } else {
             binding.textTimedGain.setTextColor(Color.RED)
@@ -302,7 +293,7 @@ class WalletFragment : Fragment() {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             attachLeftSwipeHelper { vh ->
                 walletViewModel.deleteCoin(
-                    walletViewModel.portfolio.value!!.data!![vh.layoutPosition]
+                    walletViewModel.portfolio.value!!.data!!.coinList[vh.layoutPosition]
                 )
             }
             viewTreeObserver.addOnGlobalLayoutListener {
@@ -404,8 +395,8 @@ class WalletFragment : Fragment() {
 
     private fun onItemClicked(position: Int) {
         showInsertDialog(
-            walletViewModel.portfolio.value!!.data!![position].symbol,
-            walletViewModel.portfolio.value!!.data!![position].count
+            walletViewModel.portfolio.value!!.data!!.coinList[position].symbol,
+            walletViewModel.portfolio.value!!.data!!.coinList[position].count
         )
     }
 
