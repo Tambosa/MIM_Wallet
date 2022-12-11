@@ -35,7 +35,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/text_fragment_title" />
 
-            <com.aroman.mimwallet.utils.pie_chart_view.PieChartView
+            <com.aroman.mimwallet.utils.pie_chart_view.DynamicPieChartView
                 android:id="@+id/pie_chart"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/pie_chart_height"
