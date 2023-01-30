@@ -3,6 +3,8 @@
 ## Приложение показывающие цены на криптовалюты
 
 
+https://user-images.githubusercontent.com/73552496/215429488-061e243e-ce79-43cf-b683-f1dc2fbd323f.mp4
+
 
 ### Features
 
