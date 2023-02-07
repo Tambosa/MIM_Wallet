@@ -1,5 +1,5 @@
-
 <resources>
+
     <style name="Theme.MIMWallet" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
@@ -30,6 +30,10 @@
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
 
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <item name="android:statusBarColor">@color/md_theme_light_onSecondaryContainer</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:navigationBarColor">@color/md_theme_light_onSecondaryContainer</item>
+        <item name="android:windowLightNavigationBar">false</item>
     </style>
 
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">

@@ -9,14 +9,4 @@
         android:name="com.aroman.mimwallet.presentation.wallet.WalletFragment"
         android:label="WalletFragment"
         tools:layout="@layout/fragment_wallet" />
-    <fragment
-        android:id="@+id/alertFragment"
-        android:name="com.aroman.mimwallet.presentation.alert.AlertFragment"
-        android:label="WalletFragment"
-        tools:layout="@layout/fragment_alert" />
-    <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.aroman.mimwallet.presentation.settings.SettingsFragment"
-        android:label="SettingsFragment"
-        tools:layout="@layout/fragment_settings" />
 </navigation>

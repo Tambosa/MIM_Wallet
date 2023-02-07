@@ -11,15 +11,17 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.MotionEvent
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
+import com.aroman.mimwallet.utils.theming.ThemeManager
 import kotlin.math.cos
 import kotlin.math.sin
 
-class PieChartView @JvmOverloads constructor(
+class DynamicPieChartView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+) : View(context, attrs, defStyleAttr), ThemeManager.ThemeChangedListener {
     private var data: PieData? = null
 
     private var pieState = PieState.MINIMIZED
@@ -56,17 +58,6 @@ class PieChartView @JvmOverloads constructor(
             style = Paint.Style.STROKE
             isAntiAlias = true
             color = Color.LTGRAY
-            alpha = 0
-        }
-        mainTextPaint.apply {
-            isAntiAlias = true
-            val typedValue = TypedValue()
-            context.theme.resolveAttribute(
-                com.google.android.material.R.attr.colorOnPrimaryContainer,
-                typedValue,
-                true
-            )
-            color = typedValue.data
             alpha = 0
         }
         innerOvalPaint.apply {
@@ -162,7 +153,8 @@ class PieChartView @JvmOverloads constructor(
                 drawIndicators(canvas, it.value)
             }
         }
-        canvas?.drawArc(innerOval, 0f, 360f, false, innerOvalPaint)
+//        innerCircle
+//        canvas?.drawArc(innerOval, 0f, 360f, false, innerOvalPaint)
     }
 
     private fun drawIndicators(canvas: Canvas?, pieItem: PieSlice) {
@@ -208,13 +200,24 @@ class PieChartView @JvmOverloads constructor(
         )
     }
 
-    fun expandPieChart() {
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.action == MotionEvent.ACTION_DOWN) return true
+        if (event?.action == MotionEvent.ACTION_UP) {
+            when (pieState) {
+                PieState.MINIMIZED -> expandPieChart()
+                PieState.EXPANDED -> collapsePieChart()
+            }
+        }
+        return super.onTouchEvent(event)
+    }
+
+    private fun expandPieChart() {
         expandAnimator.setIntValues(layoutParams.height, (width / 2))
         textAlpha.setIntValues(0, 255)
         animateExpansion.start()
     }
 
-    fun collapsePieChart() {
+    private fun collapsePieChart() {
         initialHeight?.let {
             collapseAnimator.setIntValues(layoutParams.height, it)
             textAlpha.setIntValues(255, 0)
@@ -271,6 +274,30 @@ class PieChartView @JvmOverloads constructor(
 
         animateExpansion.play(expandAnimator).with(textAlpha)
         animateCollapse.play(collapseAnimator).with(textAlpha)
+    }
+
+    override fun onFinishInflate() {
+        super.onFinishInflate()
+        ThemeManager.addListener(this)
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        ThemeManager.addListener(this)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        ThemeManager.removeListener(this)
+    }
+
+    override fun onThemeChanged(theme: ThemeManager.Theme) {
+        mainTextPaint.apply {
+            isAntiAlias = true
+            color = resources.getColor(theme.textViewTheme.textColor, null)
+            alpha = if (pieState == PieState.MINIMIZED) 0 else 255
+        }
+        invalidate()
     }
 
     enum class IndicatorAlignment {

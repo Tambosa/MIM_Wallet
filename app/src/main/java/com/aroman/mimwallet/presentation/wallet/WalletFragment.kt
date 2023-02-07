@@ -1,44 +1,58 @@
 package com.aroman.mimwallet.presentation.wallet
 
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewAnimationUtils
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.aroman.mimwallet.R
 import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.databinding.BottomSheetInsertBinding
 import com.aroman.mimwallet.databinding.FragmentWalletBinding
-import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.domain.model.DisplayableGettingStarted
-import com.aroman.mimwallet.domain.model.DisplayableItem
-import com.aroman.mimwallet.domain.model.DisplayableInsert
+import com.aroman.mimwallet.domain.model.*
 import com.aroman.mimwallet.presentation.wallet.adapters.MainWalletAdapter
 import com.aroman.mimwallet.utils.*
 import com.aroman.mimwallet.utils.pie_chart_view.PieData
+import com.aroman.mimwallet.utils.theming.ThemeManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
+import com.jraska.falcon.Falcon
 import dagger.hilt.android.AndroidEntryPoint
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import kotlin.math.hypot
 
 
 @AndroidEntryPoint
 class WalletFragment : Fragment() {
     private var _binding: FragmentWalletBinding? = null
     private val binding get() = _binding!!
+    private lateinit var sharedPreferences: SharedPreferences
     private val walletViewModel by viewModels<WalletViewModel>()
     private val portfolioAdapter = MainWalletAdapter(
         { position -> onItemClicked(position) },
-        { onInsertClicked() })
+        { coin -> onChipChecked(coin) },
+        { onInsertClicked() }
+    )
 
     private var coinList = listOf<DisplayableCoin>()
+    private var checkedChip = R.id.chip_24h
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,6 +68,118 @@ class WalletFragment : Fragment() {
         initViewModel()
         initRecycler()
     }
+
+    override fun onResume() {
+        super.onResume()
+        restoreTheme()
+        initThemeSwitch()
+    }
+
+    //region theme
+
+    private fun restoreTheme() {
+        sharedPreferences =
+            requireActivity().getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE)
+        when (sharedPreferences.getInt(NIGHT_MODE, 0)) {
+            0 -> {
+                ThemeManager.theme = ThemeManager.Theme.LIGHT
+                binding.darkModeButton.background =
+                    resources.getDrawable(R.drawable.ic_baseline_nights_stay_24, null)
+            }
+            else -> {
+                ThemeManager.theme = ThemeManager.Theme.DARK
+                binding.darkModeButton.background =
+                    resources.getDrawable(R.drawable.ic_baseline_wb_sunny_24, null)
+            }
+        }
+    }
+
+    private fun initThemeSwitch() {
+        binding.darkModeButton.setOnClickListener {
+            when (ThemeManager.theme) {
+                ThemeManager.Theme.DARK -> {
+                    setTheme(ThemeManager.Theme.LIGHT)
+                    sharedPreferences.edit().putInt(NIGHT_MODE, 0).apply()
+                }
+                ThemeManager.Theme.LIGHT -> {
+                    setTheme(ThemeManager.Theme.DARK)
+                    sharedPreferences.edit().putInt(NIGHT_MODE, 1).apply()
+                }
+            }
+        }
+    }
+
+    private fun setTheme(theme: ThemeManager.Theme) {
+        initScreenShot()
+        ThemeManager.theme = theme
+        initThemeAnimations()
+    }
+
+    private fun initScreenShot() {
+        var statusBarHeight = 0
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            statusBarHeight = resources.getDimensionPixelSize(resourceId)
+        }
+        val windowBitmap = Falcon.takeScreenshotBitmap(activity)
+        val bitmap = Bitmap.createBitmap(
+            windowBitmap,
+            0,
+            statusBarHeight,
+            binding.container.measuredWidth,
+            binding.container.measuredHeight,
+            null,
+            true
+        )
+        binding.shadowThemeImageView.setImageBitmap(bitmap)
+        binding.shadowThemeImageView.visibility = View.VISIBLE
+    }
+
+    private fun initThemeAnimations() {
+        binding.darkModeButton.startAnimation(
+            RotateAnimation(
+                0f,
+                360f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f
+            ).apply {
+                duration = 1000L
+                interpolator = LinearInterpolator()
+            }
+        )
+
+        ViewAnimationUtils.createCircularReveal(
+            binding.shadowThemeImageView,
+            binding.darkModeButton.x.toInt() + 30,
+            binding.darkModeButton.y.toInt() + 30,
+            hypot(
+                binding.container.measuredWidth.toFloat(),
+                binding.container.measuredHeight.toFloat()
+            ),
+            0f
+        ).apply {
+            duration = 800L
+            doOnStart {
+                requireActivity().disableTouch()
+            }
+            doOnEnd {
+                binding.shadowThemeImageView.setImageDrawable(null)
+                binding.shadowThemeImageView.visibility = View.GONE
+                when (ThemeManager.theme) {
+                    ThemeManager.Theme.DARK -> binding.darkModeButton.background =
+                        resources.getDrawable(R.drawable.ic_baseline_wb_sunny_24, null)
+                    ThemeManager.Theme.LIGHT -> binding.darkModeButton.background =
+                        resources.getDrawable(R.drawable.ic_baseline_nights_stay_24, null)
+                }
+                requireActivity().enableTouch()
+            }
+            start()
+        }
+    }
+
+    //endregion
 
     private fun initViewModel() {
         subscribeToCoinList()
@@ -77,7 +203,7 @@ class WalletFragment : Fragment() {
     private fun subscribeToPortfolio() {
         walletViewModel.portfolio.observe(viewLifecycleOwner) { portfolio ->
             when (portfolio) {
-                is ViewState.Success -> handleSuccessPortfolio(portfolio)
+                is ViewState.Success -> portfolio.data?.let { handleSuccessPortfolio(it) }
                 is ViewState.Loading -> {}
                 is ViewState.Error -> requireActivity().showMessage(portfolio.message)
             }
@@ -85,23 +211,42 @@ class WalletFragment : Fragment() {
         walletViewModel.getPortfolio()
     }
 
-    private fun handleSuccessPortfolio(portfolio: ViewState.Success<List<DisplayableCoin>>) {
+    private fun handleSuccessPortfolio(portfolio: Portfolio) {
         Log.d("@@@", portfolio.toString())
-        setHeader(portfolio.data ?: emptyList())
-        val recyclerList = mutableListOf<DisplayableItem>().also {
-            it.addAll(portfolio.data ?: emptyList())
-            it.add(DisplayableInsert)
+        val recyclerList = mutableListOf<DisplayableItem>()
+        if (portfolio.coinList.isNullOrEmpty()) {
+            binding.textTotalValue.visibility = View.GONE
+            binding.textTimedGain.visibility = View.GONE
+            binding.pieChart.visibility = View.GONE
+            binding.containerChip.visibility = View.GONE
+            recyclerList.add(DisplayableGettingStarted)
+            recyclerList.add(DisplayableInsert)
+        } else {
+            setHeader(portfolio)
+            initChips()
+            recyclerList.addAll(portfolio.coinList)
+            recyclerList.add(DisplayableInsert)
+            initPieChart(portfolio.coinList)
         }
+
         portfolioAdapter.items = recyclerList
         portfolioAdapter.notifyDataSetChanged()
+    }
 
-        portfolio.data?.let { initPieChart(it) }
-        binding.switchPieChart.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) binding.pieChart.expandPieChart() else binding.pieChart.collapsePieChart()
+    private fun initChips() {
+        binding.containerChip.visibility = View.VISIBLE
+        binding.chipGroupGain.setOnCheckedStateChangeListener { _, checkedIds ->
+            if (checkedIds.isNotEmpty()) {
+                checkedChip = checkedIds[0]
+                portfolioAdapter.notifyDataSetChanged()
+            } else {
+                binding.chipGroupGain.check(checkedChip)
+            }
         }
     }
 
     private fun initPieChart(portfolio: List<DisplayableCoin>) {
+        binding.pieChart.visibility = View.VISIBLE
         val pieData = PieData()
         for (coin in portfolio) {
             pieData.add(coin.symbol, coin.price * coin.count)
@@ -109,27 +254,35 @@ class WalletFragment : Fragment() {
         binding.pieChart.setData(pieData)
     }
 
-    private fun setHeader(portfolio: List<DisplayableCoin>) {
-        var totalPrice = 0.0
-        var oldTotalPrice = 0.0
-        for (coin in portfolio) {
-            totalPrice += coin.count * coin.price
-            val differ = (coin.count * coin.price * (coin.percentChange24h / 100))
-            oldTotalPrice += ((coin.count * coin.price) + differ)
+    private fun setHeader(portfolio: Portfolio, animateNumber: Boolean = true) {
+        binding.textTotalValue.visibility = View.VISIBLE
+        binding.textTimedGain.visibility = View.VISIBLE
+
+        val percentChange = when (checkedChip) {
+            R.id.chip_1h -> portfolio.totalPercentChange1h
+            R.id.chip_7d -> portfolio.totalPercentChange7d
+            R.id.chip_30d -> portfolio.totalPercentChange30d
+            R.id.chip_60d -> portfolio.totalPercentChange60d
+            R.id.chip_90d -> portfolio.totalPercentChange90d
+            else -> portfolio.totalPercentChange24h
         }
-        val change = ((oldTotalPrice - totalPrice) / totalPrice) * 100
 
-        val priceFormat = DecimalFormat("$#.##")
-        priceFormat.roundingMode = RoundingMode.CEILING
-        binding.includedHeader.textTotalValue.animateNumbers(2500, totalPrice, priceFormat)
-
-        val gainFormat = DecimalFormat("0.##'%'")
-        gainFormat.roundingMode = RoundingMode.CEILING
-        binding.includedHeader.text24hGain.text = gainFormat.format(change)
-        if (change > 0) {
-            binding.includedHeader.text24hGain.setTextColor(Color.GREEN)
+        if (animateNumber) {
+            binding.textTotalValue.animatePriceNumbers(
+                NUMBER_ANIMATION_LENGTH,
+                portfolio.totalPrice,
+            )
         } else {
-            binding.includedHeader.text24hGain.setTextColor(Color.RED)
+            binding.textTotalValue.text = String.format("$%.2f", portfolio.totalPrice)
+        }
+
+        val percentFormat = DecimalFormat("0.##'%'")
+        percentFormat.roundingMode = RoundingMode.CEILING
+        binding.textTimedGain.text = percentFormat.format(percentChange)
+        if (percentChange > 0) {
+            binding.textTimedGain.setTextColor(Color.GREEN)
+        } else {
+            binding.textTimedGain.setTextColor(Color.RED)
         }
     }
 
@@ -140,11 +293,15 @@ class WalletFragment : Fragment() {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             attachLeftSwipeHelper { vh ->
                 walletViewModel.deleteCoin(
-                    walletViewModel.portfolio.value!!.data!![vh.layoutPosition]
+                    walletViewModel.portfolio.value!!.data!!.coinList[vh.layoutPosition]
                 )
             }
+            viewTreeObserver.addOnGlobalLayoutListener {
+                restoreTheme()
+            }
         }
-        portfolioAdapter.items = listOf<DisplayableItem>(DisplayableGettingStarted, DisplayableInsert)
+        portfolioAdapter.items =
+            listOf(DisplayableGettingStarted, DisplayableInsert)
     }
 
     override fun onDestroy() {
@@ -161,6 +318,8 @@ class WalletFragment : Fragment() {
         val dialogInsert = BottomSheetDialog(requireContext()).apply {
             setContentView(dialogBinding.root)
         }
+
+        dialogInsert.window?.setDimAmount(0f)
 
         initAutoCompleteCoin(coinList.map { it.name + ": " + it.symbol }, dialogBinding)
         dialogBinding.autocompleteCoin.setText(symbol)
@@ -236,7 +395,25 @@ class WalletFragment : Fragment() {
 
     private fun onItemClicked(position: Int) {
         showInsertDialog(
-            walletViewModel.portfolio.value!!.data!![position].symbol,
-            walletViewModel.portfolio.value!!.data!![position].count)
+            walletViewModel.portfolio.value!!.data!!.coinList[position].symbol,
+            walletViewModel.portfolio.value!!.data!!.coinList[position].count
+        )
+    }
+
+    private fun onChipChecked(coin: DisplayableCoin): Double {
+        walletViewModel.portfolio.value?.data?.let { setHeader(it, false) }
+        return when (checkedChip) {
+            R.id.chip_1h -> coin.percentChange1h
+            R.id.chip_7d -> coin.percentChange7d
+            R.id.chip_30d -> coin.percentChange30d
+            R.id.chip_60d -> coin.percentChange60d
+            R.id.chip_90d -> coin.percentChange90d
+            else -> coin.percentChange24h
+        }
+    }
+
+    companion object {
+        const val NIGHT_MODE = "night mode"
+        const val NUMBER_ANIMATION_LENGTH = 800L
     }
 }

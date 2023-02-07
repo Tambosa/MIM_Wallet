@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_bottom_recycler_item"
-    android:background="@drawable/shape_medium_rounded_corners"
-    android:backgroundTint="?attr/colorSurfaceVariant"
+    android:background="@android:color/transparent"
     android:orientation="horizontal"
     android:paddingStart="@dimen/padding_horizontal_recycler_item"
     android:paddingTop="@dimen/padding_vertical_recycler_item"
@@ -18,9 +17,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@android:color/transparent"
         android:orientation="vertical">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/coin_name"
             style="@style/TextRecyclerItemPrimary"
             android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Bitcoin" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/coin_count"
             style="@style/TextRecyclerItemSecondary"
             android:layout_width="match_parent"
@@ -41,28 +41,12 @@
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/single_coin_price"
-            style="@style/TextRecyclerItemPrimary"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center|end"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="16,800,24" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@android:color/transparent"
         android:orientation="vertical">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/total_price"
             style="@style/TextRecyclerItemPrimary"
             android:layout_width="match_parent"
@@ -75,7 +59,7 @@
             tools:text="84.2 K" />
 
         <TextView
-            android:id="@+id/total_price_24h_change"
+            android:id="@+id/total_price_timed_change"
             style="@style/TextRecyclerItemSecondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
