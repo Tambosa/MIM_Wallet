@@ -27,9 +27,7 @@ class ComposeWalletViewModel @Inject constructor(
     private val _coins = MutableStateFlow<ViewState<List<DisplayableCoin>>>(ViewState.Loading())
     val coins = _coins.asStateFlow()
 
-    private val _portfolio = MutableStateFlow<ViewState<Portfolio>>(
-        ViewState.Success(Portfolio(listOf()))
-    )
+    private val _portfolio = MutableStateFlow<ViewState<Portfolio>>(ViewState.Loading())
     val portfolio = _portfolio.asStateFlow()
 
     fun getCoins() {
