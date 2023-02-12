@@ -5,12 +5,13 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -100,8 +101,16 @@ fun TotalPrice(portfolio: Portfolio) {
             .padding(start = 12.dp, end = 12.dp, top = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        var totalPrice by remember { mutableStateOf(portfolio.totalPrice) }
+        val totalPriceAnim by animateFloatAsState(
+            targetValue = totalPrice.toFloat(), animationSpec = tween(
+                durationMillis = 2000,
+                easing = FastOutSlowInEasing
+            )
+        )
+
         Text(
-            text = String.format("$%.2f", portfolio.totalPrice),
+            text = String.format("$%.2f", totalPriceAnim),
             color = MaterialTheme.colorScheme.onPrimaryContainer,
             style = Typography.titleMedium,
             maxLines = 1,
