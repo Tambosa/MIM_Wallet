@@ -12,7 +12,7 @@ import javax.inject.Inject
 class GetCoinsUseCase @Inject constructor(private val repo: CoinRepository) {
     operator fun invoke(): Flow<ViewState<List<DisplayableCoin>>> = flow {
         try {
-            emit(ViewState.Loading())
+//            emit(ViewState.Loading())
             val coins = repo.getCoins()
             emit(ViewState.Success(coins))
         } catch (e: HttpException) {

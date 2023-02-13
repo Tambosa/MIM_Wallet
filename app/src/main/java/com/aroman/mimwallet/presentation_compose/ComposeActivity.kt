@@ -5,19 +5,23 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.common.ViewState
@@ -52,6 +56,7 @@ class ComposeActivity : AppCompatActivity() {
                                 CoinContent(portfolioState.data!!)
                             }
                             is ViewState.Loading -> {
+                                LoadingAnimation()
                             }
                             is ViewState.Error -> {}
                         }
@@ -135,6 +140,57 @@ fun TotalPrice(portfolio: Portfolio) {
             else Color(android.graphics.Color.RED),
             style = Typography.titleMedium,
             maxLines = 1,
+        )
+    }
+}
+
+@Composable
+fun LoadingAnimation(
+    indicatorSize: Dp = 50.dp,
+    circleColors: List<Color> = listOf(
+        Color(0xFF5851D8),
+        Color(0xFF833AB4),
+        Color(0xFFC13584),
+        Color(0xFFE1306C),
+        Color(0xFFFD1D1D),
+        Color(0xFFF56040),
+        Color(0xFFF77737),
+        Color(0xFFFCAF45),
+        Color(0xFFFFDC80),
+        Color(0xFF5851D8)
+    ),
+    animationDuration: Int = 360
+) {
+    val infiniteTransition = rememberInfiniteTransition()
+
+    val rotateAnimation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                durationMillis = animationDuration,
+                easing = LinearEasing
+            )
+        )
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .size(size = indicatorSize)
+                .rotate(degrees = rotateAnimation)
+                .border(
+                    width = 4.dp,
+                    brush = Brush.sweepGradient(circleColors),
+                    shape = CircleShape
+                ),
+            progress = 1f,
+            strokeWidth = 1.dp,
+            color = MaterialTheme.colorScheme.primaryContainer // Set background color
         )
     }
 }

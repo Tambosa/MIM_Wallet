@@ -16,7 +16,7 @@ class GetPortfolioUseCase @Inject constructor(
 ) {
     operator fun invoke(): Flow<ViewState<Portfolio>> = flow {
         try {
-            emit(ViewState.Loading())
+//            emit(ViewState.Loading())
             val localCoins = localRepo.getAll()
             if (localCoins.isNotEmpty()) {
                 val coinSymbols =
