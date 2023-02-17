@@ -6,14 +6,17 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
@@ -234,10 +237,11 @@ fun TimePeriodChip(
     isSelected: Boolean = false,
     onSelectionChanged: (String) -> Unit = {},
 ) {
-    Surface(
-        modifier = Modifier.padding(4.dp),
-        shape = MaterialTheme.shapes.medium,
-        color = if (isSelected) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.onPrimary
+    Box(
+        modifier = Modifier
+            .padding(4.dp)
+            .clip(CircleShape)
+            .background(color = if (isSelected) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.onPrimary),
     ) {
         Row(modifier = Modifier
             .toggleable(
@@ -251,7 +255,7 @@ fun TimePeriodChip(
                 text = name,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
         }
     }
