@@ -64,7 +64,7 @@ dependencies {
     implementation "androidx.compose.material:material"
     implementation "androidx.compose.material3:material3-window-size-class"
 
-    implementation("androidx.activity:activity-compose")
+    implementation "androidx.activity:activity-compose:1.6.1"
 
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

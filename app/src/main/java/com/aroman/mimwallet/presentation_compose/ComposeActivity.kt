@@ -9,7 +9,6 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -18,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,17 +49,10 @@ class ComposeActivity : AppCompatActivity() {
                     Column(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Header(walletViewModel)
-                        when (portfolioState) {
-                            is ViewState.Success -> {
-                                TotalPrice(portfolioState.data!!)
-                                CoinContent(portfolioState.data!!)
-                            }
-                            is ViewState.Loading -> {
-                                LoadingAnimation()
-                            }
-                            is ViewState.Error -> {}
-                        }
+                        Header(walletViewModel = walletViewModel, portfolioState = portfolioState)
+//                        TotalPrice(portfolioState = portfolioState)
+//                        CoinContent(portfolioState = portfolioState)
+//                        LoadingAnimation()
                     }
                 }
             }
@@ -69,7 +62,7 @@ class ComposeActivity : AppCompatActivity() {
 }
 
 @Composable
-fun Header(walletViewModel: ComposeWalletViewModel) {
+fun Header(walletViewModel: ComposeWalletViewModel, portfolioState: ViewState<Portfolio>) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -79,6 +72,17 @@ fun Header(walletViewModel: ComposeWalletViewModel) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         val context = LocalContext.current
+        var isLoading by remember { mutableStateOf(true) }
+        isLoading = portfolioState is ViewState.Loading
+
+        val angle by rememberInfiniteTransition().animateFloat(
+            initialValue = 0F,
+            targetValue = 360F,
+            animationSpec = infiniteRepeatable(
+                animation = tween(500, easing = LinearEasing)
+            )
+        )
+
         Text(
             text = "Portfolio",
             color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -91,7 +95,8 @@ fun Header(walletViewModel: ComposeWalletViewModel) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_refresh_24),
                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                contentDescription = "refresh data"
+                contentDescription = "refresh data",
+                modifier = Modifier.graphicsLayer { if (isLoading) rotationZ = angle }
             )
         }
         IconButton(
@@ -109,40 +114,38 @@ fun Header(walletViewModel: ComposeWalletViewModel) {
     }
 }
 
-@Composable
-fun TotalPrice(portfolio: Portfolio) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 12.dp, end = 12.dp, top = 20.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        val totalPrice by remember { mutableStateOf(portfolio.totalPrice) }
-        val totalPriceAnim by animateFloatAsState(
-            targetValue = totalPrice.toFloat(), animationSpec = tween(
-                durationMillis = 2000,
-                easing = FastOutSlowInEasing
-            )
-        )
-
-        Text(
-            text = String.format("$%.2f", totalPriceAnim),
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
-            style = Typography.titleMedium,
-            maxLines = 1,
-        )
-
-        val percentFormat = DecimalFormat("0.##'%'")
-        percentFormat.roundingMode = RoundingMode.CEILING
-        Text(
-            text = percentFormat.format(portfolio.totalPercentChange24h),
-            color = if (portfolio.totalPercentChange24h > 0) Color(android.graphics.Color.GREEN)
-            else Color(android.graphics.Color.RED),
-            style = Typography.titleMedium,
-            maxLines = 1,
-        )
-    }
-}
+//@Composable
+//fun TotalPrice(portfolioState: ViewState<Portfolio>) {
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(start = 12.dp, end = 12.dp, top = 20.dp),
+//        horizontalArrangement = Arrangement.SpaceBetween
+//    ) {
+//        val totalPrice by remember { mutableStateOf(portfolioState.totalPrice) }
+//        val totalPriceAnim by animateFloatAsState(
+//            targetValue = totalPrice.toFloat(), animationSpec = tween(
+//                durationMillis = 2000,
+//                easing = FastOutSlowInEasing
+//            )
+//        )
+//        Text(
+//            text = String.format("$%.2f", totalPriceAnim),
+//            color = MaterialTheme.colorScheme.onPrimaryContainer,
+//            style = Typography.titleMedium,
+//            maxLines = 1,
+//        )
+//        val percentFormat = DecimalFormat("0.##'%'")
+//        percentFormat.roundingMode = RoundingMode.CEILING
+//        Text(
+//            text = percentFormat.format(portfolioState.totalPercentChange24h),
+//            color = if (portfolioState.totalPercentChange24h > 0) Color(android.graphics.Color.GREEN)
+//            else Color(android.graphics.Color.RED),
+//            style = Typography.titleMedium,
+//            maxLines = 1,
+//        )
+//    }
+//}
 
 @Composable
 fun LoadingAnimation(
@@ -162,7 +165,6 @@ fun LoadingAnimation(
     animationDuration: Int = 360
 ) {
     val infiniteTransition = rememberInfiniteTransition()
-
     val rotateAnimation by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
@@ -195,23 +197,67 @@ fun LoadingAnimation(
     }
 }
 
+//@Composable
+//fun CoinContent(portfolioState: ViewState<Portfolio>) {
+//    LazyColumn(
+//        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 15.dp),
+//        verticalArrangement = Arrangement.spacedBy(8.dp),
+//    ) {
+//        items(
+//            portfolioState.coinList.size,
+//            itemContent = {
+//                DisplayableCoinItem(coin = portfolioState.coinList[it])
+//                if (portfolioState.coinList.isEmpty()) {
+//                    DisplayableHint()
+//                    DisplayableAddCoin()
+//                } else if (it == portfolioState.coinList.size - 1) {
+//                    DisplayableAddCoin()
+//                }
+//            }
+//        )
+//    }
+//}
+
 @Composable
-fun CoinContent(portfolio: Portfolio) {
-    LazyColumn(
-        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 15.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+fun DisplayableHint() {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(
-            portfolio.coinList.size,
-            itemContent = {
-                CoinItem(coin = portfolio.coinList[it])
-            }
+        Text(
+            text = "Click button below to add your first coin to your portfolio",
+            style = Typography.bodyMedium
+        )
+        Icon(
+            painter = painterResource(id = R.drawable.ic_baseline_arrow_downward_24),
+            contentDescription = ""
         )
     }
 }
 
 @Composable
-fun CoinItem(coin: DisplayableCoin) {
+fun DisplayableAddCoin() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        val context = LocalContext.current
+        IconButton(
+            onClick = {
+                Toast.makeText(context, "add item", Toast.LENGTH_SHORT).show()
+            }) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_baseline_add_circle_outline_24),
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                contentDescription = "add coin"
+            )
+        }
+    }
+}
+
+
+@Composable
+fun DisplayableCoinItem(coin: DisplayableCoin) {
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -224,7 +270,6 @@ fun CoinItem(coin: DisplayableCoin) {
                     easing = FastOutSlowInEasing
                 )
             )
-
             Text(
                 text = coin.name,
                 style = Typography.bodyMedium
@@ -242,7 +287,6 @@ fun CoinItem(coin: DisplayableCoin) {
                 text = "${coin.count} ${coin.symbol}",
                 style = Typography.bodySmall
             )
-
             val percentFormat = DecimalFormat("0.##'%'")
             percentFormat.roundingMode = RoundingMode.CEILING
             Text(
@@ -260,9 +304,7 @@ fun CoinItem(coin: DisplayableCoin) {
 fun DefaultPreview() {
     AppTheme {
         Surface(
-            modifier = Modifier
-                .width(IntrinsicSize.Max)
-                .height(IntrinsicSize.Max),
+            modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.primaryContainer
         ) {
         }
