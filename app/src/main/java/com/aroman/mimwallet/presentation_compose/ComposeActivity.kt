@@ -132,7 +132,7 @@ fun Header(
             Icon(
                 painter = if (themeViewModel.isDarkTheme.collectAsState().value) painterResource(id = R.drawable.ic_baseline_nights_stay_24)
                 else painterResource(id = R.drawable.ic_baseline_wb_sunny_24),
-                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                tint = MaterialTheme.colorScheme.primary,
                 contentDescription = "toggle dark mode"
             )
         }
@@ -324,7 +324,7 @@ fun DisplayableAddCoin() {
             }) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_baseline_add_circle_outline_24),
-                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                tint = MaterialTheme.colorScheme.primary,
                 contentDescription = "add coin"
             )
         }
