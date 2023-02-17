@@ -1,5 +1,6 @@
 package com.aroman.mimwallet.presentation_compose
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
@@ -32,12 +33,14 @@ import java.text.DecimalFormat
 @AndroidEntryPoint
 class ComposeActivity : AppCompatActivity() {
     private val walletViewModel by viewModels<ComposeWalletViewModel>()
+    private val themeViewModel by viewModels<ComposeThemeViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val portfolioState by walletViewModel.portfolio.collectAsState()
-            AppTheme { PortfolioScreen(portfolioState) }
+            val isDarkTheme = themeViewModel.isDarkTheme.collectAsState(initial = true)
+            AppTheme(useDarkTheme = isDarkTheme.value) { PortfolioScreen(portfolioState) }
         }
         walletViewModel.getPortfolio()
     }
@@ -51,7 +54,11 @@ class ComposeActivity : AppCompatActivity() {
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Header(walletViewModel = walletViewModel, portfolioState = portfolioState)
+                Header(
+                    themeViewModel = themeViewModel,
+                    walletViewModel = walletViewModel,
+                    portfolioState = portfolioState,
+                )
                 TotalPrice(portfolioState = portfolioState)
                 CoinContent(portfolioState = portfolioState)
             }
@@ -60,7 +67,11 @@ class ComposeActivity : AppCompatActivity() {
 }
 
 @Composable
-fun Header(walletViewModel: ComposeWalletViewModel, portfolioState: ViewState<Portfolio>) {
+fun Header(
+    themeViewModel: ComposeThemeViewModel,
+    walletViewModel: ComposeWalletViewModel,
+    portfolioState: ViewState<Portfolio>,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -69,7 +80,6 @@ fun Header(walletViewModel: ComposeWalletViewModel, portfolioState: ViewState<Po
             ),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        val context = LocalContext.current
         var isLoading by remember { mutableStateOf(true) }
         isLoading = portfolioState is ViewState.Loading
 
@@ -80,7 +90,6 @@ fun Header(walletViewModel: ComposeWalletViewModel, portfolioState: ViewState<Po
                 animation = tween(500, easing = LinearEasing)
             )
         )
-
         Text(
             text = "Portfolio",
             color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -99,8 +108,7 @@ fun Header(walletViewModel: ComposeWalletViewModel, portfolioState: ViewState<Po
         }
         IconButton(
             onClick = {
-                Toast.makeText(context, "Night mode clicked", Toast.LENGTH_SHORT)
-                    .show()
+                themeViewModel.inverseTheme()
             }) {
             Icon(
                 painter = if (!isSystemInDarkTheme()) painterResource(id = R.drawable.ic_baseline_nights_stay_24)
@@ -272,7 +280,7 @@ fun DisplayableCoinItem(coin: DisplayableCoin) {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    AppTheme {
+    AppTheme(false) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.primaryContainer

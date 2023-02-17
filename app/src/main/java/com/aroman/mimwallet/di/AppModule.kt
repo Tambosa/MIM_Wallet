@@ -1,7 +1,9 @@
 package com.aroman.mimwallet.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
+import com.aroman.mimwallet.R
 import com.aroman.mimwallet.common.Constants
 import com.aroman.mimwallet.data.local.PortfolioRepositoryImpl
 import com.aroman.mimwallet.data.local.RoomDb
@@ -72,5 +74,11 @@ object AppModule {
         dao: CoinDao
     ): PortfolioRepository {
         return PortfolioRepositoryImpl(dao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences(context.getString((R.string.app_name)), Context.MODE_PRIVATE)
     }
 }
