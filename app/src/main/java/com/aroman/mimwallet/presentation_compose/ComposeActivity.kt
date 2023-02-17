@@ -41,23 +41,26 @@ class ComposeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val portfolioState by walletViewModel.portfolio.collectAsState()
-            AppTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.primaryContainer
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Header(walletViewModel = walletViewModel, portfolioState = portfolioState)
-//                        TotalPrice(portfolioState = portfolioState)
-//                        CoinContent(portfolioState = portfolioState)
-//                        LoadingAnimation()
-                    }
-                }
-            }
+            AppTheme { PortfolioScreen(portfolioState) }
         }
         walletViewModel.getPortfolio()
+    }
+
+    @Composable
+    fun PortfolioScreen(portfolioState: ViewState<Portfolio>) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.primaryContainer
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Header(walletViewModel = walletViewModel, portfolioState = portfolioState)
+                TotalPrice(portfolioState = portfolioState)
+//                        CoinContent(portfolioState = portfolioState)
+//                        LoadingAnimation()
+            }
+        }
     }
 }
 
@@ -114,38 +117,50 @@ fun Header(walletViewModel: ComposeWalletViewModel, portfolioState: ViewState<Po
     }
 }
 
-//@Composable
-//fun TotalPrice(portfolioState: ViewState<Portfolio>) {
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(start = 12.dp, end = 12.dp, top = 20.dp),
-//        horizontalArrangement = Arrangement.SpaceBetween
-//    ) {
-//        val totalPrice by remember { mutableStateOf(portfolioState.totalPrice) }
-//        val totalPriceAnim by animateFloatAsState(
-//            targetValue = totalPrice.toFloat(), animationSpec = tween(
-//                durationMillis = 2000,
-//                easing = FastOutSlowInEasing
-//            )
-//        )
-//        Text(
-//            text = String.format("$%.2f", totalPriceAnim),
-//            color = MaterialTheme.colorScheme.onPrimaryContainer,
-//            style = Typography.titleMedium,
-//            maxLines = 1,
-//        )
-//        val percentFormat = DecimalFormat("0.##'%'")
-//        percentFormat.roundingMode = RoundingMode.CEILING
-//        Text(
-//            text = percentFormat.format(portfolioState.totalPercentChange24h),
-//            color = if (portfolioState.totalPercentChange24h > 0) Color(android.graphics.Color.GREEN)
-//            else Color(android.graphics.Color.RED),
-//            style = Typography.titleMedium,
-//            maxLines = 1,
-//        )
-//    }
-//}
+@Composable
+fun TotalPrice(portfolioState: ViewState<Portfolio>) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 12.dp, end = 12.dp, top = 20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        var totalPrice by remember { mutableStateOf(0.0) }
+        //TODO why !!
+        if (portfolioState is ViewState.Success) {
+            totalPrice = portfolioState.data!!.totalPrice
+        }
+        val totalPriceAnim by animateFloatAsState(
+            targetValue = totalPrice.toFloat(),
+            animationSpec = tween(1200, 0, FastOutSlowInEasing)
+        )
+        Text(
+            text = String.format("$%.2f", totalPriceAnim),
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            style = Typography.titleMedium,
+            maxLines = 1,
+        )
+
+        var totalPercent by remember { mutableStateOf(0.0) }
+        if (portfolioState is ViewState.Success) {
+            totalPercent = portfolioState.data!!.totalPercentChange24h
+        }
+        val totalPercentAnim by animateFloatAsState(
+            targetValue = totalPercent.toFloat(),
+            animationSpec = tween(1000, 0, FastOutSlowInEasing)
+        )
+        val percentFormat = DecimalFormat("0.##'%'").apply {
+            roundingMode = RoundingMode.CEILING
+        }
+        Text(
+            text = percentFormat.format(totalPercentAnim),
+            color = if (totalPercent > 0) Color(android.graphics.Color.GREEN)
+            else Color(android.graphics.Color.RED),
+            style = Typography.titleMedium,
+            maxLines = 1,
+        )
+    }
+}
 
 @Composable
 fun LoadingAnimation(
