@@ -1,15 +1,15 @@
 package com.aroman.mimwallet.presentation_compose
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -40,13 +40,22 @@ class ComposeActivity : AppCompatActivity() {
         setContent {
             val portfolioState by walletViewModel.portfolio.collectAsState()
             val isDarkTheme = themeViewModel.isDarkTheme.collectAsState(initial = true)
-            AppTheme(useDarkTheme = isDarkTheme.value) { PortfolioScreen(portfolioState) }
+            val timePeriodSelection by walletViewModel.timePeriod.collectAsState()
+            AppTheme(useDarkTheme = isDarkTheme.value) {
+                PortfolioScreen(
+                    portfolioState,
+                    timePeriodSelection
+                )
+            }
         }
         walletViewModel.getPortfolio()
     }
 
     @Composable
-    fun PortfolioScreen(portfolioState: ViewState<Portfolio>) {
+    fun PortfolioScreen(
+        portfolioState: ViewState<Portfolio>,
+        timePeriodSelection: ComposeWalletViewModel.TimePeriod
+    ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.primaryContainer
@@ -59,8 +68,18 @@ class ComposeActivity : AppCompatActivity() {
                     walletViewModel = walletViewModel,
                     portfolioState = portfolioState,
                 )
-                TotalPrice(portfolioState = portfolioState)
-                CoinContent(portfolioState = portfolioState)
+                TotalPrice(
+                    portfolioState = portfolioState,
+                    timePeriodSelection = timePeriodSelection
+                )
+                TimePeriodSelection(
+                    walletViewModel = walletViewModel,
+                    timePeriodSelection = timePeriodSelection
+                )
+                CoinContent(
+                    portfolioState = portfolioState,
+                    timePeriodSelection = timePeriodSelection
+                )
             }
         }
     }
@@ -111,7 +130,7 @@ fun Header(
                 themeViewModel.inverseTheme()
             }) {
             Icon(
-                painter = if (!isSystemInDarkTheme()) painterResource(id = R.drawable.ic_baseline_nights_stay_24)
+                painter = if (themeViewModel.isDarkTheme.collectAsState().value) painterResource(id = R.drawable.ic_baseline_nights_stay_24)
                 else painterResource(id = R.drawable.ic_baseline_wb_sunny_24),
                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 contentDescription = "toggle dark mode"
@@ -121,7 +140,10 @@ fun Header(
 }
 
 @Composable
-fun TotalPrice(portfolioState: ViewState<Portfolio>) {
+fun TotalPrice(
+    portfolioState: ViewState<Portfolio>,
+    timePeriodSelection: ComposeWalletViewModel.TimePeriod
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -146,7 +168,14 @@ fun TotalPrice(portfolioState: ViewState<Portfolio>) {
 
         var totalPercent by remember { mutableStateOf(0.0) }
         if (portfolioState is ViewState.Success) {
-            totalPercent = portfolioState.data!!.totalPercentChange24h
+            totalPercent = when (timePeriodSelection) {
+                ComposeWalletViewModel.TimePeriod.ONE_HOUR -> portfolioState.data!!.totalPercentChange1h
+                ComposeWalletViewModel.TimePeriod.TWENTY_FOUR_HOURS -> portfolioState.data!!.totalPercentChange24h
+                ComposeWalletViewModel.TimePeriod.SEVEN_DAYS -> portfolioState.data!!.totalPercentChange7d
+                ComposeWalletViewModel.TimePeriod.THIRTY_DAYS -> portfolioState.data!!.totalPercentChange30d
+                ComposeWalletViewModel.TimePeriod.SIXTY_DAYS -> portfolioState.data!!.totalPercentChange60d
+                ComposeWalletViewModel.TimePeriod.NINETY_DAYS -> portfolioState.data!!.totalPercentChange90d
+            }
         }
         val totalPercentAnim by animateFloatAsState(
             targetValue = totalPercent.toFloat(),
@@ -165,8 +194,74 @@ fun TotalPrice(portfolioState: ViewState<Portfolio>) {
     }
 }
 
+
 @Composable
-fun CoinContent(portfolioState: ViewState<Portfolio>) {
+fun TimePeriodSelection(
+    walletViewModel: ComposeWalletViewModel,
+    timePeriodSelection: ComposeWalletViewModel.TimePeriod
+) {
+    val timePeriodList = ComposeWalletViewModel.TimePeriod.values().asList()
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+    ) {
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            items(
+                count = ComposeWalletViewModel.TimePeriod.values().size,
+                itemContent = {
+                    //TODO it???
+                    val index = it
+                    TimePeriodChip(
+                        name = timePeriodList[index].value,
+                        isSelected = timePeriodList[index] == timePeriodSelection,
+                        onSelectionChanged = { walletViewModel.setTimePeriod(timePeriodList[index]) }
+                    )
+                }
+            )
+        }
+
+    }
+}
+
+@Composable
+fun TimePeriodChip(
+    name: String = "Chip",
+    isSelected: Boolean = false,
+    onSelectionChanged: (String) -> Unit = {},
+) {
+    Surface(
+        modifier = Modifier.padding(4.dp),
+        shape = MaterialTheme.shapes.medium,
+        color = if (isSelected) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.onPrimary
+    ) {
+        Row(modifier = Modifier
+            .toggleable(
+                value = isSelected,
+                onValueChange = {
+                    onSelectionChanged(name)
+                }
+            )
+        ) {
+            Text(
+                text = name,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun CoinContent(
+    portfolioState: ViewState<Portfolio>,
+    timePeriodSelection: ComposeWalletViewModel.TimePeriod
+) {
     var coinList by remember { mutableStateOf(listOf<DisplayableCoin>()) }
     if (portfolioState is ViewState.Success) {
         coinList = portfolioState.data!!.coinList
@@ -186,7 +281,10 @@ fun CoinContent(portfolioState: ViewState<Portfolio>) {
             items(
                 coinList.size,
                 itemContent = {
-                    DisplayableCoinItem(coin = coinList[it])
+                    DisplayableCoinItem(
+                        coin = coinList[it],
+                        timePeriodSelection = timePeriodSelection
+                    )
                     if (it == coinList.size - 1) {
                         DisplayableAddCoin()
                     }
@@ -235,7 +333,10 @@ fun DisplayableAddCoin() {
 
 
 @Composable
-fun DisplayableCoinItem(coin: DisplayableCoin) {
+fun DisplayableCoinItem(
+    coin: DisplayableCoin,
+    timePeriodSelection: ComposeWalletViewModel.TimePeriod
+) {
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -265,12 +366,21 @@ fun DisplayableCoinItem(coin: DisplayableCoin) {
                 text = "${coin.count} ${coin.symbol}",
                 style = Typography.bodySmall
             )
-            val percentFormat = DecimalFormat("0.##'%'")
-            percentFormat.roundingMode = RoundingMode.CEILING
+            val percentFormat = DecimalFormat("0.##'%'").apply {
+                roundingMode = RoundingMode.CEILING
+            }
+            val percentChange = when (timePeriodSelection) {
+                ComposeWalletViewModel.TimePeriod.ONE_HOUR -> coin.percentChange1h
+                ComposeWalletViewModel.TimePeriod.TWENTY_FOUR_HOURS -> coin.percentChange24h
+                ComposeWalletViewModel.TimePeriod.SEVEN_DAYS -> coin.percentChange7d
+                ComposeWalletViewModel.TimePeriod.THIRTY_DAYS -> coin.percentChange30d
+                ComposeWalletViewModel.TimePeriod.SIXTY_DAYS -> coin.percentChange60d
+                ComposeWalletViewModel.TimePeriod.NINETY_DAYS -> coin.percentChange90d
+            }
             Text(
-                text = percentFormat.format(coin.percentChange24h),
+                text = percentFormat.format(percentChange),
                 style = Typography.bodySmall,
-                color = if (coin.percentChange24h > 0) Color(android.graphics.Color.GREEN)
+                color = if (percentChange > 0) Color(android.graphics.Color.GREEN)
                 else Color(android.graphics.Color.RED)
             )
         }
