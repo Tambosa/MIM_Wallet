@@ -20,6 +20,7 @@ import com.aroman.mimwallet.R
 import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.Portfolio
+import com.aroman.mimwallet.presentation_compose.ComposeWalletViewModel.TimePeriod
 import com.aroman.mimwallet.presentation_compose.ui.compose_views.CircularChip
 import com.aroman.mimwallet.presentation_compose.ui.compose_views.DisplayableCoinItem
 import com.aroman.mimwallet.presentation_compose.ui.compose_views.DisplayableHint
@@ -54,7 +55,7 @@ class ComposeActivity : AppCompatActivity() {
     @Composable
     fun PortfolioScreen(
         portfolioState: ViewState<Portfolio>,
-        timePeriodSelection: ComposeWalletViewModel.TimePeriod
+        timePeriodSelection: TimePeriod
     ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -142,7 +143,7 @@ fun Header(
 @Composable
 fun TotalPrice(
     portfolioState: ViewState<Portfolio>,
-    timePeriodSelection: ComposeWalletViewModel.TimePeriod
+    timePeriodSelection: TimePeriod
 ) {
     Row(
         modifier = Modifier
@@ -151,9 +152,8 @@ fun TotalPrice(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         var totalPrice by remember { mutableStateOf(0.0) }
-        //TODO why !!
         if (portfolioState is ViewState.Success) {
-            totalPrice = portfolioState.data!!.totalPrice
+            totalPrice = portfolioState.successData.totalPrice
         }
         val totalPriceAnim by animateFloatAsState(
             targetValue = totalPrice.toFloat(),
@@ -168,13 +168,15 @@ fun TotalPrice(
 
         var totalPercent by remember { mutableStateOf(0.0) }
         if (portfolioState is ViewState.Success) {
-            totalPercent = when (timePeriodSelection) {
-                ComposeWalletViewModel.TimePeriod.ONE_HOUR -> portfolioState.data!!.totalPercentChange1h
-                ComposeWalletViewModel.TimePeriod.TWENTY_FOUR_HOURS -> portfolioState.data!!.totalPercentChange24h
-                ComposeWalletViewModel.TimePeriod.SEVEN_DAYS -> portfolioState.data!!.totalPercentChange7d
-                ComposeWalletViewModel.TimePeriod.THIRTY_DAYS -> portfolioState.data!!.totalPercentChange30d
-                ComposeWalletViewModel.TimePeriod.SIXTY_DAYS -> portfolioState.data!!.totalPercentChange60d
-                ComposeWalletViewModel.TimePeriod.NINETY_DAYS -> portfolioState.data!!.totalPercentChange90d
+            totalPercent = with(portfolioState.successData) {
+                when (timePeriodSelection) {
+                    TimePeriod.ONE_HOUR -> totalPercentChange1h
+                    TimePeriod.TWENTY_FOUR_HOURS -> totalPercentChange24h
+                    TimePeriod.SEVEN_DAYS -> totalPercentChange7d
+                    TimePeriod.THIRTY_DAYS -> totalPercentChange30d
+                    TimePeriod.SIXTY_DAYS -> totalPercentChange60d
+                    TimePeriod.NINETY_DAYS -> totalPercentChange90d
+                }
             }
         }
         val totalPercentAnim by animateFloatAsState(
@@ -197,9 +199,9 @@ fun TotalPrice(
 @Composable
 fun TimePeriodSelection(
     walletViewModel: ComposeWalletViewModel,
-    timePeriodSelection: ComposeWalletViewModel.TimePeriod
+    timePeriodSelection: TimePeriod
 ) {
-    val timePeriodList = ComposeWalletViewModel.TimePeriod.values().asList()
+    val timePeriodList = TimePeriod.values().asList()
 
     Column(
         modifier = Modifier
@@ -211,10 +213,8 @@ fun TimePeriodSelection(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             items(
-                count = ComposeWalletViewModel.TimePeriod.values().size,
-                itemContent = {
-                    //TODO it???
-                    val index = it
+                count = TimePeriod.values().size,
+                itemContent = { index ->
                     CircularChip(
                         name = timePeriodList[index].value,
                         isSelected = timePeriodList[index] == timePeriodSelection,
@@ -229,11 +229,11 @@ fun TimePeriodSelection(
 @Composable
 fun CoinContent(
     portfolioState: ViewState<Portfolio>,
-    timePeriodSelection: ComposeWalletViewModel.TimePeriod
+    timePeriodSelection: TimePeriod
 ) {
     var coinList by remember { mutableStateOf(listOf<DisplayableCoin>()) }
     if (portfolioState is ViewState.Success) {
-        coinList = portfolioState.data!!.coinList
+        coinList = portfolioState.successData.coinList
     }
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 15.dp),

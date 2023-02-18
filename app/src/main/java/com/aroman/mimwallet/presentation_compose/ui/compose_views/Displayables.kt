@@ -21,7 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.presentation_compose.ComposeWalletViewModel
+import com.aroman.mimwallet.presentation_compose.ComposeWalletViewModel.TimePeriod
 import com.aroman.mimwallet.presentation_compose.ui.theme.Typography
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -29,7 +29,7 @@ import java.text.DecimalFormat
 @Composable
 fun DisplayableCoinItem(
     coin: DisplayableCoin,
-    timePeriodSelection: ComposeWalletViewModel.TimePeriod
+    timePeriodSelection: TimePeriod
 ) {
     Column {
         Row(
@@ -64,12 +64,12 @@ fun DisplayableCoinItem(
                 roundingMode = RoundingMode.CEILING
             }
             val percentChange = when (timePeriodSelection) {
-                ComposeWalletViewModel.TimePeriod.ONE_HOUR -> coin.percentChange1h
-                ComposeWalletViewModel.TimePeriod.TWENTY_FOUR_HOURS -> coin.percentChange24h
-                ComposeWalletViewModel.TimePeriod.SEVEN_DAYS -> coin.percentChange7d
-                ComposeWalletViewModel.TimePeriod.THIRTY_DAYS -> coin.percentChange30d
-                ComposeWalletViewModel.TimePeriod.SIXTY_DAYS -> coin.percentChange60d
-                ComposeWalletViewModel.TimePeriod.NINETY_DAYS -> coin.percentChange90d
+                TimePeriod.ONE_HOUR -> coin.percentChange1h
+                TimePeriod.TWENTY_FOUR_HOURS -> coin.percentChange24h
+                TimePeriod.SEVEN_DAYS -> coin.percentChange7d
+                TimePeriod.THIRTY_DAYS -> coin.percentChange30d
+                TimePeriod.SIXTY_DAYS -> coin.percentChange60d
+                TimePeriod.NINETY_DAYS -> coin.percentChange90d
             }
             Text(
                 text = percentFormat.format(percentChange),
