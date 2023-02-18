@@ -1,6 +1,11 @@
 package com.aroman.mimwallet.presentation_compose
 
+import android.animation.ObjectAnimator
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,9 +18,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
+import androidx.core.graphics.applyCanvas
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.domain.model.DisplayableCoin
@@ -27,6 +36,8 @@ import com.aroman.mimwallet.presentation_compose.ui.compose_views.DisplayableHin
 import com.aroman.mimwallet.presentation_compose.ui.compose_views.DisplayableInsertCoin
 import com.aroman.mimwallet.presentation_compose.ui.theme.AppTheme
 import com.aroman.mimwallet.presentation_compose.ui.theme.Typography
+import com.aroman.mimwallet.utils.disableTouch
+import com.aroman.mimwallet.utils.enableTouch
 import dagger.hilt.android.AndroidEntryPoint
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -64,10 +75,12 @@ class ComposeActivity : AppCompatActivity() {
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
+                val view = LocalView.current
                 Header(
                     themeViewModel = themeViewModel,
                     walletViewModel = walletViewModel,
                     portfolioState = portfolioState,
+                    onThemeChange = { setScreenShot(view) }
                 )
                 TotalPrice(
                     portfolioState = portfolioState,
@@ -84,6 +97,26 @@ class ComposeActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun setScreenShot(view: View) {
+        val bmp = Bitmap.createBitmap(
+            view.width, view.height,
+            Bitmap.Config.ARGB_8888
+        ).applyCanvas {
+            view.draw(this)
+        }
+        view.foreground = BitmapDrawable(resources, bmp)
+
+        ObjectAnimator.ofInt(view.foreground, "alpha", 255, 0).apply {
+            duration = 800
+            doOnStart { this@ComposeActivity.disableTouch() }
+            doOnEnd {
+                Log.d("@@@", "setScreenShot: ")
+                this@ComposeActivity.enableTouch()
+                view.foreground = null
+            }
+        }.start()
+    }
 }
 
 @Composable
@@ -91,6 +124,7 @@ fun Header(
     themeViewModel: ComposeThemeViewModel,
     walletViewModel: ComposeWalletViewModel,
     portfolioState: ViewState<Portfolio>,
+    onThemeChange: () -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -129,6 +163,7 @@ fun Header(
         IconButton(
             onClick = {
                 themeViewModel.inverseTheme()
+                onThemeChange()
             }) {
             Icon(
                 painter = if (themeViewModel.isDarkTheme.collectAsState().value) painterResource(id = R.drawable.ic_baseline_nights_stay_24)
