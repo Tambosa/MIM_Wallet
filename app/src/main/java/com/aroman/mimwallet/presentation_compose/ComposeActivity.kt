@@ -169,7 +169,7 @@ fun Header(
                 painter = if (themeViewModel.isDarkTheme.collectAsState().value) painterResource(id = R.drawable.ic_baseline_nights_stay_24)
                 else painterResource(id = R.drawable.ic_baseline_wb_sunny_24),
                 tint = MaterialTheme.colorScheme.primary,
-                contentDescription = "toggle dark mode"
+                contentDescription = "toggle dark mode",
             )
         }
     }
@@ -178,7 +178,7 @@ fun Header(
 @Composable
 fun TotalPrice(
     portfolioState: ViewState<Portfolio>,
-    timePeriodSelection: TimePeriod
+    timePeriodSelection: TimePeriod,
 ) {
     Row(
         modifier = Modifier
@@ -187,21 +187,22 @@ fun TotalPrice(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         var totalPrice by remember { mutableStateOf(0.0) }
+        val totalPriceAnim = remember { Animatable(0f) }
         if (portfolioState is ViewState.Success) {
             totalPrice = portfolioState.successData.totalPrice
         }
-        val totalPriceAnim by animateFloatAsState(
-            targetValue = totalPrice.toFloat(),
-            animationSpec = tween(1200, 0, FastOutSlowInEasing)
-        )
+        LaunchedEffect(totalPrice) {
+            totalPriceAnim.animateTo(totalPrice.toFloat())
+        }
         Text(
-            text = String.format("$%.2f", totalPriceAnim),
+            text = String.format("$%.2f", totalPriceAnim.value),
             color = MaterialTheme.colorScheme.onPrimaryContainer,
             style = Typography.titleMedium,
             maxLines = 1,
         )
 
         var totalPercent by remember { mutableStateOf(0.0) }
+        val totalPercentAnim = remember { Animatable(0f) }
         if (portfolioState is ViewState.Success) {
             totalPercent = with(portfolioState.successData) {
                 when (timePeriodSelection) {
@@ -214,15 +215,14 @@ fun TotalPrice(
                 }
             }
         }
-        val totalPercentAnim by animateFloatAsState(
-            targetValue = totalPercent.toFloat(),
-            animationSpec = tween(1000, 0, FastOutSlowInEasing)
-        )
+        LaunchedEffect(totalPercent) {
+            totalPercentAnim.animateTo(totalPercent.toFloat())
+        }
         val percentFormat = DecimalFormat("0.##'%'").apply {
             roundingMode = RoundingMode.CEILING
         }
         Text(
-            text = percentFormat.format(totalPercentAnim),
+            text = percentFormat.format(totalPercentAnim.value),
             color = if (totalPercent > 0) Color(android.graphics.Color.GREEN)
             else Color(android.graphics.Color.RED),
             style = Typography.titleMedium,
