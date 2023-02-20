@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -58,49 +59,36 @@ class ComposeActivity : AppCompatActivity() {
             val isDarkTheme = themeViewModel.isDarkTheme.collectAsState(initial = true)
             val timePeriodSelection by walletViewModel.timePeriod.collectAsState()
             AppTheme(useDarkTheme = isDarkTheme.value) {
-                PortfolioScreen(
-                    portfolioState,
-                    timePeriodSelection
-                )
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.primaryContainer
+                ) {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        val view = LocalView.current
+                        Header(
+                            themeViewModel = themeViewModel,
+                            walletViewModel = walletViewModel,
+                            portfolioState = portfolioState,
+                            onThemeChange = { setScreenShot(view) }
+                        )
+                        PieChart(portfolioState = portfolioState)
+                        TotalPrice(
+                            portfolioState = portfolioState,
+                            timePeriodSelection = timePeriodSelection
+                        )
+                        TimePeriodSelection(
+                            walletViewModel = walletViewModel,
+                            timePeriodSelection = timePeriodSelection
+                        )
+                        CoinContent(
+                            portfolioState = portfolioState,
+                            timePeriodSelection = timePeriodSelection
+                        )
+                    }
+                }
             }
         }
         walletViewModel.getPortfolio()
-    }
-
-    @Composable
-    fun PortfolioScreen(
-        portfolioState: ViewState<Portfolio>,
-        timePeriodSelection: TimePeriod
-    ) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.primaryContainer
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                val view = LocalView.current
-                Header(
-                    themeViewModel = themeViewModel,
-                    walletViewModel = walletViewModel,
-                    portfolioState = portfolioState,
-                    onThemeChange = { setScreenShot(view) }
-                )
-                PieChart(portfolioState = portfolioState)
-                TotalPrice(
-                    portfolioState = portfolioState,
-                    timePeriodSelection = timePeriodSelection
-                )
-                TimePeriodSelection(
-                    walletViewModel = walletViewModel,
-                    timePeriodSelection = timePeriodSelection
-                )
-                CoinContent(
-                    portfolioState = portfolioState,
-                    timePeriodSelection = timePeriodSelection
-                )
-            }
-        }
     }
 
     private fun setScreenShot(view: View) {
@@ -130,7 +118,7 @@ fun PieChart(
     val pieData = PieData()
     var coinList by remember { mutableStateOf(listOf<DisplayableCoin>()) }
     if (portfolioState is ViewState.Success) {
-        coinList = portfolioState.successData.coinList
+        coinList = portfolioState.successData.coinList.sortedWith(compareBy { it.price * it.count })
     }
 
     if (coinList.isNotEmpty()) {
@@ -325,7 +313,6 @@ fun TimePeriodSelection(
     timePeriodSelection: TimePeriod
 ) {
     val timePeriodList = TimePeriod.values().asList()
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
