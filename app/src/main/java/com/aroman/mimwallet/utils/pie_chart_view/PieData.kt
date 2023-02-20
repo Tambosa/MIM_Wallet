@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import java.util.*
+import androidx.compose.ui.graphics.Color as ComposeColor
 
 class PieData {
     val pieSlices = HashMap<String, PieSlice>()
@@ -21,9 +22,11 @@ class PieData {
             pieSlices[name]?.let { it.value += value }
         } else {
             color?.let {
-                pieSlices[name] = PieSlice(name, value, 0f, 0f, PointF(), createPaint(it))
+                pieSlices[name] =
+                    PieSlice(name, value, 0f, 0f, PointF(), createPaint(it), createRandomComposeColor())
             } ?: run {
-                pieSlices[name] = PieSlice(name, value, 0f, 0f, PointF(), createPaint(null))
+                pieSlices[name] =
+                    PieSlice(name, value, 0f, 0f, PointF(), createPaint(null), createRandomComposeColor())
             }
         }
         totalValue += value
@@ -49,5 +52,14 @@ class PieData {
         }
         newPaint.isAntiAlias = true
         return newPaint
+    }
+
+    private fun createRandomComposeColor(): ComposeColor {
+        return androidx.compose.ui.graphics.Color(
+            alpha = 255,
+            red = Random().nextInt(255),
+            green = Random().nextInt(255),
+            blue = Random().nextInt(255),
+        )
     }
 }
