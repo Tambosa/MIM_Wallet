@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.core.animation.doOnEnd
 import androidx.core.graphics.applyCanvas
+import androidx.navigation.NavController
 import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.presentation_compose.ui.portfolio_screen.compose_children.*
 import com.aroman.mimwallet.presentation_compose.ui.theme.AppTheme
@@ -22,6 +23,7 @@ import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletView
 
 @Composable
 fun PortfolioScreen(
+    navController: NavController,
     walletViewModel: ComposeWalletViewModel,
     themeViewModel: ComposeThemeViewModel,
 ) {
@@ -64,7 +66,8 @@ fun PortfolioScreen(
                 )
                 CoinContent(
                     portfolioState = portfolioState,
-                    timePeriodSelection = timePeriodSelection
+                    timePeriodSelection = timePeriodSelection,
+                    navController = navController
                 )
             }
         }

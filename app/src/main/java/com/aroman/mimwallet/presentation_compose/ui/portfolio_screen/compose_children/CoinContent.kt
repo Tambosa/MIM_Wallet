@@ -1,9 +1,9 @@
 package com.aroman.mimwallet.presentation_compose.ui.portfolio_screen.compose_children
 
-import android.widget.Toast
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
@@ -17,19 +17,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.Portfolio
-import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel.TimePeriod
+import com.aroman.mimwallet.presentation_compose.ui.navigation.Screen
 import com.aroman.mimwallet.presentation_compose.ui.theme.Typography
+import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel.TimePeriod
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
 @Composable
 fun CoinContent(
     portfolioState: ViewState<Portfolio>,
-    timePeriodSelection: TimePeriod
+    timePeriodSelection: TimePeriod,
+    navController: NavController
 ) {
     var coinList by remember { mutableStateOf(listOf<DisplayableCoin>()) }
     if (portfolioState is ViewState.Success) {
@@ -43,7 +46,7 @@ fun CoinContent(
             items(1,
                 itemContent = {
                     DisplayableHint()
-                    DisplayableInsertCoin()
+                    DisplayableInsertCoin(navController)
                 })
         }
         if (coinList.isNotEmpty()) {
@@ -52,10 +55,11 @@ fun CoinContent(
                 itemContent = {
                     DisplayableCoinItem(
                         coin = coinList[it],
-                        timePeriodSelection = timePeriodSelection
+                        timePeriodSelection = timePeriodSelection,
+                        navController = navController
                     )
                     if (it == coinList.size - 1) {
-                        DisplayableInsertCoin()
+                        DisplayableInsertCoin(navController)
                     }
                 }
             )
@@ -66,9 +70,12 @@ fun CoinContent(
 @Composable
 fun DisplayableCoinItem(
     coin: DisplayableCoin,
-    timePeriodSelection: TimePeriod
+    timePeriodSelection: TimePeriod,
+    navController: NavController
 ) {
-    Column {
+    Column(modifier = Modifier.clickable {
+        navController.navigate(Screen.CoinDetails.withArg("${coin.name}: ${coin.symbol}"))
+    }) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -82,7 +89,7 @@ fun DisplayableCoinItem(
             )
             Text(
                 text = coin.name,
-                style = Typography.bodyMedium
+                style = Typography.bodyMedium,
             )
             Text(
                 text = String.format("$%.2f", (coinPriceAnim * coin.count)),
@@ -136,15 +143,14 @@ fun DisplayableHint() {
 }
 
 @Composable
-fun DisplayableInsertCoin() {
+fun DisplayableInsertCoin(navController: NavController) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-        val context = LocalContext.current
         IconButton(
             onClick = {
-                Toast.makeText(context, "add item", Toast.LENGTH_SHORT).show()
+                navController.navigate(Screen.CoinDetails.withArg("BTC"))
             }) {
             Icon(
                 modifier = Modifier.size(100.dp),
