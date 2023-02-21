@@ -1,4 +1,4 @@
-package com.aroman.mimwallet.presentation_compose
+package com.aroman.mimwallet.presentation_compose.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

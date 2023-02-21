@@ -1,18 +1,16 @@
-package com.aroman.mimwallet.presentation_compose.ui.compose_views
+package com.aroman.mimwallet.presentation_compose.ui.portfolio_screen.compose_children
 
 import android.widget.Toast
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,11 +18,50 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.R
+import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.presentation_compose.ComposeWalletViewModel.TimePeriod
+import com.aroman.mimwallet.domain.model.Portfolio
+import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel.TimePeriod
 import com.aroman.mimwallet.presentation_compose.ui.theme.Typography
 import java.math.RoundingMode
 import java.text.DecimalFormat
+
+@Composable
+fun CoinContent(
+    portfolioState: ViewState<Portfolio>,
+    timePeriodSelection: TimePeriod
+) {
+    var coinList by remember { mutableStateOf(listOf<DisplayableCoin>()) }
+    if (portfolioState is ViewState.Success) {
+        coinList = portfolioState.successData.coinList
+    }
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 15.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        if (coinList.isEmpty()) {
+            items(1,
+                itemContent = {
+                    DisplayableHint()
+                    DisplayableInsertCoin()
+                })
+        }
+        if (coinList.isNotEmpty()) {
+            items(
+                coinList.size,
+                itemContent = {
+                    DisplayableCoinItem(
+                        coin = coinList[it],
+                        timePeriodSelection = timePeriodSelection
+                    )
+                    if (it == coinList.size - 1) {
+                        DisplayableInsertCoin()
+                    }
+                }
+            )
+        }
+    }
+}
 
 @Composable
 fun DisplayableCoinItem(
