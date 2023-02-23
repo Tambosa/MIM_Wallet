@@ -73,7 +73,7 @@ fun DisplayableCoinItem(
     navController: NavController
 ) {
     Column(modifier = Modifier.clickable {
-        navController.navigate(Screen.CoinDetails.withArg("${coin.name}: ${coin.symbol}"))
+        //todo change count
     }) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -149,7 +149,7 @@ fun DisplayableInsertCoin(navController: NavController) {
     ) {
         IconButton(
             onClick = {
-                navController.navigate(Screen.CoinDetails.withArg("BTC"))
+                navController.navigate(Screen.CoinDetails.route)
             }) {
             Icon(
                 modifier = Modifier.size(100.dp),
