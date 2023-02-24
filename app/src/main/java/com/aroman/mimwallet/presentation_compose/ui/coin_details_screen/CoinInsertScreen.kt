@@ -1,6 +1,5 @@
 package com.aroman.mimwallet.presentation_compose.ui.coin_details_screen
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
@@ -11,12 +10,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aroman.mimwallet.presentation_compose.ui.coin_details_screen.compose_children.DialogDropDownMenu
+import com.aroman.mimwallet.presentation_compose.ui.navigation.Screen
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel
 
 @Composable
@@ -73,18 +72,13 @@ fun CoinInsertScreen(
                 )
             )
 
-            val context = LocalContext.current
             saveEnabled = selectedIndex != -1 && coinCount > 0.0
             Button(
                 onClick = {
                     val newCoin = coins.data!![selectedIndex]
                     newCoin.count = coinCount
-                    Toast.makeText(
-                        context,
-                        "$newCoin",
-                        Toast.LENGTH_LONG
-                    ).show()
                     walletViewModel.insertCoin(newCoin)
+                    navController.navigate(Screen.Portfolio.route)
                 },
                 enabled = saveEnabled
             ) {

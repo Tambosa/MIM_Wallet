@@ -64,7 +64,8 @@ fun PortfolioScreen(
             CoinContent(
                 portfolioState = portfolioState,
                 timePeriodSelection = timePeriodSelection,
-                navController = navController
+                navController = navController,
+                viewModel = walletViewModel
             )
         }
     }

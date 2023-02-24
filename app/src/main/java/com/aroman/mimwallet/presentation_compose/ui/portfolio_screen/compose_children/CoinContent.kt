@@ -6,15 +6,16 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aroman.mimwallet.R
@@ -23,6 +24,7 @@ import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.Portfolio
 import com.aroman.mimwallet.presentation_compose.ui.navigation.Screen
 import com.aroman.mimwallet.presentation_compose.ui.theme.Typography
+import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel.TimePeriod
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -31,12 +33,29 @@ import java.text.DecimalFormat
 fun CoinContent(
     portfolioState: ViewState<Portfolio>,
     timePeriodSelection: TimePeriod,
-    navController: NavController
+    navController: NavController,
+    viewModel: ComposeWalletViewModel
 ) {
+    //lazyRow's vars
     var coinList by remember { mutableStateOf(listOf<DisplayableCoin>()) }
     if (portfolioState is ViewState.Success) {
         coinList = portfolioState.successData.coinList
     }
+
+    //alertDialog's vars
+    var openDialog by remember { mutableStateOf(false) }
+    var newCount by remember { mutableStateOf(0.0) }
+    var saveEnabled by remember { mutableStateOf(true) }
+    var clickedCoin by remember {
+        mutableStateOf(
+            DisplayableCoin(
+                id = 1,
+                name = "Bitcoin",
+                symbol = "BTC"
+            )
+        )
+    }
+
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 15.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -53,9 +72,13 @@ fun CoinContent(
                 coinList.size,
                 itemContent = {
                     DisplayableCoinItem(
+                        modifier = Modifier.clickable {
+                            openDialog = true
+                            clickedCoin = coinList[it]
+                            newCount = clickedCoin.count
+                        },
                         coin = coinList[it],
                         timePeriodSelection = timePeriodSelection,
-                        navController = navController
                     )
                     if (it == coinList.size - 1) {
                         DisplayableInsertCoin(navController)
@@ -64,17 +87,71 @@ fun CoinContent(
             )
         }
     }
+
+    if (openDialog) {
+        AlertDialog(
+            onDismissRequest = { openDialog = false },
+            title = { Text(text = clickedCoin.name) },
+            text = {
+                Column() {
+                    OutlinedTextField(
+                        label = { Text(text = "Quantity") },
+                        value = newCount.toString(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp),
+                        onValueChange = {
+                            newCount = it.toDoubleOrNull() ?: 0.0
+                            saveEnabled = newCount >= 0.0
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Decimal,
+                            imeAction = ImeAction.Done
+                        )
+                    )
+
+                }
+            },
+            confirmButton = {
+                Row(horizontalArrangement = Arrangement.Center) {
+                    Button(
+                        modifier = Modifier.padding(8.dp),
+                        onClick = {
+                            clickedCoin.count = newCount
+                            viewModel.insertCoin(clickedCoin)
+                            openDialog = false
+                        },
+                        enabled = saveEnabled
+                    ) {
+                        Text(text = "Confirm")
+                    }
+                }
+            },
+            dismissButton = {
+                Row(horizontalArrangement = Arrangement.Center) {
+                    Button(
+                        modifier = Modifier.padding(8.dp),
+                        onClick = {
+                            viewModel.deleteCoin(clickedCoin)
+                            viewModel.getPortfolio()
+                            openDialog = false
+                        },
+                    ) {
+                        Text(text = "Delete")
+                    }
+                }
+            }
+        )
+    }
 }
 
 @Composable
 fun DisplayableCoinItem(
     coin: DisplayableCoin,
     timePeriodSelection: TimePeriod,
-    navController: NavController
+    modifier: Modifier
 ) {
-    Column(modifier = Modifier.clickable {
-        //todo change count
-    }) {
+    Column(modifier = modifier) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
