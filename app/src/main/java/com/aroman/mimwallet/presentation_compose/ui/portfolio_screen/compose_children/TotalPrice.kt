@@ -25,7 +25,7 @@ fun TotalPrice(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 12.dp, end = 12.dp, top = 20.dp),
+            .padding(top = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         var totalPrice by remember { mutableStateOf(0.0) }

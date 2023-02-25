@@ -18,7 +18,8 @@ import androidx.navigation.NavController
 import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.Portfolio
-import com.aroman.mimwallet.presentation_compose.ui.portfolio_screen.compose_children.*
+import com.aroman.mimwallet.presentation_compose.ui.portfolio_screen.compose_children.CoinContent
+import com.aroman.mimwallet.presentation_compose.ui.portfolio_screen.compose_children.Header
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeThemeViewModel
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel
 
@@ -57,22 +58,11 @@ fun PortfolioScreen(
                     setScreenshot(view)
                 }
             )
-            key(coins) {
-                PieChart(coins = coins)
-            }
-            TotalPrice(
-                portfolio = portfolio,
-                timePeriodSelection = timePeriodSelection
-            )
-            TimePeriodSelection(
-                walletViewModel = walletViewModel,
-                timePeriodSelection = timePeriodSelection
-            )
             CoinContent(
+                viewModel = walletViewModel,
+                navController = navController,
                 portfolio = portfolio,
                 timePeriodSelection = timePeriodSelection,
-                navController = navController,
-                viewModel = walletViewModel
             )
         }
     }

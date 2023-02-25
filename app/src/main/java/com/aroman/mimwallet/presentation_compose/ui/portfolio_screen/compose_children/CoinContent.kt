@@ -33,51 +33,41 @@ fun CoinContent(
     portfolio: Portfolio,
     timePeriodSelection: TimePeriod,
     navController: NavController,
-    viewModel: ComposeWalletViewModel
+    viewModel: ComposeWalletViewModel,
 ) {
-    //lazyRow's vars
-    var coinList by remember { mutableStateOf(listOf<DisplayableCoin>()) }
-    coinList = portfolio.coinList
-
     //alertDialog's vars
     var openDialog by remember { mutableStateOf(false) }
-    var newCount by remember { mutableStateOf(0.0) }
-    var saveEnabled by remember { mutableStateOf(true) }
-    var clickedCoin by remember {
-        mutableStateOf(
-            DisplayableCoin(
-                id = 1,
-                name = "Bitcoin",
-                symbol = "BTC"
-            )
-        )
-    }
+    var oldCount by remember { mutableStateOf(0.0) }
+    var clickedCoin by remember { mutableStateOf(DisplayableCoin(1, "Bitcoin", "BTC")) }
 
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 15.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        if (coinList.isEmpty()) {
+        if (portfolio.coinList.isEmpty()) {
             items(1,
                 itemContent = {
                     DisplayableHint()
                     DisplayableInsertCoin(navController)
                 })
         }
-        if (coinList.isNotEmpty()) {
+        if (portfolio.coinList.isNotEmpty()) {
             items(
-                coinList.size,
+                portfolio.coinList.size,
                 itemContent = {
+                    if (it == 0) {
+                        RecyclerTopContent(portfolio, timePeriodSelection, viewModel)
+                    }
                     DisplayableCoinItem(
                         modifier = Modifier.clickable {
                             openDialog = true
-                            clickedCoin = coinList[it]
-                            newCount = clickedCoin.count
+                            clickedCoin = portfolio.coinList[it]
+                            oldCount = clickedCoin.count
                         },
-                        coin = coinList[it],
+                        coin = portfolio.coinList[it],
                         timePeriodSelection = timePeriodSelection,
                     )
-                    if (it == coinList.size - 1) {
+                    if (it == portfolio.coinList.size - 1) {
                         DisplayableInsertCoin(navController)
                     }
                 }
@@ -86,60 +76,91 @@ fun CoinContent(
     }
 
     if (openDialog) {
-        AlertDialog(
+        EditCoinCountDialog(
             onDismissRequest = { openDialog = false },
-            title = { Text(text = clickedCoin.name) },
-            text = {
-                Column() {
-                    OutlinedTextField(
-                        label = { Text(text = "Quantity") },
-                        value = newCount.toString(),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 12.dp),
-                        onValueChange = {
-                            newCount = it.toDoubleOrNull() ?: 0.0
-                            saveEnabled = newCount >= 0.0
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Decimal,
-                            imeAction = ImeAction.Done
-                        )
-                    )
-
-                }
-            },
-            confirmButton = {
-                Row(horizontalArrangement = Arrangement.Center) {
-                    Button(
-                        modifier = Modifier.padding(8.dp),
-                        onClick = {
-                            clickedCoin.count = newCount
-                            viewModel.insertCoin(clickedCoin)
-                            openDialog = false
-                        },
-                        enabled = saveEnabled
-                    ) {
-                        Text(text = "Confirm")
-                    }
-                }
-            },
-            dismissButton = {
-                Row(horizontalArrangement = Arrangement.Center) {
-                    Button(
-                        modifier = Modifier.padding(8.dp),
-                        onClick = {
-                            viewModel.deleteCoin(clickedCoin)
-                            viewModel.getPortfolio()
-                            openDialog = false
-                        },
-                    ) {
-                        Text(text = "Delete")
-                    }
-                }
-            }
+            clickedCoin = clickedCoin,
+            oldCount = oldCount,
+            viewModel = viewModel
         )
     }
+}
+
+@Composable
+fun EditCoinCountDialog(
+    onDismissRequest: () -> Unit,
+    clickedCoin: DisplayableCoin,
+    oldCount: Double,
+    viewModel: ComposeWalletViewModel
+) {
+    var saveEnabled by remember { mutableStateOf(true) }
+    var newCount by remember { mutableStateOf(oldCount) }
+    AlertDialog(
+        onDismissRequest = { onDismissRequest() },
+        title = { Text(text = clickedCoin.name) },
+        text = {
+            Column() {
+                OutlinedTextField(
+                    label = { Text(text = "Quantity") },
+                    value = newCount.toString(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp),
+                    onValueChange = {
+                        newCount = it.toDoubleOrNull() ?: 0.0
+                        saveEnabled = newCount >= 0.0
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Decimal,
+                        imeAction = ImeAction.Done
+                    )
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                modifier = Modifier.padding(8.dp),
+                onClick = {
+                    clickedCoin.count = newCount
+                    viewModel.insertCoin(clickedCoin)
+                    onDismissRequest()
+                },
+                enabled = saveEnabled
+            ) {
+                Text(text = "Confirm")
+            }
+        },
+        dismissButton = {
+            Button(
+                modifier = Modifier.padding(8.dp),
+                onClick = {
+                    viewModel.deleteCoin(clickedCoin)
+                    viewModel.getPortfolio()
+                    onDismissRequest()
+                },
+            ) {
+                Text(text = "Delete")
+            }
+        }
+    )
+}
+
+@Composable
+private fun RecyclerTopContent(
+    portfolio: Portfolio,
+    timePeriodSelection: TimePeriod,
+    viewModel: ComposeWalletViewModel
+) {
+    key(portfolio.coinList) {
+        PieChart(coins = portfolio.coinList)
+    }
+    TotalPrice(
+        portfolio = portfolio,
+        timePeriodSelection = timePeriodSelection
+    )
+    TimePeriodSelection(
+        walletViewModel = viewModel,
+        timePeriodSelection = timePeriodSelection
+    )
 }
 
 @Composable
