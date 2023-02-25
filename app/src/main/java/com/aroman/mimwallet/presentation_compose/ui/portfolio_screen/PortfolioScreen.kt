@@ -16,6 +16,8 @@ import androidx.core.animation.doOnEnd
 import androidx.core.graphics.applyCanvas
 import androidx.navigation.NavController
 import com.aroman.mimwallet.common.ViewState
+import com.aroman.mimwallet.domain.model.DisplayableCoin
+import com.aroman.mimwallet.domain.model.Portfolio
 import com.aroman.mimwallet.presentation_compose.ui.portfolio_screen.compose_children.*
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeThemeViewModel
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel
@@ -26,14 +28,19 @@ fun PortfolioScreen(
     walletViewModel: ComposeWalletViewModel,
     themeViewModel: ComposeThemeViewModel,
 ) {
+    LaunchedEffect(true) {
+        walletViewModel.getPortfolio()
+    }
     val portfolioState by walletViewModel.portfolio.collectAsState()
     val timePeriodSelection by walletViewModel.timePeriod.collectAsState()
 
     var isLoading by remember { mutableStateOf(true) }
     isLoading = portfolioState is ViewState.Loading
-
-    LaunchedEffect(true) {
-        walletViewModel.getPortfolio()
+    var coins by remember { mutableStateOf(listOf<DisplayableCoin>()) }
+    var portfolio by remember { mutableStateOf(Portfolio(listOf())) }
+    if (portfolioState is ViewState.Success) {
+        portfolio = (portfolioState as ViewState.Success<Portfolio>).successData
+        coins = portfolio.coinList
     }
 
     Surface(
@@ -50,11 +57,11 @@ fun PortfolioScreen(
                     setScreenshot(view)
                 }
             )
-            key(portfolioState.data?.coinList) {
-                PieChart(portfolioState = portfolioState)
+            key(coins) {
+                PieChart(coins = coins)
             }
             TotalPrice(
-                portfolioState = portfolioState,
+                portfolio = portfolio,
                 timePeriodSelection = timePeriodSelection
             )
             TimePeriodSelection(
@@ -62,7 +69,7 @@ fun PortfolioScreen(
                 timePeriodSelection = timePeriodSelection
             )
             CoinContent(
-                portfolioState = portfolioState,
+                portfolio = portfolio,
                 timePeriodSelection = timePeriodSelection,
                 navController = navController,
                 viewModel = walletViewModel

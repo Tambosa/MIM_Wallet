@@ -19,7 +19,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aroman.mimwallet.R
-import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.Portfolio
 import com.aroman.mimwallet.presentation_compose.ui.navigation.Screen
@@ -31,16 +30,14 @@ import java.text.DecimalFormat
 
 @Composable
 fun CoinContent(
-    portfolioState: ViewState<Portfolio>,
+    portfolio: Portfolio,
     timePeriodSelection: TimePeriod,
     navController: NavController,
     viewModel: ComposeWalletViewModel
 ) {
     //lazyRow's vars
     var coinList by remember { mutableStateOf(listOf<DisplayableCoin>()) }
-    if (portfolioState is ViewState.Success) {
-        coinList = portfolioState.successData.coinList
-    }
+    coinList = portfolio.coinList
 
     //alertDialog's vars
     var openDialog by remember { mutableStateOf(false) }

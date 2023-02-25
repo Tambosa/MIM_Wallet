@@ -8,25 +8,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
-import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.domain.model.Portfolio
 import com.aroman.mimwallet.presentation_compose.ui.theme.Typography
 import com.aroman.mimwallet.utils.pie_chart_view.PieData
 import com.aroman.mimwallet.utils.pie_chart_view.PieSlice
 
 @Composable
 fun PieChart(
-    portfolioState: ViewState<Portfolio>
+    coins: List<DisplayableCoin>
 ) {
     val pieData = PieData()
-    var coinList by remember { mutableStateOf(listOf<DisplayableCoin>()) }
-    if (portfolioState is ViewState.Success) {
-        coinList = portfolioState.successData.coinList.sortedWith(compareBy { it.price * it.count })
-    }
 
-    if (coinList.isNotEmpty()) {
-        for (coin in coinList) {
+    if (coins.isNotEmpty()) {
+        for (coin in coins) {
             pieData.add(coin.symbol, coin.price * coin.count)
         }
         var lastAngle = 270f

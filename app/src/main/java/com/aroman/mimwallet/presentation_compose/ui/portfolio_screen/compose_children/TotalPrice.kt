@@ -11,16 +11,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.domain.model.Portfolio
-import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel
 import com.aroman.mimwallet.presentation_compose.ui.theme.Typography
+import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
 @Composable
 fun TotalPrice(
-    portfolioState: ViewState<Portfolio>,
+    portfolio: Portfolio,
     timePeriodSelection: ComposeWalletViewModel.TimePeriod,
 ) {
     Row(
@@ -31,9 +30,7 @@ fun TotalPrice(
     ) {
         var totalPrice by remember { mutableStateOf(0.0) }
         val totalPriceAnim = remember { Animatable(0f) }
-        if (portfolioState is ViewState.Success) {
-            totalPrice = portfolioState.successData.totalPrice
-        }
+        totalPrice = portfolio.totalPrice
         LaunchedEffect(totalPrice) {
             totalPriceAnim.animateTo(totalPrice.toFloat())
         }
@@ -46,18 +43,17 @@ fun TotalPrice(
 
         var totalPercent by remember { mutableStateOf(0.0) }
         val totalPercentAnim = remember { Animatable(0f) }
-        if (portfolioState is ViewState.Success) {
-            totalPercent = with(portfolioState.successData) {
-                when (timePeriodSelection) {
-                    ComposeWalletViewModel.TimePeriod.ONE_HOUR -> totalPercentChange1h
-                    ComposeWalletViewModel.TimePeriod.TWENTY_FOUR_HOURS -> totalPercentChange24h
-                    ComposeWalletViewModel.TimePeriod.SEVEN_DAYS -> totalPercentChange7d
-                    ComposeWalletViewModel.TimePeriod.THIRTY_DAYS -> totalPercentChange30d
-                    ComposeWalletViewModel.TimePeriod.SIXTY_DAYS -> totalPercentChange60d
-                    ComposeWalletViewModel.TimePeriod.NINETY_DAYS -> totalPercentChange90d
-                }
+        totalPercent = with(portfolio) {
+            when (timePeriodSelection) {
+                ComposeWalletViewModel.TimePeriod.ONE_HOUR -> totalPercentChange1h
+                ComposeWalletViewModel.TimePeriod.TWENTY_FOUR_HOURS -> totalPercentChange24h
+                ComposeWalletViewModel.TimePeriod.SEVEN_DAYS -> totalPercentChange7d
+                ComposeWalletViewModel.TimePeriod.THIRTY_DAYS -> totalPercentChange30d
+                ComposeWalletViewModel.TimePeriod.SIXTY_DAYS -> totalPercentChange60d
+                ComposeWalletViewModel.TimePeriod.NINETY_DAYS -> totalPercentChange90d
             }
         }
+
         LaunchedEffect(totalPercent) {
             totalPercentAnim.animateTo(totalPercent.toFloat())
         }

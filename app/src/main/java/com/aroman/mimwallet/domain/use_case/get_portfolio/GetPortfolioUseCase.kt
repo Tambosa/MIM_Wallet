@@ -5,6 +5,7 @@ import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.Portfolio
 import com.aroman.mimwallet.domain.repository.CoinRepository
 import com.aroman.mimwallet.domain.repository.PortfolioRepository
+import com.aroman.mimwallet.utils.round2Digits
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
@@ -30,7 +31,7 @@ class GetPortfolioUseCase @Inject constructor(
                             name = localCoin.name,
                             symbol = localCoin.symbol,
                             count = localCoin.count,
-                            price = coinDetailsList[localCoin.symbol]!!.price,
+                            price = coinDetailsList[localCoin.symbol]!!.price.round2Digits(),
                             percentChange1h = coinDetailsList[localCoin.symbol]!!.percentChange1h,
                             percentChange24h = coinDetailsList[localCoin.symbol]!!.percentChange24h,
                             percentChange7d = coinDetailsList[localCoin.symbol]!!.percentChange7d,

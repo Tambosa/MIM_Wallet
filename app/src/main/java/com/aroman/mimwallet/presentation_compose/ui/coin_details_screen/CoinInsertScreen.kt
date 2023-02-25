@@ -57,7 +57,6 @@ fun CoinInsertScreen(
                 selectedIndex = selectedIndex
             )
 
-
             var coinCount by remember { mutableStateOf(0.0) }
             OutlinedTextField(
                 label = { Text("Quantity") },
