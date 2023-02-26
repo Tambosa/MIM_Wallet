@@ -1,6 +1,7 @@
 package com.aroman.mimwallet.presentation_compose.ui.portfolio_screen
 
 import android.animation.ObjectAnimator
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.animation.doOnEnd
 import androidx.core.graphics.applyCanvas
@@ -46,12 +48,13 @@ fun PortfolioScreen(
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             val view = LocalView.current
+            val resources = LocalContext.current.resources
             Header(
                 themeViewModel = themeViewModel,
                 walletViewModel = walletViewModel,
                 isLoading = isLoading,
                 onThemeChange = {
-                    setScreenshot(view)
+                    setScreenshot(view, resources)
                 }
             )
             CoinContent(
@@ -64,14 +67,14 @@ fun PortfolioScreen(
     }
 }
 
-private fun setScreenshot(view: View) {
+private fun setScreenshot(view: View, resources: Resources) {
     val bmp = Bitmap.createBitmap(
         view.width, view.height,
         Bitmap.Config.ARGB_8888
     ).applyCanvas {
         view.draw(this)
     }
-    view.foreground = BitmapDrawable(bmp)
+    view.foreground = BitmapDrawable(resources, bmp)
 
     ObjectAnimator.ofInt(view.foreground, "alpha", 255, 0).apply {
         duration = 800
