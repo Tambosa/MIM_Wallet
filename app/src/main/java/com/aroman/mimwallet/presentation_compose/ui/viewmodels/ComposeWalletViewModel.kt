@@ -9,10 +9,7 @@ import com.aroman.mimwallet.domain.repository.PortfolioRepository
 import com.aroman.mimwallet.domain.use_case.get_coins.GetCoinsUseCase
 import com.aroman.mimwallet.domain.use_case.get_portfolio.GetPortfolioUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,6 +26,7 @@ class ComposeWalletViewModel @Inject constructor(
 
     private val _portfolio = MutableStateFlow<ViewState<Portfolio>>(ViewState.Loading())
     val portfolio = _portfolio.asStateFlow()
+    val isLoading = portfolio.map { it is ViewState.Loading }
 
     private val _timePeriod = MutableStateFlow(TimePeriod.TWENTY_FOUR_HOURS)
     val timePeriod = _timePeriod.asStateFlow()
