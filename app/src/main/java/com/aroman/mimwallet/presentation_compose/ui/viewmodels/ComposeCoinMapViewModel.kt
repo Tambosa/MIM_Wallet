@@ -9,6 +9,7 @@ import com.aroman.mimwallet.domain.repository.PortfolioRepository
 import com.aroman.mimwallet.domain.use_case.get_coins.GetCoinsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,10 +28,12 @@ class ComposeCoinMapViewModel @Inject constructor(
 
     private val _coins = MutableStateFlow<ViewState<List<DisplayableCoin>>>(ViewState.Loading())
     val isLoading = _coins.map { it is ViewState.Loading }
-    private val successCoins = _coins.map { if (it is ViewState.Success) it.successData else listOf() }
+    private val successCoins =
+        _coins.map { if (it is ViewState.Success) it.successData else listOf() }
 
     val coins = searchText
         .debounce(500L)
+        .onEach { _isSearching.update { true } }
         .combine(successCoins) { text, coins ->
             if (text.isBlank()) {
                 Log.d("@@@", "coins blank: $coins")
@@ -39,9 +42,12 @@ class ComposeCoinMapViewModel @Inject constructor(
                 Log.d(
                     "@@@", "coins filter: $coins"
                 )
+                delay(500)
                 coins.filter { it.doesMatchSearchQuery(text) }
             }
-        }.stateIn(
+        }
+        .onEach { _isSearching.update { false } }
+        .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             _coins.value.data
