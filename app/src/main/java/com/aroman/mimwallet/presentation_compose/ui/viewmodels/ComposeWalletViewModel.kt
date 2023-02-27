@@ -6,7 +6,6 @@ import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.Portfolio
 import com.aroman.mimwallet.domain.repository.PortfolioRepository
-import com.aroman.mimwallet.domain.use_case.get_coins.GetCoinsUseCase
 import com.aroman.mimwallet.domain.use_case.get_portfolio.GetPortfolioUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -15,14 +14,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ComposeWalletViewModel @Inject constructor(
-    private val getCoinsUseCase: GetCoinsUseCase,
     private val getPortfolioUseCase: GetPortfolioUseCase,
     private val localRepo: PortfolioRepository
 ) :
     ViewModel() {
-
-    private val _coins = MutableStateFlow<ViewState<List<DisplayableCoin>>>(ViewState.Loading())
-    val coins = _coins.asStateFlow()
 
     private val _portfolio = MutableStateFlow<ViewState<Portfolio>>(ViewState.Loading())
     val portfolio = _portfolio.asStateFlow()
@@ -30,12 +25,6 @@ class ComposeWalletViewModel @Inject constructor(
 
     private val _timePeriod = MutableStateFlow(TimePeriod.TWENTY_FOUR_HOURS)
     val timePeriod = _timePeriod.asStateFlow()
-
-    fun getCoins() {
-        getCoinsUseCase().onEach { result ->
-            _coins.value = result
-        }.launchIn(viewModelScope)
-    }
 
     fun getPortfolio() {
         getPortfolioUseCase().onEach { result ->

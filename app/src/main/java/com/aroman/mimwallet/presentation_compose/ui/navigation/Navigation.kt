@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.aroman.mimwallet.presentation_compose.ui.coin_details_screen.CoinInsertScreen
 import com.aroman.mimwallet.presentation_compose.ui.portfolio_screen.PortfolioScreen
+import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeCoinMapViewModel
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeThemeViewModel
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel
 
@@ -13,6 +14,7 @@ import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletView
 fun Navigation(
     walletViewModel: ComposeWalletViewModel,
     themeViewModel: ComposeThemeViewModel,
+    coinMapViewModel: ComposeCoinMapViewModel
 ) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.Portfolio.route) {
@@ -28,7 +30,7 @@ fun Navigation(
         ) {
             CoinInsertScreen(
                 navController = navController,
-                walletViewModel = walletViewModel,
+                coinMapViewModel = coinMapViewModel,
             )
         }
     }

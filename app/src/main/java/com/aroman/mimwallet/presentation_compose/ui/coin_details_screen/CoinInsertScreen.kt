@@ -1,40 +1,34 @@
 package com.aroman.mimwallet.presentation_compose.ui.coin_details_screen
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material3.Button
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.TextField
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.aroman.mimwallet.presentation_compose.ui.coin_details_screen.compose_children.DialogDropDownMenu
-import com.aroman.mimwallet.presentation_compose.ui.navigation.Screen
-import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel
+import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeCoinMapViewModel
+
 
 @Composable
 fun CoinInsertScreen(
     navController: NavController,
-    walletViewModel: ComposeWalletViewModel,
+    coinMapViewModel: ComposeCoinMapViewModel
 ) {
-    val coins by walletViewModel.coins.collectAsState()
-    val coinsList by remember {
-        derivedStateOf {
-            coins.data?.map { "${it.name}: ${it.symbol}" } ?: listOf()
-        }
-    }
-    var selectedIndex by remember { mutableStateOf(-1) }
-    var saveEnabled by remember { mutableStateOf(false) }
+    val coins by coinMapViewModel.coins.collectAsState()
+    LaunchedEffect(true) { coinMapViewModel.getCoins() }
 
-    LaunchedEffect(true) {
-        walletViewModel.getCoins()
-    }
+    val searchText by coinMapViewModel.searchText.collectAsState()
+    val isLoading by coinMapViewModel.isLoading.collectAsState(true)
+    val isSearching by coinMapViewModel.isSearching.collectAsState()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -45,44 +39,32 @@ fun CoinInsertScreen(
                 .fillMaxSize()
                 .padding(horizontal = 12.dp, vertical = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
         ) {
-            DialogDropDownMenu(
-                modifier = Modifier.padding(vertical = 12.dp),
-                label = "Crypto currency",
-                items = coinsList,
-                onItemSelected = { index, _ ->
-                    selectedIndex = index
+            TextField(
+                value = searchText,
+                onValueChange = coinMapViewModel::onSearchTextChange,
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = {
+                    Text(text = "Search")
                 },
-                selectedIndex = selectedIndex
+                maxLines = 1
             )
-
-            var coinCount by remember { mutableStateOf(0.0) }
-            OutlinedTextField(
-                label = { Text("Quantity") },
-                value = coinCount.toString(),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp),
-                onValueChange = { coinCount = it.toDoubleOrNull() ?: 0.0 },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Decimal,
-                    imeAction = ImeAction.Done
-                )
-            )
-
-            saveEnabled = selectedIndex != -1 && coinCount > 0.0
-            Button(
-                onClick = {
-                    val newCoin = coins.data!![selectedIndex]
-                    newCoin.count = coinCount
-                    walletViewModel.insertCoin(newCoin)
-                    navController.navigate(Screen.Portfolio.route)
-                },
-                enabled = saveEnabled
-            ) {
-                Text(text = "Save")
-            }
+            Spacer(modifier = Modifier.height(16.dp))
+            if (!coins.isNullOrEmpty())
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                ) {
+                    items(coins!!) { coin ->
+                        Text(
+                            text = "${coin.name}: ${coin.symbol}",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 12.dp)
+                        )
+                    }
+                }
         }
     }
 }
