@@ -53,7 +53,7 @@ private fun CoinInsertContent(
     isSearching: Boolean,
     coins: List<DisplayableCoin>?
 ) {
-    var selectedCoins1 by remember { mutableStateOf(listOf<DisplayableCoin>()) }
+    var selectedCoins by remember { mutableStateOf(listOf<DisplayableCoin>()) }
     Column(
         Modifier
             .fillMaxSize()
@@ -71,7 +71,7 @@ private fun CoinInsertContent(
         )
         Spacer(modifier = Modifier.height(16.dp))
         InsertCoinButton(
-            selectedCoin = selectedCoins1,
+            selectedCoin = selectedCoins,
             coinMapViewModel = coinMapViewModel,
             navController = navController
         )
@@ -90,13 +90,13 @@ private fun CoinInsertContent(
                             .fillMaxWidth()
                             .padding(vertical = 12.dp)
                             .clickable {
-                                selectedCoins1 = if (selectedCoins1.contains(coin)) {
+                                selectedCoins = if (selectedCoins.contains(coin)) {
                                     mutableListOf<DisplayableCoin>().apply {
-                                        addAll(selectedCoins1)
+                                        addAll(selectedCoins)
                                         remove(coin)
                                     }
                                 } else {
-                                    listOf(*selectedCoins1.toTypedArray(), coin)
+                                    listOf(*selectedCoins.toTypedArray(), coin)
                                 }
                             }
                     )
