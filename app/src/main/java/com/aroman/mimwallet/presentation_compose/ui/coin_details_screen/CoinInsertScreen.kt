@@ -71,7 +71,7 @@ private fun CoinInsertContent(
         )
         Spacer(modifier = Modifier.height(16.dp))
         InsertCoinButton(
-            selectedCoin = selectedCoins,
+            selectedCoins = selectedCoins,
             coinMapViewModel = coinMapViewModel,
             navController = navController
         )
@@ -117,21 +117,21 @@ private fun LoadingBox() {
 
 @Composable
 fun InsertCoinButton(
-    selectedCoin: List<DisplayableCoin>,
+    selectedCoins: List<DisplayableCoin>,
     coinMapViewModel: ComposeCoinMapViewModel,
     navController: NavController
 ) {
-    if (selectedCoin.isNotEmpty()) {
+    if (selectedCoins.isNotEmpty()) {
         Button(
             onClick = {
-                selectedCoin.forEach {
+                selectedCoins.forEach {
                     coinMapViewModel.insertCoin(it)
                 }
                 navController.popBackStack()
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Add ${selectedCoin.map { it.name + " " }}")
+            Text(text = "Add ${selectedCoins.map { it.name + " " }}")
         }
         Spacer(modifier = Modifier.height(16.dp))
     }
