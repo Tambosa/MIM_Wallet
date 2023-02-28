@@ -23,7 +23,7 @@ fun TimePeriodSelection(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(top = 8.dp, start = 12.dp, end = 12.dp),
     ) {
         LazyRow(
             modifier = Modifier.fillMaxWidth(),

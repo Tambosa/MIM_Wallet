@@ -1,17 +1,30 @@
 package com.aroman.mimwallet.presentation_compose.ui.portfolio_screen.compose_children
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -28,6 +41,7 @@ import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletView
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun CoinContent(
     portfolio: Portfolio,
@@ -41,7 +55,7 @@ fun CoinContent(
     var clickedCoin by remember { mutableStateOf(DisplayableCoin(1, "Bitcoin", "BTC")) }
 
     LazyColumn(
-        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 15.dp),
+        contentPadding = PaddingValues(vertical = 15.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         if (portfolio.coinList.isEmpty()) {
@@ -53,21 +67,52 @@ fun CoinContent(
         }
         if (portfolio.coinList.isNotEmpty()) {
             items(
-                portfolio.coinList.size,
-                itemContent = {
-                    if (it == 0) {
+                count = portfolio.coinList.size,
+                key = { index -> portfolio.coinList[index].id },
+                itemContent = { index ->
+                    if (index == 0) {
                         RecyclerTopContent(portfolio, timePeriodSelection, viewModel)
                     }
-                    DisplayableCoinItem(
-                        modifier = Modifier.clickable {
-                            openDialog = true
-                            clickedCoin = portfolio.coinList[it]
-                            oldCount = clickedCoin.count
-                        },
-                        coin = portfolio.coinList[it],
-                        timePeriodSelection = timePeriodSelection,
+                    val currentItem by rememberUpdatedState(portfolio.coinList[index])
+                    val dismissState = rememberDismissState(
+                        confirmStateChange = {
+                            when (it) {
+                                DismissValue.DismissedToStart -> {
+                                    viewModel.deleteCoin(currentItem)
+                                    true
+                                }
+                                else -> false
+                            }
+                        }
                     )
-                    if (it == portfolio.coinList.size - 1) {
+                    SwipeToDismiss(
+                        modifier = Modifier
+                            .padding(vertical = 1.dp)
+                            .animateItemPlacement(),
+                        state = dismissState,
+                        background = {
+                            SwipeBackground(dismissState)
+                        },
+                        directions = setOf(DismissDirection.EndToStart),
+                        dismissContent = {
+                            DisplayableCoinItem(
+                                modifier = Modifier
+                                    .clickable {
+                                        openDialog = true
+                                        clickedCoin = portfolio.coinList[index]
+                                        oldCount = clickedCoin.count
+                                    }
+                                    .background(
+                                        shape = MaterialTheme.shapes.small,
+                                        color = MaterialTheme.colorScheme.primaryContainer
+                                    )
+                                    .padding(start = 12.dp, end = 12.dp),
+                                coin = portfolio.coinList[index],
+                                timePeriodSelection = timePeriodSelection,
+                            )
+                        }
+                    )
+                    if (index == portfolio.coinList.size - 1) {
                         DisplayableInsertCoin(navController)
                     }
                 }
@@ -81,6 +126,37 @@ fun CoinContent(
             clickedCoin = clickedCoin,
             oldCount = oldCount,
             viewModel = viewModel
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun SwipeBackground(dismissState: DismissState) {
+    val direction = dismissState.dismissDirection ?: return
+    val color by animateColorAsState(Color.Red)
+    val alignment = when (direction) {
+        DismissDirection.StartToEnd -> Alignment.CenterStart
+        DismissDirection.EndToStart -> Alignment.CenterEnd
+    }
+    val icon = when (direction) {
+        DismissDirection.StartToEnd -> Icons.Default.Done
+        DismissDirection.EndToStart -> Icons.Default.Delete
+    }
+    val scale by animateFloatAsState(
+        if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+    )
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(color)
+            .padding(horizontal = 20.dp),
+        contentAlignment = alignment
+    ) {
+        Icon(
+            icon,
+            contentDescription = "Localized description",
+            modifier = Modifier.scale(scale)
         )
     }
 }
@@ -243,9 +319,7 @@ fun DisplayableInsertCoin(navController: NavController) {
         horizontalArrangement = Arrangement.Center
     ) {
         IconButton(
-            onClick = {
-                navController.navigate(Screen.CoinDetails.route)
-            }) {
+            onClick = { navController.navigate(Screen.CoinDetails.route) }) {
             Icon(
                 modifier = Modifier.size(100.dp),
                 painter = painterResource(id = R.drawable.ic_baseline_add_circle_outline_24),
