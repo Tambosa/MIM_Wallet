@@ -31,6 +31,9 @@ class ComposeCoinMapViewModel @Inject constructor(
     private val successCoins =
         _coins.map { if (it is ViewState.Success) it.successData else listOf() }
 
+    private val _selectedCoins = MutableStateFlow(listOf<DisplayableCoin>())
+    val selectedCoins = _selectedCoins.asStateFlow()
+
     val coins = searchText
         .debounce(500L)
         .onEach { _isSearching.update { true } }
@@ -66,6 +69,21 @@ class ComposeCoinMapViewModel @Inject constructor(
     fun insertCoin(coin: DisplayableCoin) {
         viewModelScope.launch {
             localRepo.saveCoin(coin)
+        }
+    }
+
+    fun resetSelectedCoins() {
+        _selectedCoins.value = listOf()
+    }
+
+    fun updateSelectedCoins(coin: DisplayableCoin) {
+        _selectedCoins.value = if (selectedCoins.value.contains(coin)) {
+            mutableListOf<DisplayableCoin>().apply {
+                addAll(_selectedCoins.value)
+                remove(coin)
+            }
+        } else {
+            listOf(*_selectedCoins.value.toTypedArray(), coin)
         }
     }
 }
