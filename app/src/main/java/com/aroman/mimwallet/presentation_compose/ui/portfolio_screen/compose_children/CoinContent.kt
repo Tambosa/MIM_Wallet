@@ -298,7 +298,9 @@ fun DisplayableCoinItem(
 @Composable
 fun DisplayableHint() {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 12.dp, end = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -315,7 +317,9 @@ fun DisplayableHint() {
 @Composable
 fun DisplayableInsertCoin(navController: NavController) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 12.dp, end = 12.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         IconButton(
