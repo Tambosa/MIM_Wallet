@@ -34,7 +34,7 @@ import androidx.navigation.NavController
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.Portfolio
-import com.aroman.mimwallet.presentation_compose.ui.navigation.Screen
+import com.aroman.mimwallet.presentation_compose.Screen
 import com.aroman.mimwallet.presentation_compose.ui.theme.Typography
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel.TimePeriod

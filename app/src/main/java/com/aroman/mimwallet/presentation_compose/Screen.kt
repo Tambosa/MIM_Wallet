@@ -1,4 +1,4 @@
-package com.aroman.mimwallet.presentation_compose.ui.navigation
+package com.aroman.mimwallet.presentation_compose
 
 sealed class Screen(val route: String) {
     object Portfolio : Screen("portfolio")

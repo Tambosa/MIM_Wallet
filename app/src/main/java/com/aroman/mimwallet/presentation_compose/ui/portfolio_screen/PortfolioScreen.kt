@@ -27,8 +27,8 @@ import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletView
 @Composable
 fun PortfolioScreen(
     navController: NavController,
-    walletViewModel: ComposeWalletViewModel,
     themeViewModel: ComposeThemeViewModel,
+    walletViewModel: ComposeWalletViewModel,
 ) {
     LaunchedEffect(true) {
         walletViewModel.getPortfolio()
