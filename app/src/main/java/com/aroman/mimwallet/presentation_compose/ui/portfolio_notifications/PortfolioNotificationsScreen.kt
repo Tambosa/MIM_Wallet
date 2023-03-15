@@ -22,9 +22,15 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.aroman.mimwallet.R
+import com.aroman.mimwallet.common.ViewState
+import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeNotificationViewModel
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 @Composable
-fun PortfolioNotificationsScreen() {
+fun PortfolioNotificationsScreen(notificationViewModel: ComposeNotificationViewModel) {
+    val portfolioState by notificationViewModel.portfolio.collectAsState()
+    val shouldShowNotification by notificationViewModel.shouldShowNotification.collectAsState()
     val context = LocalContext.current
     val channelId = "001"
     val notificationId = 0
@@ -53,6 +59,24 @@ fun PortfolioNotificationsScreen() {
             }
         }
     }
+    if (portfolioState is ViewState.Success && shouldShowNotification) {
+        with(portfolioState as ViewState.Success) {
+            val totalPrice = String.format("$%.2f", successData.totalPrice)
+            val percent = DecimalFormat("0.##'%'").apply {
+                roundingMode = RoundingMode.CEILING
+            }.format(successData.totalPercentChange24h)
+            if (hasNotificationPermission) {
+                showSimpleNotification(
+                    context,
+                    channelId,
+                    notificationId,
+                    "Portfolio Update",
+                    "Total: $totalPrice 24h change: $percent",
+                )
+            }
+            notificationViewModel.notificationFinished()
+        }
+    }
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.primaryContainer
@@ -65,15 +89,7 @@ fun PortfolioNotificationsScreen() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(onClick = {
-                if (hasNotificationPermission) {
-                    showSimpleNotification(
-                        context,
-                        channelId,
-                        notificationId,
-                        "Portfolio Update",
-                        "Info here",
-                    )
-                }
+                notificationViewModel.requestNotification()
             }) {
                 Text(text = "Activate notification")
             }

@@ -13,6 +13,7 @@ import com.aroman.mimwallet.presentation_compose.ui.coin_insert.CoinInsertScreen
 import com.aroman.mimwallet.presentation_compose.ui.portfolio.PortfolioScreen
 import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.PortfolioNotificationsScreen
 import com.aroman.mimwallet.presentation_compose.ui.theme.AppTheme
+import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeNotificationViewModel
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeThemeViewModel
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class ComposeActivity : AppCompatActivity() {
     private val themeViewModel by viewModels<ComposeThemeViewModel>()
     private val walletViewModel by viewModels<ComposeWalletViewModel>()
+    private val notificationViewModel by viewModels<ComposeNotificationViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -42,7 +44,7 @@ class ComposeActivity : AppCompatActivity() {
                     composable(
                         route = Screen.PortfolioNotifications.route
                     ) {
-                        PortfolioNotificationsScreen()
+                        PortfolioNotificationsScreen(notificationViewModel)
                     }
                 }
             }
