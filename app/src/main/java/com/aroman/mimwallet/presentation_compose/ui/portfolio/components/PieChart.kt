@@ -1,9 +1,9 @@
-package com.aroman.mimwallet.presentation_compose.ui.portfolio_screen.compose_children
+package com.aroman.mimwallet.presentation_compose.ui.portfolio.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -18,20 +18,17 @@ fun PieChart(
     coins: List<DisplayableCoin>
 ) {
     val pieData = PieData()
-
     if (coins.isNotEmpty()) {
         for (coin in coins) {
             pieData.add(coin.symbol, coin.price * coin.count)
         }
         var lastAngle = 270f
-        //set pie slice dimens
         pieData.pieSlices.forEach {
             it.value.startAngle = lastAngle
             it.value.sweepAngle = (((it.value.value / pieData.totalValue)) * 360f).toFloat()
             lastAngle += it.value.sweepAngle
         }
     }
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -57,7 +54,6 @@ fun PieChart(
                 }
             }
         }
-
         Column(
             modifier = Modifier
                 .weight(1f)
@@ -79,7 +75,7 @@ fun PieChart(
 }
 
 @Composable
-fun PieHint(pieSlice: PieSlice) {
+private fun PieHint(pieSlice: PieSlice) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

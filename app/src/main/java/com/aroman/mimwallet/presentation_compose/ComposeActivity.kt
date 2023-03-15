@@ -9,8 +9,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.aroman.mimwallet.presentation_compose.ui.coin_details_screen.CoinInsertScreen
-import com.aroman.mimwallet.presentation_compose.ui.portfolio_screen.PortfolioScreen
+import com.aroman.mimwallet.presentation_compose.ui.coin_insert.CoinInsertScreen
+import com.aroman.mimwallet.presentation_compose.ui.portfolio.PortfolioScreen
 import com.aroman.mimwallet.presentation_compose.ui.theme.AppTheme
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeThemeViewModel
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel

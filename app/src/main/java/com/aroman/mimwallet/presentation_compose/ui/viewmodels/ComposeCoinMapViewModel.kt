@@ -1,6 +1,5 @@
 package com.aroman.mimwallet.presentation_compose.ui.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aroman.mimwallet.common.ViewState
@@ -39,13 +38,9 @@ class ComposeCoinMapViewModel @Inject constructor(
         .onEach { _isSearching.update { true } }
         .combine(successCoins) { text, coins ->
             if (text.isBlank()) {
-                Log.d("@@@", "coins blank: $coins")
                 coins
             } else {
-                Log.d(
-                    "@@@", "coins filter: $coins"
-                )
-                delay(500)
+                delay(100)
                 coins.filter { it.doesMatchSearchQuery(text) }
             }
         }

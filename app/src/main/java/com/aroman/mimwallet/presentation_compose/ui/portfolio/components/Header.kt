@@ -1,4 +1,4 @@
-package com.aroman.mimwallet.presentation_compose.ui.portfolio_screen.compose_children
+package com.aroman.mimwallet.presentation_compose.ui.portfolio.components
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.Arrangement

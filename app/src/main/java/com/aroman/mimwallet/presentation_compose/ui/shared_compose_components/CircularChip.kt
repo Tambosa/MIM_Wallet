@@ -1,8 +1,9 @@
-package com.aroman.mimwallet.presentation_compose.ui.portfolio_screen.compose_children
+package com.aroman.mimwallet.presentation_compose.ui.shared_compose_components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
@@ -12,36 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel
-
-@Composable
-fun TimePeriodSelection(
-    walletViewModel: ComposeWalletViewModel,
-    timePeriodSelection: ComposeWalletViewModel.TimePeriod
-) {
-    val timePeriodList = ComposeWalletViewModel.TimePeriod.values().asList()
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp),
-    ) {
-        LazyRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            items(
-                count = ComposeWalletViewModel.TimePeriod.values().size,
-                itemContent = { index ->
-                    CircularChip(
-                        name = timePeriodList[index].value,
-                        isSelected = timePeriodList[index] == timePeriodSelection,
-                        onSelectionChanged = { walletViewModel.setTimePeriod(timePeriodList[index]) }
-                    )
-                }
-            )
-        }
-    }
-}
 
 @Composable
 fun CircularChip(

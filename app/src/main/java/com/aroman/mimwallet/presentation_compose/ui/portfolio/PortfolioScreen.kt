@@ -1,4 +1,4 @@
-package com.aroman.mimwallet.presentation_compose.ui.portfolio_screen
+package com.aroman.mimwallet.presentation_compose.ui.portfolio
 
 import android.animation.ObjectAnimator
 import android.content.res.Resources
@@ -19,8 +19,8 @@ import androidx.core.graphics.applyCanvas
 import androidx.navigation.NavController
 import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.domain.model.Portfolio
-import com.aroman.mimwallet.presentation_compose.ui.portfolio_screen.compose_children.CoinContent
-import com.aroman.mimwallet.presentation_compose.ui.portfolio_screen.compose_children.Header
+import com.aroman.mimwallet.presentation_compose.ui.portfolio.components.CoinContent
+import com.aroman.mimwallet.presentation_compose.ui.portfolio.components.Header
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeThemeViewModel
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel
 
