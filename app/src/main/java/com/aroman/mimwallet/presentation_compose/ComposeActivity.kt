@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.aroman.mimwallet.presentation_compose.ui.coin_insert.CoinInsertScreen
 import com.aroman.mimwallet.presentation_compose.ui.portfolio.PortfolioScreen
+import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.PortfolioNotificationsScreen
 import com.aroman.mimwallet.presentation_compose.ui.theme.AppTheme
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeThemeViewModel
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel
@@ -37,6 +38,11 @@ class ComposeActivity : AppCompatActivity() {
                         route = Screen.CoinDetails.route,
                     ) {
                         CoinInsertScreen(navController)
+                    }
+                    composable(
+                        route = Screen.PortfolioNotifications.route
+                    ) {
+                        PortfolioNotificationsScreen()
                     }
                 }
             }

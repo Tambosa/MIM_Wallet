@@ -13,7 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.aroman.mimwallet.R
+import com.aroman.mimwallet.presentation_compose.Screen
 import com.aroman.mimwallet.presentation_compose.ui.theme.Typography
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeThemeViewModel
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel
@@ -24,6 +26,7 @@ fun Header(
     walletViewModel: ComposeWalletViewModel,
     isLoading: Boolean,
     onThemeChange: () -> Unit,
+    navController: NavController,
 ) {
     Surface(color = MaterialTheme.colorScheme.secondaryContainer) {
         Row(
@@ -52,9 +55,19 @@ fun Header(
                 }) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_refresh_24),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    tint = MaterialTheme.colorScheme.primary,
                     contentDescription = "refresh data",
                     modifier = Modifier.graphicsLayer { if (isLoading) rotationZ = angle }
+                )
+            }
+            IconButton(
+                onClick = {
+                    navController.navigate(Screen.PortfolioNotifications.route)
+                }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_baseline_notifications_24),
+                    tint = MaterialTheme.colorScheme.primary,
+                    contentDescription = "open notification screen",
                 )
             }
             IconButton(

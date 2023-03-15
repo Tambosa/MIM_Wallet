@@ -52,6 +52,7 @@ fun PortfolioScreen(
             Header(
                 themeViewModel = themeViewModel,
                 walletViewModel = walletViewModel,
+                navController = navController,
                 isLoading = isLoading,
                 onThemeChange = {
                     setScreenshot(view, resources)

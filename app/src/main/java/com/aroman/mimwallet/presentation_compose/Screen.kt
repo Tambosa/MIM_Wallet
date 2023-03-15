@@ -3,6 +3,7 @@ package com.aroman.mimwallet.presentation_compose
 sealed class Screen(val route: String) {
     object Portfolio : Screen("portfolio")
     object CoinDetails : Screen("coinDetails")
+    object PortfolioNotifications : Screen("portfolioAlarm")
 
     fun withArg(arg: Int): String {
         return buildString {
