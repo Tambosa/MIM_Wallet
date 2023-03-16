@@ -22,11 +22,10 @@ import androidx.core.content.ContextCompat
 import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.feature.PortfolioNotificationManager
 import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.feature.PortfolioNotificationManager.CHANNEL_ID
 import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.feature.PortfolioNotificationManager.CHANNEL_NAME
-import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeNotificationViewModel
 import java.util.*
 
 @Composable
-fun PortfolioNotificationsScreen(notificationViewModel: ComposeNotificationViewModel) {
+fun PortfolioNotificationsScreen() {
     val context = LocalContext.current
     var hasNotificationPermission by remember {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -68,7 +67,7 @@ fun PortfolioNotificationsScreen(notificationViewModel: ComposeNotificationViewM
                 PortfolioNotificationManager.startReminder(
                     context = context,
                     reminderTimeHours = Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
-                    reminderTimeMinutes = Calendar.getInstance().get(Calendar.MINUTE) + 1,
+                    reminderTimeMinutes = Calendar.getInstance().get(Calendar.MINUTE) + 2,
                 )
             }) {
                 Text(text = "Launch Notification in 1 minute")

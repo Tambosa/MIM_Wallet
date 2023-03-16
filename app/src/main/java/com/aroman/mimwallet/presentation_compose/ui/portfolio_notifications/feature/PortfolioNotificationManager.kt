@@ -31,12 +31,11 @@ object PortfolioNotificationManager {
             set(Calendar.HOUR_OF_DAY, reminderTimeHours)
             set(Calendar.MINUTE, reminderTimeMinutes)
         }
-//        if (Calendar.getInstance(Locale.ENGLISH)
-//                .apply { add(Calendar.MINUTE, 1) }.timeInMillis - calendar.timeInMillis > 0
-//        ) {
-//            Log.d("@@@", "startReminder: Date +1")
-//            calendar.add(Calendar.DATE, 1)
-//        }
+        if (Calendar.getInstance(Locale.ENGLISH)
+                .apply { add(Calendar.MINUTE, 1) }.timeInMillis - calendar.timeInMillis > 0
+        ) {
+            calendar.add(Calendar.DATE, 1)
+        }
 
         alarmManager.setAlarmClock(
             AlarmManager.AlarmClockInfo(calendar.timeInMillis, intent),

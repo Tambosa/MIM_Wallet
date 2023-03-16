@@ -1,60 +1,54 @@
 package com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.feature
 
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.core.app.NotificationCompat
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.aroman.mimwallet.R
-import com.aroman.mimwallet.domain.model.Portfolio
-import com.aroman.mimwallet.presentation_compose.ComposeActivity
+import com.aroman.mimwallet.common.ViewState
+import com.aroman.mimwallet.domain.use_case.get_portfolio.GetPortfolioUseCase
 import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.feature.PortfolioNotificationManager.CHANNEL_ID
-import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.feature.PortfolioNotificationManager.NOTIFICATION_ID
+import com.aroman.mimwallet.utils.sendNotification
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import javax.inject.Inject
 
-class AlarmReceiver() : BroadcastReceiver() {
+@AndroidEntryPoint
+class AlarmReceiver : BroadcastReceiver() {
+
+    @Inject
+    lateinit var getPortfolioUseCase: GetPortfolioUseCase
     override fun onReceive(context: Context, intent: Intent) {
         val notificationManager = ContextCompat.getSystemService(
             context,
             NotificationManager::class.java
         ) as NotificationManager
 
-        notificationManager.sendReminderNotification(
-            portfolioData = Portfolio(listOf(), totalPrice = 100.0, totalPercentChange24h = 4.2),
-            applicationContext = context,
-            channelId = CHANNEL_ID,
-        )
+        getPortfolioUseCase().onEach { result ->
+            Log.d("@@@", "onReceive: ${result.toString()}")
+            if (result is ViewState.Success) {
+                val totalPrice = String.format("$%.2f", result.successData.totalPrice)
+                val percent = DecimalFormat("0.##'%'").apply {
+                    roundingMode = RoundingMode.CEILING
+                }.format(result.successData.totalPercentChange24h)
+
+                notificationManager.sendNotification(
+                    applicationContext = context,
+                    channelId = CHANNEL_ID,
+                    title = "Portfolio Update",
+                    text = "Total: $totalPrice 24h change: $percent",
+                    icon = R.drawable.baseline_currency_bitcoin_24
+                )
+            }
+        }.launchIn(CoroutineScope(Dispatchers.IO))
+
         PortfolioNotificationManager.startReminder(context)
     }
-}
-
-fun NotificationManager.sendReminderNotification(
-    applicationContext: Context,
-    channelId: String,
-    portfolioData: Portfolio,
-) {
-    val contentIntent = Intent(applicationContext, ComposeActivity::class.java)
-    val pendingIntent = PendingIntent.getActivity(
-        applicationContext,
-        1,
-        contentIntent,
-        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-    )
-
-    val totalPrice = String.format("$%.2f", portfolioData.totalPrice)
-    val percent = DecimalFormat("0.##'%'").apply {
-        roundingMode = RoundingMode.CEILING
-    }.format(portfolioData.totalPercentChange24h)
-
-    val builder = NotificationCompat.Builder(applicationContext, channelId)
-        .setContentTitle("Portfolio Update")
-        .setContentText("Total: $totalPrice 24h change: $percent")
-        .setSmallIcon(R.drawable.baseline_currency_bitcoin_24)
-        .setContentIntent(pendingIntent)
-        .setAutoCancel(true)
-
-    notify(NOTIFICATION_ID, builder.build())
 }
