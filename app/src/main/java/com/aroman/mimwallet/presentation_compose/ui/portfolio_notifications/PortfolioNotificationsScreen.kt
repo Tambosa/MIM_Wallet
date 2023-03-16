@@ -18,22 +18,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import com.aroman.mimwallet.R
-import com.aroman.mimwallet.common.ViewState
+import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.feature.PortfolioNotificationManager
+import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.feature.PortfolioNotificationManager.CHANNEL_ID
+import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.feature.PortfolioNotificationManager.CHANNEL_NAME
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeNotificationViewModel
-import java.math.RoundingMode
-import java.text.DecimalFormat
+import java.util.*
 
 @Composable
 fun PortfolioNotificationsScreen(notificationViewModel: ComposeNotificationViewModel) {
-    val portfolioState by notificationViewModel.portfolio.collectAsState()
-    val shouldShowNotification by notificationViewModel.shouldShowNotification.collectAsState()
     val context = LocalContext.current
-    val channelId = "001"
-    val notificationId = 0
     var hasNotificationPermission by remember {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             mutableStateOf(
@@ -52,29 +46,11 @@ fun PortfolioNotificationsScreen(notificationViewModel: ComposeNotificationViewM
         }
     )
     LaunchedEffect(Unit) {
-        createNotificationChannel(channelId, context)
+        createNotificationChannel(CHANNEL_ID, context)
         if (!hasNotificationPermission) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
-        }
-    }
-    if (portfolioState is ViewState.Success && shouldShowNotification) {
-        with(portfolioState as ViewState.Success) {
-            val totalPrice = String.format("$%.2f", successData.totalPrice)
-            val percent = DecimalFormat("0.##'%'").apply {
-                roundingMode = RoundingMode.CEILING
-            }.format(successData.totalPercentChange24h)
-            if (hasNotificationPermission) {
-                showSimpleNotification(
-                    context,
-                    channelId,
-                    notificationId,
-                    "Portfolio Update",
-                    "Total: $totalPrice 24h change: $percent",
-                )
-            }
-            notificationViewModel.notificationFinished()
         }
     }
     Surface(
@@ -89,31 +65,15 @@ fun PortfolioNotificationsScreen(notificationViewModel: ComposeNotificationViewM
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(onClick = {
-                notificationViewModel.requestNotification()
+                PortfolioNotificationManager.startReminder(
+                    context = context,
+                    reminderTimeHours = Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
+                    reminderTimeMinutes = Calendar.getInstance().get(Calendar.MINUTE) + 1,
+                )
             }) {
-                Text(text = "Activate notification")
+                Text(text = "Launch Notification in 1 minute")
             }
         }
-    }
-}
-
-fun showSimpleNotification(
-    context: Context,
-    channelId: String,
-    notificationId: Int,
-    textTitle: String,
-    textContent: String,
-    priority: Int = NotificationCompat.PRIORITY_DEFAULT
-) {
-    val builder = NotificationCompat.Builder(context, channelId)
-        .setSmallIcon(R.drawable.baseline_currency_bitcoin_24)
-        .setContentTitle(textTitle)
-        .setContentText(textContent)
-        .setPriority(priority)
-        .setSmallIcon(R.drawable.baseline_currency_bitcoin_24)
-
-    with(NotificationManagerCompat.from(context)) {
-        notify(notificationId, builder.build())
     }
 }
 
@@ -121,7 +81,7 @@ fun createNotificationChannel(channelId: String, context: Context) {
     (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
         NotificationChannel(
             channelId,
-            "Portfolio daily notification",
+            CHANNEL_NAME,
             NotificationManager.IMPORTANCE_HIGH
         )
     )
