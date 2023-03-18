@@ -1,4 +1,4 @@
-package com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.feature
+package com.aroman.mimwallet.data.feature_notifications
 
 import android.app.AlarmManager
 import android.app.PendingIntent

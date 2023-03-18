@@ -24,6 +24,7 @@ fun InsertCoinButton(
         Button(
             onClick = {
                 selectedCoins.forEach {
+                    it.count = 1.0
                     coinMapViewModel.insertCoin(it)
                 }
                 navController.popBackStack()

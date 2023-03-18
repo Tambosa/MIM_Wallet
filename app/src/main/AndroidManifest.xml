@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <receiver
-            android:name=".presentation_compose.ui.portfolio_notifications.feature.AlarmReceiver"
+            android:name=".data.feature_notifications.AlarmReceiver"
             android:enabled="true" />
 
         <meta-data

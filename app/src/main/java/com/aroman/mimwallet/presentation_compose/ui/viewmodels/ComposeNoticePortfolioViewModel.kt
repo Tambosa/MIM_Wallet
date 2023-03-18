@@ -1,7 +1,9 @@
 package com.aroman.mimwallet.presentation_compose.ui.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager
 import com.aroman.mimwallet.domain.model.NoticePortfolio
 import com.aroman.mimwallet.domain.repository.NoticePortfolioRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,8 +39,12 @@ class ComposeNoticePortfolioViewModel @Inject constructor(
         }
     }
 
-    fun deleteNoticePortfolio(noticePortfolio: NoticePortfolio) {
+    fun deleteNoticePortfolio(context: Context, noticePortfolio: NoticePortfolio) {
         viewModelScope.launch {
+            PortfolioNotificationManager.stopReminder(
+                context = context,
+                reminderId = noticePortfolio.id
+            )
             noticePortfolioRepo.deleteNotice(noticePortfolio)
             _noticePortfolioList.value = noticePortfolioRepo.getAll()
         }

@@ -1,4 +1,4 @@
-package com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.feature
+package com.aroman.mimwallet.data.feature_notifications
 
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.domain.use_case.get_portfolio.GetPortfolioUseCase
-import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.feature.PortfolioNotificationManager.CHANNEL_ID
+import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager.CHANNEL_ID
 import com.aroman.mimwallet.utils.sendNotification
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope

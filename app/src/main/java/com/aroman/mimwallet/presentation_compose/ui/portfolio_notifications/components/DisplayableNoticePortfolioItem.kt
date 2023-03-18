@@ -13,8 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager
 import com.aroman.mimwallet.domain.model.NoticePortfolio
-import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.feature.PortfolioNotificationManager
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeNoticePortfolioViewModel
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.clock.ClockDialog
@@ -81,7 +81,7 @@ fun DisplayableNoticePortfolioItem(
                 noticePortfolioViewModel.updateNoticePortfolio(noticePortfolio)
             })
         IconButton(onClick = {
-            noticePortfolioViewModel.deleteNoticePortfolio(noticePortfolio)
+            noticePortfolioViewModel.deleteNoticePortfolio(context, noticePortfolio)
         }) {
             Icon(Icons.Filled.Delete, "delete")
         }
