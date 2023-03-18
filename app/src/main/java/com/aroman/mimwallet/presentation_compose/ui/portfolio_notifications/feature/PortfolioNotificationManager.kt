@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.icu.util.Calendar
+import android.util.Log
 import java.util.*
 
 object PortfolioNotificationManager {
@@ -34,6 +35,7 @@ object PortfolioNotificationManager {
         if (Calendar.getInstance(Locale.ENGLISH)
                 .apply { add(Calendar.MINUTE, 1) }.timeInMillis - calendar.timeInMillis > 0
         ) {
+            Log.d("@@@", "startReminder: tomorrow")
             calendar.add(Calendar.DATE, 1)
         }
 
@@ -53,7 +55,7 @@ object PortfolioNotificationManager {
                 context,
                 reminderId,
                 intent,
-                0
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
         }
         alarmManager.cancel(intent)
