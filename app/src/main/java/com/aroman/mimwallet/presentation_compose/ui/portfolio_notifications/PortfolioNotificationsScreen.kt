@@ -1,74 +1,66 @@
 package com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications
 
 import android.Manifest
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.components.DisplayableInsertNoticePortfolio
+import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.components.DisplayableNoticePortfolioItem
+import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.components.DisplayableNotificationsTitle
 import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.feature.PortfolioNotificationManager.CHANNEL_ID
-import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.feature.PortfolioNotificationManager.CHANNEL_NAME
-import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
-import com.maxkeppeler.sheets.clock.ClockDialog
-import com.maxkeppeler.sheets.clock.models.ClockConfig
-import com.maxkeppeler.sheets.clock.models.ClockSelection
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
+import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeNoticePortfolioViewModel
+import com.aroman.mimwallet.utils.createNotificationChannel
+import com.aroman.mimwallet.utils.isNotificationAllowed
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PortfolioNotificationsScreen() {
+fun PortfolioNotificationsScreen(
+    noticePortfolioViewModel: ComposeNoticePortfolioViewModel = hiltViewModel()
+) {
     val context = LocalContext.current
     var hasNotificationPermission by remember(isNotificationAllowed(context))
     InitNotificationPermissions(context, hasNotificationPermission) {
         hasNotificationPermission = it
     }
-    var pickedTime by remember { mutableStateOf(LocalTime.NOON) }
-    val clockDialogState = rememberUseCaseState()
+    val noticePortfolioList by noticePortfolioViewModel.noticePortfolioList.collectAsState()
+    LaunchedEffect(Unit) {
+        noticePortfolioViewModel.getNoticePortfolioList()
+    }
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.primaryContainer
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center
         ) {
-            Button(onClick = {
-                clockDialogState.show()
-            }) {
-                Text(text = "Pick time")
-            }
-            Text(
-                text = DateTimeFormatter
-                    .ofPattern("hh:mm")
-                    .format(pickedTime)
+            items(
+                count = noticePortfolioList.size,
+                key = { index -> noticePortfolioList[index].id },
+                itemContent = { index ->
+                    if (index == 0) {
+                        DisplayableNotificationsTitle()
+                    }
+                    DisplayableNoticePortfolioItem(
+                        noticePortfolioList[index],
+                        noticePortfolioViewModel
+                    )
+                    if (index == noticePortfolioList.size - 1) {
+                        DisplayableInsertNoticePortfolio(viewModel = noticePortfolioViewModel)
+                    }
+                }
             )
         }
-        ClockDialog(
-            state = clockDialogState,
-            config = ClockConfig(
-                defaultTime = pickedTime,
-                is24HourFormat = true
-            ),
-            selection = ClockSelection.HoursMinutes { hours, minutes ->
-                pickedTime = LocalTime.of(hours, minutes)
-                Log.d("@@@", "PortfolioNotificationsScreen: $pickedTime")
-            }
-        )
+
 //        Column(
 //            modifier = Modifier
 //                .fillMaxWidth()
@@ -89,6 +81,7 @@ fun PortfolioNotificationsScreen() {
     }
 }
 
+
 @Composable
 private fun InitNotificationPermissions(
     context: Context,
@@ -107,27 +100,4 @@ private fun InitNotificationPermissions(
             }
         }
     }
-}
-
-private fun isNotificationAllowed(context: Context): () -> MutableState<Boolean> = {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        mutableStateOf(
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
-        )
-    } else {
-        mutableStateOf(true)
-    }
-}
-
-fun createNotificationChannel(channelId: String, context: Context) {
-    (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
-        NotificationChannel(
-            channelId,
-            CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_HIGH
-        )
-    )
 }
