@@ -9,18 +9,20 @@ import android.util.Log
 import java.util.*
 
 object PortfolioNotificationManager {
-    const val NOTIFICATION_ID = 123
     const val CHANNEL_ID = "001"
     const val CHANNEL_NAME = "Portfolio daily notification"
 
     fun startReminder(
         context: Context,
-        reminderTimeHours: Int = 8,
-        reminderTimeMinutes: Int = 0,
-        reminderId: Int = NOTIFICATION_ID,
+        reminderTimeHours: Int,
+        reminderTimeMinutes: Int,
+        reminderId: Int,
     ) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context.applicationContext, AlarmReceiver::class.java).let {
+            it.putExtra("reminderId", reminderId)
+            it.putExtra("reminderTimeHours", reminderTimeHours)
+            it.putExtra("reminderTimeMinutes", reminderTimeMinutes)
             PendingIntent.getBroadcast(
                 context.applicationContext,
                 reminderId,
@@ -35,7 +37,6 @@ object PortfolioNotificationManager {
         if (Calendar.getInstance(Locale.ENGLISH)
                 .apply { add(Calendar.MINUTE, 1) }.timeInMillis - calendar.timeInMillis > 0
         ) {
-            Log.d("@@@", "startReminder: tomorrow")
             calendar.add(Calendar.DATE, 1)
         }
 
@@ -47,8 +48,9 @@ object PortfolioNotificationManager {
 
     fun stopReminder(
         context: Context,
-        reminderId: Int = NOTIFICATION_ID
+        reminderId: Int
     ) {
+        Log.d("@@@", "stopReminder: $reminderId")
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java).let { intent ->
             PendingIntent.getBroadcast(

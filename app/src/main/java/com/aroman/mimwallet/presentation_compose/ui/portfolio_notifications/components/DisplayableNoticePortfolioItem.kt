@@ -1,6 +1,5 @@
 package com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -62,7 +61,6 @@ fun DisplayableNoticePortfolioItem(
             checked = checkedState,
             onCheckedChange = {
                 if (it) {
-                    Log.d("@@@", "start: $noticePortfolio")
                     PortfolioNotificationManager.startReminder(
                         context = context,
                         reminderTimeHours = noticePortfolio.hour,
@@ -70,7 +68,6 @@ fun DisplayableNoticePortfolioItem(
                         reminderId = noticePortfolio.id
                     )
                 } else {
-                    Log.d("@@@", "stop: $noticePortfolio")
                     PortfolioNotificationManager.stopReminder(
                         context = context,
                         reminderId = noticePortfolio.id
