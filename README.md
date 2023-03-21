@@ -26,6 +26,7 @@ https://user-images.githubusercontent.com/73552496/226553274-f4d4336f-c849-4e17-
 https://user-images.githubusercontent.com/73552496/226553397-e0c60b03-4d75-46c4-bee0-9dbedfd89c3c.mp4
 
 Процент изменения цены за фиксированный промежуток времени
+
 Fun fact! Несущественный баг меняет цвет диаграммы  при каждой рекомпозиции, мне понравилось это поведение и я решил временно оставить это как фичу.
 
 https://user-images.githubusercontent.com/73552496/226553455-83ff2bdc-0424-45c7-bca4-82f69c70b5de.mp4
