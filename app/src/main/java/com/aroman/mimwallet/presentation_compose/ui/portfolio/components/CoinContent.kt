@@ -61,13 +61,17 @@ fun CoinContent(
                 key = { index -> portfolio.coinList[index].id },
                 itemContent = { index ->
                     if (index == 0) {
-                        key(portfolio.coinList) {
-                            PieChart(coins = portfolio.coinList)
+                        if (portfolio.totalPrice != 0.0 ||
+                            !portfolio.totalPrice.isNaN()
+                        ) {
+                            key(portfolio.coinList) {
+                                PieChart(coins = portfolio.coinList)
+                            }
+                            TotalPrice(
+                                portfolio = portfolio,
+                                timePeriodSelection = timePeriodSelection
+                            )
                         }
-                        TotalPrice(
-                            portfolio = portfolio,
-                            timePeriodSelection = timePeriodSelection
-                        )
                         TimePeriodSelection(
                             walletViewModel = viewModel,
                             timePeriodSelection = timePeriodSelection
