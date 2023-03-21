@@ -17,15 +17,15 @@ fun TextView.animatePriceNumbers(duration: Long, number: Double) {
             startValue + (endValue - startValue) * fraction
         })
         addListener(object: AnimatorListener {
-            override fun onAnimationEnd(p0: Animator?) {
+            override fun onAnimationEnd(p0: Animator) {
                 this@animatePriceNumbers.text = String.format("$%.2f", number)
             }
 
-            override fun onAnimationStart(p0: Animator?) {}
+            override fun onAnimationStart(p0: Animator) {}
 
-            override fun onAnimationCancel(p0: Animator?) {}
+            override fun onAnimationCancel(p0: Animator) {}
 
-            override fun onAnimationRepeat(p0: Animator?) {}
+            override fun onAnimationRepeat(p0: Animator) {}
         })
     }.start()
 }

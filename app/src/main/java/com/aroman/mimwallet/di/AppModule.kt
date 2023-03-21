@@ -1,15 +1,20 @@
 package com.aroman.mimwallet.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
+import com.aroman.mimwallet.R
 import com.aroman.mimwallet.common.Constants
+import com.aroman.mimwallet.data.local.NoticePortfolioRepositoryImpl
 import com.aroman.mimwallet.data.local.PortfolioRepositoryImpl
 import com.aroman.mimwallet.data.local.RoomDb
 import com.aroman.mimwallet.data.local.dao.CoinDao
-import com.aroman.mimwallet.data.local.tables.RoomConst
+import com.aroman.mimwallet.data.local.dao.NoticeDao
+import com.aroman.mimwallet.data.local.RoomConst
 import com.aroman.mimwallet.data.remote.CoinMarketCapApi
 import com.aroman.mimwallet.data.repository.CoinRepositoryImpl
 import com.aroman.mimwallet.domain.repository.CoinRepository
+import com.aroman.mimwallet.domain.repository.NoticePortfolioRepository
 import com.aroman.mimwallet.domain.repository.PortfolioRepository
 import dagger.Module
 import dagger.Provides
@@ -72,5 +77,28 @@ object AppModule {
         dao: CoinDao
     ): PortfolioRepository {
         return PortfolioRepositoryImpl(dao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNoticeDao(db: RoomDb): NoticeDao {
+        return db.noticeDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideNoticeRepository(
+        dao: NoticeDao
+    ): NoticePortfolioRepository {
+        return NoticePortfolioRepositoryImpl(dao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences(
+            context.getString((R.string.app_name)),
+            Context.MODE_PRIVATE
+        )
     }
 }

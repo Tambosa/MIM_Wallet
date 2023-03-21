@@ -12,4 +12,15 @@ data class DisplayableCoin(
     val percentChange30d: Double = 0.0,
     val percentChange60d: Double = 0.0,
     val percentChange90d: Double = 0.0,
-) : DisplayableItem
+) : DisplayableItem {
+    fun doesMatchSearchQuery(query: String): Boolean {
+        val matchingCombinations = listOf(
+            name,
+            symbol,
+            "$id"
+        )
+        return matchingCombinations.any {
+            it.contains(query, ignoreCase = true)
+        }
+    }
+}

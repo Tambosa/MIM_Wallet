@@ -241,7 +241,7 @@ class DynamicPieChartView @JvmOverloads constructor(
             invalidate()
         }
         expandAnimator.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 super.onAnimationEnd(animation)
                 pieState = PieState.EXPANDED
             }
@@ -257,7 +257,7 @@ class DynamicPieChartView @JvmOverloads constructor(
             invalidate()
         }
         collapseAnimator.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 super.onAnimationEnd(animation)
                 pieState = PieState.MINIMIZED
             }

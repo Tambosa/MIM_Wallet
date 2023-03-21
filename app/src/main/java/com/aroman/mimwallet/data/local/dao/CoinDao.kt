@@ -2,7 +2,7 @@ package com.aroman.mimwallet.data.local.dao
 
 import androidx.room.*
 import com.aroman.mimwallet.data.local.tables.CoinRoomEntity
-import com.aroman.mimwallet.data.local.tables.RoomConst
+import com.aroman.mimwallet.data.local.RoomConst
 
 @Dao
 interface CoinDao {
