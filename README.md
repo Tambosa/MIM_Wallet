@@ -38,9 +38,11 @@ https://user-images.githubusercontent.com/73552496/226553605-9343c6a2-4c7f-4ca5-
 https://user-images.githubusercontent.com/73552496/226553736-340f30c8-8e58-432c-8337-5138f8deffe8.mp4
 
 Пример оповщения 
-![notification example](https://user-images.githubusercontent.com/73552496/226553771-555d3bcf-0530-46c1-a214-cd634a7ad45f.jpeg)
 
-#### Techs
+![notification example](https://user-images.githubusercontent.com/73552496/226554463-cfd27c21-fdc6-4b27-b471-41d33f8656c0.jpeg)
+
+
+### Techs
 
 Для реализации проекта использовались следующие технологии
 - MVVM + LiveData
@@ -52,5 +54,7 @@ https://user-images.githubusercontent.com/73552496/226553736-340f30c8-8e58-432c-
 
 <details>
   <summary>Старый ui на xml + viewBinding</summary>
-https://user-images.githubusercontent.com/73552496/215429488-061e243e-ce79-43cf-b683-f1dc2fbd323f.mp4
+  
+      https://user-images.githubusercontent.com/73552496/215429488-061e243e-ce79-43cf-b683-f1dc2fbd323f.mp4
+  
 </details>
