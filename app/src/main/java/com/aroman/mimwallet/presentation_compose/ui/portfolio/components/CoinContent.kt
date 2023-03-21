@@ -61,9 +61,7 @@ fun CoinContent(
                 key = { index -> portfolio.coinList[index].id },
                 itemContent = { index ->
                     if (index == 0) {
-                        if (portfolio.totalPrice != 0.0 ||
-                            !portfolio.totalPrice.isNaN()
-                        ) {
+                        if (portfolio.totalPrice != 0.0) {
                             key(portfolio.coinList) {
                                 PieChart(coins = portfolio.coinList)
                             }
