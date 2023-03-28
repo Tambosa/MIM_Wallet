@@ -4,7 +4,6 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.core.content.ContextCompat
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.common.ViewState
@@ -65,14 +64,10 @@ class AlarmReceiver : BroadcastReceiver() {
                 val list = noticePortfolioRepository.getAll()
                 if (list.any {
                         it.id == _reminderId &&
-                        it.hour == reminderTimeHours &&
-                        it.minute == reminderTimeMinutes &&
-                        it.isActive
+                                it.hour == reminderTimeHours &&
+                                it.minute == reminderTimeMinutes &&
+                                it.isActive
                     }) {
-                    Log.d(
-                        "@@@",
-                        "onReceive rescheduled: $reminderId, $reminderTimeHours:$reminderTimeMinutes "
-                    )
                     PortfolioNotificationManager.startReminder(
                         context,
                         _reminderTimeHours,
