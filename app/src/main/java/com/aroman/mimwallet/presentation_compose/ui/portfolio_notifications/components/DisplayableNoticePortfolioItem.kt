@@ -91,13 +91,10 @@ fun DisplayableNoticePortfolioItem(
             ),
             selection = ClockSelection.HoursMinutes { hours, minutes ->
                 PortfolioNotificationManager.stopReminder(context, noticePortfolio.id)
-
                 pickedTime = LocalTime.of(hours, minutes)
                 noticePortfolio.hour = hours
                 noticePortfolio.minute = minutes
-                noticePortfolio.isActive = false
                 noticePortfolioViewModel.updateNoticePortfolio(noticePortfolio)
-
                 if (noticePortfolio.isActive) {
                     PortfolioNotificationManager.startReminder(
                         context = context,
