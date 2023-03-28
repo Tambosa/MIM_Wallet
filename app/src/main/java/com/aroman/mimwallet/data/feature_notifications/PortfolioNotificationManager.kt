@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.icu.util.Calendar
+import android.os.Handler
 import android.widget.Toast
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -47,12 +48,14 @@ object PortfolioNotificationManager {
             TimeUnit.MILLISECONDS.toMinutes(timer) -
                     TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timer))
         )
-        Toast.makeText(
-            context,
-            "Notification will appear in $formattedTimer",
-            Toast.LENGTH_SHORT
-        )
-            .show()
+        Handler(context.mainLooper).post {
+            Toast.makeText(
+                context,
+                "Notification will appear in $formattedTimer",
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
 
         alarmManager.setAlarmClock(
             AlarmManager.AlarmClockInfo(calendar.timeInMillis, intent),
