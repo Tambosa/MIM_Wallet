@@ -28,7 +28,7 @@ fun Header(
     onThemeChange: () -> Unit,
     navController: NavController,
 ) {
-    Surface(color = MaterialTheme.colorScheme.secondaryContainer) {
+    Surface(color = MaterialTheme.colorScheme.primaryContainer) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
