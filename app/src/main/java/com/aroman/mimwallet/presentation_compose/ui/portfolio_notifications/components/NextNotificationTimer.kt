@@ -27,6 +27,9 @@ fun NextNotificationTimer(nextTimerInMillis: Long) {
             .padding(bottom = 8.dp),
         horizontalArrangement = Arrangement.Center
     ) {
-        Text(text = "Next notification in $formattedTimer")
+        Text(
+            text = "Next notification in $formattedTimer",
+            color = MaterialTheme.colorScheme.onPrimaryContainer
+        )
     }
 }
