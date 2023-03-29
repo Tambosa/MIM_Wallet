@@ -1,9 +1,11 @@
 package com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
@@ -34,6 +36,12 @@ fun DisplayableNoticePortfolioItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 16.dp)
+            .border(
+                shape = RoundedCornerShape(16.dp),
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                width = 1.dp
+            )
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround
