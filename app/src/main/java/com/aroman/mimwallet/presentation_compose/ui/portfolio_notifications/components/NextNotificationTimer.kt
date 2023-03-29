@@ -10,20 +10,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import java.util.concurrent.TimeUnit
 
 @Composable
-fun NotificationsTitle() {
+fun NextNotificationTimer(nextTimerInMillis: Long) {
+    val formattedTimer = String.format(
+        "%2d hours and %2d minutes",
+        TimeUnit.MILLISECONDS.toHours(nextTimerInMillis),
+        TimeUnit.MILLISECONDS.toMinutes(nextTimerInMillis) -
+                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(nextTimerInMillis))
+    )
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primaryContainer)
-            .padding(vertical = 16.dp),
+            .padding(bottom = 8.dp),
         horizontalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = "Portfolio notifications",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onPrimaryContainer
-        )
+        Text(text = "Next notification in $formattedTimer")
     }
 }

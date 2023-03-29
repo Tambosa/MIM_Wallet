@@ -5,9 +5,15 @@ import android.content.Context
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Text
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
@@ -18,10 +24,10 @@ import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationMana
 import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.components.DisplayableInsertNoticePortfolio
 import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.components.DisplayableNoticePortfolioItem
 import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.components.NotificationsTitle
+import com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.components.PortfolioNotificationsHeader
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeNoticePortfolioViewModel
 import com.aroman.mimwallet.utils.createNotificationChannel
 import com.aroman.mimwallet.utils.isNotificationAllowed
-import java.util.concurrent.TimeUnit
 
 @Composable
 fun PortfolioNotificationsScreen(
@@ -32,6 +38,25 @@ fun PortfolioNotificationsScreen(
     InitNotificationPermissions(context, hasNotificationPermission) {
         hasNotificationPermission = it
     }
+    val lazyListState = rememberLazyListState()
+    val isFirstItemVisible by remember {
+        derivedStateOf {
+            val layoutInfo = lazyListState.layoutInfo
+            val visibleItemsInfo = layoutInfo.visibleItemsInfo
+            if (layoutInfo.totalItemsCount == 0) {
+                true
+            } else {
+                visibleItemsInfo.first().index == 0
+            }
+        }
+    }
+    val cardAlpha by animateFloatAsState(
+        targetValue = if (isFirstItemVisible) 1f else 0f,
+        animationSpec = tween(
+            durationMillis = 300,
+            easing = LinearOutSlowInEasing
+        )
+    )
     val noticePortfolioList by noticePortfolioViewModel.noticePortfolioList.collectAsState()
     val nextTimerInMillis by noticePortfolioViewModel.nextTimerInMillis.collectAsState()
     LaunchedEffect(Unit) {
@@ -51,10 +76,14 @@ fun PortfolioNotificationsScreen(
             }
         } else {
             Column {
-                NotificationsTitle()
-                nextTimerInMillis?.let { NextNotificationTimer(it) }
+                PortfolioNotificationsHeader(
+                    nextTimerInMillis = nextTimerInMillis,
+                    isExpanded = isFirstItemVisible,
+                    cardAlpha = cardAlpha
+                )
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
+                    state = lazyListState,
                     verticalArrangement = Arrangement.Center
                 ) {
                     items(
@@ -75,23 +104,6 @@ fun PortfolioNotificationsScreen(
         }
     }
 }
-
-@Composable
-fun NextNotificationTimer(nextTimerInMillis: Long) {
-    val formattedTimer = String.format(
-        "%2d hours and %2d minutes",
-        TimeUnit.MILLISECONDS.toHours(nextTimerInMillis),
-        TimeUnit.MILLISECONDS.toMinutes(nextTimerInMillis) -
-                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(nextTimerInMillis))
-    )
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(text = "Next notification in $formattedTimer")
-    }
-}
-
 
 @Composable
 private fun InitNotificationPermissions(

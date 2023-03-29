@@ -23,6 +23,13 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 32.sp
     ),
+    titleSmall = TextStyle(
+        fontFamily = FontFamily(
+            Font(R.font.inter)
+        ),
+        fontWeight = FontWeight.Normal,
+        fontSize = 24.sp
+    ),
     bodyMedium = TextStyle(
         fontFamily = FontFamily(
             Font(R.font.inter)
