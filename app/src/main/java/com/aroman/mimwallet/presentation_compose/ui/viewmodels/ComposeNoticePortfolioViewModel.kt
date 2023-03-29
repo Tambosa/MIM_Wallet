@@ -53,10 +53,23 @@ class ComposeNoticePortfolioViewModel @Inject constructor(
         _nextTimerInMillis.value = _noticePortfolioList.value
             .filter { it.isActive }
             .minOfOrNull {
-                Calendar.getInstance(Locale.ENGLISH).apply {
-                    set(Calendar.HOUR_OF_DAY, it.hour)
-                    set(Calendar.MINUTE, it.minute)
-                }.timeInMillis - System.currentTimeMillis()
+                if (
+                    Calendar.getInstance(Locale.ENGLISH).apply {
+                        set(Calendar.HOUR_OF_DAY, it.hour)
+                        set(Calendar.MINUTE, it.minute)
+                    }.timeInMillis - System.currentTimeMillis() > 0
+                ) {
+                    Calendar.getInstance(Locale.ENGLISH).apply {
+                        set(Calendar.HOUR_OF_DAY, it.hour)
+                        set(Calendar.MINUTE, it.minute)
+                    }.timeInMillis - System.currentTimeMillis()
+                } else {
+                    Calendar.getInstance(Locale.ENGLISH).apply {
+                        set(Calendar.HOUR_OF_DAY, it.hour)
+                        set(Calendar.MINUTE, it.minute)
+                        add(Calendar.DATE, 1)
+                    }.timeInMillis - System.currentTimeMillis()
+                }
             }
     }
 
