@@ -1,5 +1,9 @@
 # MIM_Wallet
 
+![playstore](https://user-images.githubusercontent.com/73552496/228832852-ba2a0ffd-8b0d-4573-9b59-1dda5f985aef.png)
+
+Иконка для приложения была сгенерирована при помощи Midjourney
+
 ## Приложение для просмотра цены на криптовалюты
 
 ### Features
