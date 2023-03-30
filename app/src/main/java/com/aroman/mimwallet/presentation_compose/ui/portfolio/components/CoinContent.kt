@@ -1,6 +1,5 @@
 package com.aroman.mimwallet.presentation_compose.ui.portfolio.components
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -22,6 +21,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -135,7 +135,8 @@ fun CoinContent(
 @Composable
 private fun SwipeBackground(dismissState: DismissState) {
     val direction = dismissState.dismissDirection ?: return
-    val color by animateColorAsState(Color.Red)
+    val brush =
+        Brush.horizontalGradient(listOf(Color.Red, MaterialTheme.colorScheme.primaryContainer))
     val alignment = when (direction) {
         DismissDirection.StartToEnd -> Alignment.CenterStart
         DismissDirection.EndToStart -> Alignment.CenterEnd
@@ -145,12 +146,12 @@ private fun SwipeBackground(dismissState: DismissState) {
         DismissDirection.EndToStart -> Icons.Default.Delete
     }
     val scale by animateFloatAsState(
-        if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+        if (dismissState.targetValue == DismissValue.Default) 0.75f else 1.25f
     )
     Box(
         Modifier
             .fillMaxSize()
-            .background(color)
+            .background(brush)
             .padding(horizontal = 20.dp),
         contentAlignment = alignment
     ) {
