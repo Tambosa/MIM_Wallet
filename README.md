@@ -15,29 +15,26 @@
 
 Запуск приложения
 
-https://user-images.githubusercontent.com/73552496/226553175-8443753a-8635-48e9-9117-dd6a471e5704.mp4
+<details>
+  <summary>Fun fact!</summary>
+  
+  Несущественный баг меняет цвет диаграммы  при каждой рекомпозиции, мне понравилось это поведение и я решил временно оставить это как фичу.
+ 
+</details>
+
+https://user-images.githubusercontent.com/73552496/228832076-eb972d6a-0e69-47a9-9e43-b7bd4a8f5344.mp4
 
 Смена темы с тёмной на светлую
 
-https://user-images.githubusercontent.com/73552496/226553274-f4d4336f-c849-4e17-8c28-479d74926dd3.mp4
+https://user-images.githubusercontent.com/73552496/228832142-7a6e1d5f-2a20-42aa-84c0-4885f60de085.mp4
 
-Изменение кол-ва
+Удаление/добавление
 
-https://user-images.githubusercontent.com/73552496/226553397-e0c60b03-4d75-46c4-bee0-9dbedfd89c3c.mp4
-
-Процент изменения цены за фиксированный промежуток времени
-
-Fun fact! Несущественный баг меняет цвет диаграммы  при каждой рекомпозиции, мне понравилось это поведение и я решил временно оставить это как фичу.
-
-https://user-images.githubusercontent.com/73552496/226553455-83ff2bdc-0424-45c7-bca4-82f69c70b5de.mp4
-
-Удаление и добавление
-
-https://user-images.githubusercontent.com/73552496/226553605-9343c6a2-4c7f-4ca5-af16-e86b2cbdb58c.mp4
+https://user-images.githubusercontent.com/73552496/228832305-ce456e97-21eb-43d8-a103-27feffc63e97.mp4
 
 Экран найстройки уведомлений
 
-https://user-images.githubusercontent.com/73552496/226553736-340f30c8-8e58-432c-8337-5138f8deffe8.mp4
+https://user-images.githubusercontent.com/73552496/228832389-e434e405-da47-487a-bd36-8fa5e566abc2.mp4
 
 Пример оповщения 
 
