@@ -1,6 +1,5 @@
 package com.aroman.mimwallet.presentation_compose.ui.portfolio_notifications.components
 
-import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
@@ -30,7 +29,6 @@ fun PortfolioNotificationsHeader(
                 )
             )
     ) {
-        Log.d("@@@", "PortfolioNotificationsHeader: $isExpanded")
         if (isExpanded) {
             Column(
                 modifier = Modifier
@@ -46,7 +44,7 @@ fun PortfolioNotificationsHeader(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.primaryContainer)
-                    .padding(vertical = 8.dp, horizontal = 16.dp),
+                    .padding(vertical = 16.dp, horizontal = 16.dp),
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
