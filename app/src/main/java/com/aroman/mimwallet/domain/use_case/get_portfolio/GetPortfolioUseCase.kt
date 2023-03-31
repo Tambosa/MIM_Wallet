@@ -18,11 +18,11 @@ class GetPortfolioUseCase @Inject constructor(
     private val localRepo: PortfolioRepository,
     private val cacheRepo: CacheUiStateRepo,
 ) {
-    private var isClear: Boolean = true
+    private var isColdStart: Boolean = true
     operator fun invoke(): Flow<ViewState<PortfolioState>> = flow {
         try {
             val invokedTimer = System.currentTimeMillis()
-            if (isClear) {
+            if (isColdStart) {
                 val cachedPortfolio = cacheRepo.getPortfolioState()
                 if (cachedPortfolio != null) {
                     emit(ViewState.Success(cachedPortfolio))
@@ -31,7 +31,7 @@ class GetPortfolioUseCase @Inject constructor(
                         "time to emit cache ${(System.currentTimeMillis() - invokedTimer) * 0.001} seconds "
                     )
                 }
-                isClear = false
+                isColdStart = false
             }
             emit(ViewState.Loading())
             val localCoins = localRepo.getAll()
