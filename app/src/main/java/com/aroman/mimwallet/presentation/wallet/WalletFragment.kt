@@ -211,7 +211,7 @@ class WalletFragment : Fragment() {
         walletViewModel.getPortfolio()
     }
 
-    private fun handleSuccessPortfolio(portfolio: Portfolio) {
+    private fun handleSuccessPortfolio(portfolio: PortfolioState) {
         Log.d("@@@", portfolio.toString())
         val recyclerList = mutableListOf<DisplayableItem>()
         if (portfolio.coinList.isNullOrEmpty()) {
@@ -254,7 +254,7 @@ class WalletFragment : Fragment() {
         binding.pieChart.setData(pieData)
     }
 
-    private fun setHeader(portfolio: Portfolio, animateNumber: Boolean = true) {
+    private fun setHeader(portfolio: PortfolioState, animateNumber: Boolean = true) {
         binding.textTotalValue.visibility = View.VISIBLE
         binding.textTimedGain.visibility = View.VISIBLE
 

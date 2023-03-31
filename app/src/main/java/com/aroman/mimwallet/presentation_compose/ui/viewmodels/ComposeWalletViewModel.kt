@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.domain.model.Portfolio
+import com.aroman.mimwallet.domain.model.PortfolioState
 import com.aroman.mimwallet.domain.repository.PortfolioRepository
 import com.aroman.mimwallet.domain.use_case.get_portfolio.GetPortfolioUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +19,7 @@ class ComposeWalletViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private val _portfolio = MutableStateFlow<ViewState<Portfolio>>(ViewState.Loading())
+    private val _portfolio = MutableStateFlow<ViewState<PortfolioState>>(ViewState.Loading())
     val portfolio = _portfolio.asStateFlow()
     val isLoading = portfolio.map { it is ViewState.Loading }
 

@@ -18,7 +18,7 @@ import androidx.core.animation.doOnEnd
 import androidx.core.graphics.applyCanvas
 import androidx.navigation.NavController
 import com.aroman.mimwallet.common.ViewState
-import com.aroman.mimwallet.domain.model.Portfolio
+import com.aroman.mimwallet.domain.model.PortfolioState
 import com.aroman.mimwallet.presentation_compose.ui.portfolio.components.CoinContent
 import com.aroman.mimwallet.presentation_compose.ui.portfolio.components.Header
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeThemeViewModel
@@ -37,9 +37,9 @@ fun PortfolioScreen(
     val timePeriodSelection by walletViewModel.timePeriod.collectAsState()
     val isLoading by walletViewModel.isLoading.collectAsState(true)
 
-    var portfolio by remember { mutableStateOf(Portfolio(listOf())) }
+    var portfolio by remember { mutableStateOf(PortfolioState(listOf())) }
     if (portfolioState is ViewState.Success) {
-        portfolio = (portfolioState as ViewState.Success<Portfolio>).successData
+        portfolio = (portfolioState as ViewState.Success<PortfolioState>).successData
     }
 
     Surface(

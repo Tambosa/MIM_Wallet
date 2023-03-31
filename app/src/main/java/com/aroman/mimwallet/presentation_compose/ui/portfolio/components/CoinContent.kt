@@ -28,14 +28,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.domain.model.Portfolio
+import com.aroman.mimwallet.domain.model.PortfolioState
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel
 import com.aroman.mimwallet.presentation_compose.ui.viewmodels.ComposeWalletViewModel.TimePeriod
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun CoinContent(
-    portfolio: Portfolio,
+    portfolio: PortfolioState,
     timePeriodSelection: TimePeriod,
     navController: NavController,
     viewModel: ComposeWalletViewModel,
