@@ -5,14 +5,13 @@ import android.content.SharedPreferences
 import androidx.room.Room
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.common.Constants
-import com.aroman.mimwallet.data.local.NoticePortfolioRepositoryImpl
-import com.aroman.mimwallet.data.local.PortfolioRepositoryImpl
-import com.aroman.mimwallet.data.local.RoomDb
+import com.aroman.mimwallet.data.local.*
 import com.aroman.mimwallet.data.local.dao.CoinDao
 import com.aroman.mimwallet.data.local.dao.NoticeDao
-import com.aroman.mimwallet.data.local.RoomConst
+import com.aroman.mimwallet.data.local.dao.UiPortfolioStateDao
 import com.aroman.mimwallet.data.remote.CoinMarketCapApi
-import com.aroman.mimwallet.data.repository.CoinRepositoryImpl
+import com.aroman.mimwallet.data.remote.CoinRepositoryImpl
+import com.aroman.mimwallet.domain.repository.CacheUiStateRepo
 import com.aroman.mimwallet.domain.repository.CoinRepository
 import com.aroman.mimwallet.domain.repository.NoticePortfolioRepository
 import com.aroman.mimwallet.domain.repository.PortfolioRepository
@@ -91,6 +90,20 @@ object AppModule {
         dao: NoticeDao
     ): NoticePortfolioRepository {
         return NoticePortfolioRepositoryImpl(dao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUiPortfolioStateDao(db: RoomDb): UiPortfolioStateDao {
+        return db.uiPortfolioStateDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUiPortfolioStateRepository(
+        dao: UiPortfolioStateDao
+    ): CacheUiStateRepo {
+        return CacheUiStateRepoImpl(dao)
     }
 
     @Provides

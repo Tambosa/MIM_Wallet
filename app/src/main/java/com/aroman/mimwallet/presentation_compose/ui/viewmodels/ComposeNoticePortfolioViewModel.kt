@@ -2,7 +2,6 @@ package com.aroman.mimwallet.presentation_compose.ui.viewmodels
 
 import android.content.Context
 import android.icu.util.Calendar
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager
@@ -37,7 +36,6 @@ class ComposeNoticePortfolioViewModel @Inject constructor(
         while (true) {
             emit(Unit)
             updateTimer()
-            Log.d("@@@", ": delay ")
             delay(60000)
         }
     }

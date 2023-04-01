@@ -1,7 +1,6 @@
-package com.aroman.mimwallet.data.repository
+package com.aroman.mimwallet.data.remote
 
 import android.content.Context
-import com.aroman.mimwallet.data.remote.CoinMarketCapApi
 import com.aroman.mimwallet.data.remote.dto.coin_details_dto.toCoinDetails
 import com.aroman.mimwallet.data.remote.dto.coin_dto.toCoin
 import com.aroman.mimwallet.domain.model.CoinDetails

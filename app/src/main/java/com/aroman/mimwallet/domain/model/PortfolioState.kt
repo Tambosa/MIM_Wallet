@@ -1,6 +1,6 @@
 package com.aroman.mimwallet.domain.model
 
-data class Portfolio(
+data class PortfolioState(
     val coinList: List<DisplayableCoin>,
     var totalPrice: Double = 0.0,
     var totalPercentChange1h: Double = 0.0,

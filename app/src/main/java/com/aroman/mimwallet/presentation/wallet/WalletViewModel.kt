@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.domain.model.Portfolio
+import com.aroman.mimwallet.domain.model.PortfolioState
 import com.aroman.mimwallet.domain.repository.PortfolioRepository
 import com.aroman.mimwallet.domain.use_case.get_coins.GetCoinsUseCase
 import com.aroman.mimwallet.domain.use_case.get_portfolio.GetPortfolioUseCase
@@ -26,7 +26,7 @@ class WalletViewModel @Inject constructor(
     private val _coins = MutableLiveData<ViewState<List<DisplayableCoin>>>()
     val coins = _coins
 
-    private val _portfolio = MutableLiveData<ViewState<Portfolio>>()
+    private val _portfolio = MutableLiveData<ViewState<PortfolioState>>()
     val portfolio = _portfolio
 
     fun getCoins() {
