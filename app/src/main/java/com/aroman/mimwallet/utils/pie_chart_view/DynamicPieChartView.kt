@@ -15,13 +15,12 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
-import com.aroman.mimwallet.utils.theming.ThemeManager
 import kotlin.math.cos
 import kotlin.math.sin
 
 class DynamicPieChartView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr), ThemeManager.ThemeChangedListener {
+) : View(context, attrs, defStyleAttr) {
     private var data: PieData? = null
 
     private var pieState = PieState.MINIMIZED
@@ -274,30 +273,6 @@ class DynamicPieChartView @JvmOverloads constructor(
 
         animateExpansion.play(expandAnimator).with(textAlpha)
         animateCollapse.play(collapseAnimator).with(textAlpha)
-    }
-
-    override fun onFinishInflate() {
-        super.onFinishInflate()
-        ThemeManager.addListener(this)
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        ThemeManager.addListener(this)
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        ThemeManager.removeListener(this)
-    }
-
-    override fun onThemeChanged(theme: ThemeManager.Theme) {
-        mainTextPaint.apply {
-            isAntiAlias = true
-            color = resources.getColor(theme.textViewTheme.textColor, null)
-            alpha = if (pieState == PieState.MINIMIZED) 0 else 255
-        }
-        invalidate()
     }
 
     enum class IndicatorAlignment {
