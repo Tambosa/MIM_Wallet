@@ -55,7 +55,7 @@ https://user-images.githubusercontent.com/73552496/228832389-e434e405-da47-487a-
 ### Techs
 
 Для реализации проекта использовались следующие технологии
-- MVVM + LiveData
+- MVVM + StateFlow
 - Retrofit
 - Room
 - DaggerHilt
