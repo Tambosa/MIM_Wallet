@@ -51,8 +51,8 @@ class AlarmReceiver : BroadcastReceiver() {
                     applicationContext = context,
                     channelId = CHANNEL_ID,
                     notificationId = reminderId,
-                    title = "Portfolio Update",
-                    text = "Total: $totalPrice 24h change: $percent",
+                    title = context.getString(R.string.portfolio_update),
+                    text = context.getString(R.string.notification_template, totalPrice, percent),
                     icon = R.drawable.baseline_currency_bitcoin_24
                 )
             }

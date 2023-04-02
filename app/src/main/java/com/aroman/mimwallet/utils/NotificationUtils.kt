@@ -13,7 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager
-import com.aroman.mimwallet.presentation_compose.ComposeActivity
+import com.aroman.mimwallet.presentation.ComposeActivity
 
 fun isNotificationAllowed(context: Context): () -> MutableState<Boolean> = {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -34,7 +34,9 @@ fun createNotificationChannel(channelId: String, context: Context) {
             channelId,
             PortfolioNotificationManager.CHANNEL_NAME,
             NotificationManager.IMPORTANCE_HIGH
-        )
+        ).apply {
+            setShowBadge(false)
+        }
     )
 }
 

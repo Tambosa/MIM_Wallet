@@ -12,4 +12,4 @@ data class CoinDetails(
     val percentChange30d: Double,
     val percentChange60d: Double,
     val percentChange90d: Double,
-) : DisplayableItem
+)
