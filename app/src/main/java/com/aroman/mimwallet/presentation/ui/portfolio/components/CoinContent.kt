@@ -23,10 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.PortfolioState
 import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel
@@ -157,7 +159,7 @@ private fun SwipeBackground(dismissState: DismissState) {
     ) {
         Icon(
             icon,
-            contentDescription = "Localized description",
+            contentDescription = stringResource(id = R.string.delete),
             modifier = Modifier.scale(scale)
         )
     }
@@ -178,7 +180,7 @@ private fun EditCoinCountDialog(
         text = {
             Column {
                 OutlinedTextField(
-                    label = { Text(text = "Quantity") },
+                    label = { Text(text = stringResource(id = R.string.quantity)) },
                     value = newCount.toString(),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -204,7 +206,7 @@ private fun EditCoinCountDialog(
                 },
                 enabled = saveEnabled
             ) {
-                Text(text = "Confirm")
+                Text(text = stringResource(id = R.string.confirm))
             }
         },
         dismissButton = {
@@ -216,7 +218,7 @@ private fun EditCoinCountDialog(
                     onDismissRequest()
                 },
             ) {
-                Text(text = "Delete")
+                Text(text = stringResource(id = R.string.delete))
             }
         }
     )

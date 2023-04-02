@@ -11,7 +11,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.aroman.mimwallet.R
 
 @Composable
 fun PortfolioNotificationsHeader(
@@ -48,7 +50,7 @@ fun PortfolioNotificationsHeader(
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    text = "Notifications",
+                    text = stringResource(id = R.string.notifications),
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )

@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aroman.mimwallet.R
@@ -45,7 +46,7 @@ fun Header(
                 )
             )
             Text(
-                text = "Portfolio",
+                text = stringResource(id = R.string.portfolio),
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 style = Typography.titleLarge
             )
@@ -56,7 +57,7 @@ fun Header(
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_refresh_24),
                     tint = MaterialTheme.colorScheme.primary,
-                    contentDescription = "refresh data",
+                    contentDescription = stringResource(id = R.string.refresh_data),
                     modifier = Modifier.graphicsLayer { if (isLoading) rotationZ = angle }
                 )
             }
@@ -67,7 +68,7 @@ fun Header(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_notifications_24),
                     tint = MaterialTheme.colorScheme.primary,
-                    contentDescription = "open notification screen",
+                    contentDescription = stringResource(id = R.string.open_notification_screen),
                 )
             }
             IconButton(
@@ -81,7 +82,7 @@ fun Header(
                     )
                     else painterResource(id = R.drawable.ic_baseline_wb_sunny_24),
                     tint = MaterialTheme.colorScheme.primary,
-                    contentDescription = "toggle dark mode",
+                    contentDescription = stringResource(id = R.string.enable_dark_mode),
                 )
             }
         }

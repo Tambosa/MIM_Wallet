@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.presentation.ui.shared_compose_components.CircularChip
 import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel
@@ -30,7 +31,7 @@ fun TimePeriodSelection(
                 count = WalletViewModel.TimePeriod.values().size,
                 itemContent = { index ->
                     CircularChip(
-                        name = timePeriodList[index].value,
+                        name = stringResource(id = timePeriodList[index].value),
                         isSelected = timePeriodList[index] == timePeriodSelection,
                         onSelectionChanged = { walletViewModel.setTimePeriod(timePeriodList[index]) }
                     )

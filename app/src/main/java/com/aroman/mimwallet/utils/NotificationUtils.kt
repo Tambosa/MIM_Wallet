@@ -34,7 +34,9 @@ fun createNotificationChannel(channelId: String, context: Context) {
             channelId,
             PortfolioNotificationManager.CHANNEL_NAME,
             NotificationManager.IMPORTANCE_HIGH
-        )
+        ).apply {
+            setShowBadge(false)
+        }
     )
 }
 

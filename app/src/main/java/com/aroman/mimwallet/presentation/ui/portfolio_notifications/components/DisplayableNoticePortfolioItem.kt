@@ -13,7 +13,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.aroman.mimwallet.R
 import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager
 import com.aroman.mimwallet.domain.model.NoticePortfolio
 import com.aroman.mimwallet.presentation.ui.viewmodels.NoticePortfolioViewModel
@@ -58,7 +60,7 @@ fun DisplayableNoticePortfolioItem(
         Button(onClick = {
             clockDialogState.show()
         }) {
-            Text(text = "Pick time")
+            Text(text = stringResource(id = R.string.pick_time))
         }
         Text(
             text = DateTimeFormatter
@@ -88,7 +90,7 @@ fun DisplayableNoticePortfolioItem(
         IconButton(onClick = {
             noticePortfolioViewModel.deleteNoticePortfolio(context, noticePortfolio)
         }) {
-            Icon(Icons.Filled.Delete, "delete")
+            Icon(Icons.Filled.Delete, stringResource(id = R.string.delete))
         }
 
         ClockDialog(

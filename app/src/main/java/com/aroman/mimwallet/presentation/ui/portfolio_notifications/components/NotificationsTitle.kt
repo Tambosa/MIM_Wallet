@@ -9,7 +9,9 @@ import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.aroman.mimwallet.R
 
 @Composable
 fun NotificationsTitle() {
@@ -21,7 +23,7 @@ fun NotificationsTitle() {
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Portfolio notifications",
+            text = stringResource(id = R.string.portfolio_notifications),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onPrimaryContainer
         )

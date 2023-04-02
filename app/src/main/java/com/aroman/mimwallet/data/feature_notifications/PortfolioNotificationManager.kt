@@ -7,6 +7,7 @@ import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Handler
 import android.widget.Toast
+import com.aroman.mimwallet.R
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -42,8 +43,8 @@ object PortfolioNotificationManager {
             calendar.add(Calendar.DATE, 1)
         }
         val timer = calendar.timeInMillis - System.currentTimeMillis()
-        val formattedTimer = String.format(
-            "%2d hours and %2d minutes",
+        val notificationText = context.resources.getString(
+            R.string.notification_toast_template,
             TimeUnit.MILLISECONDS.toHours(timer),
             TimeUnit.MILLISECONDS.toMinutes(timer) -
                     TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timer))
@@ -51,7 +52,7 @@ object PortfolioNotificationManager {
         Handler(context.mainLooper).post {
             Toast.makeText(
                 context,
-                "Notification will appear in $formattedTimer",
+                notificationText,
                 Toast.LENGTH_SHORT
             )
                 .show()
