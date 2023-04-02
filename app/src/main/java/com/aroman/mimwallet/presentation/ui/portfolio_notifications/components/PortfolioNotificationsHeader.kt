@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
@@ -36,9 +37,18 @@ fun PortfolioNotificationsHeader(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.primaryContainer)
-                    .alpha(cardAlpha)
+                    .alpha(cardAlpha),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                NotificationsTitle()
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .padding(vertical = 22.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    NotificationsTitle()
+                }
                 nextTimerInMillis?.let { NextNotificationTimer(it) }
             }
         } else {
@@ -46,7 +56,7 @@ fun PortfolioNotificationsHeader(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.primaryContainer)
-                    .padding(vertical = 16.dp, horizontal = 16.dp),
+                    .padding(vertical = 20.dp, horizontal = 24.dp),
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(

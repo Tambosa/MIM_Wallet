@@ -14,34 +14,34 @@ val Typography = Typography(
             Font(R.font.inter)
         ),
         fontWeight = FontWeight.Bold,
-        fontSize = 36.sp
+        fontSize = 32.sp
     ),
     titleMedium = TextStyle(
         fontFamily = FontFamily(
             Font(R.font.inter)
         ),
         fontWeight = FontWeight.Normal,
-        fontSize = 32.sp
+        fontSize = 28.sp
     ),
     titleSmall = TextStyle(
         fontFamily = FontFamily(
             Font(R.font.inter)
         ),
         fontWeight = FontWeight.Normal,
-        fontSize = 24.sp
+        fontSize = 20.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = FontFamily(
             Font(R.font.inter)
         ),
         fontWeight = FontWeight.Normal,
-        fontSize = 18.sp
+        fontSize = 14.sp
     ),
     bodySmall = TextStyle(
         fontFamily = FontFamily(
             Font(R.font.inter)
         ),
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
+        fontSize = 12.sp
     )
 )

@@ -3,7 +3,6 @@ package com.aroman.mimwallet.presentation.ui.portfolio_notifications.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
@@ -24,13 +23,13 @@ fun NextNotificationTimer(nextTimerInMillis: Long) {
     )
     Row(
         modifier = Modifier
-            .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primaryContainer)
             .padding(bottom = 8.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
             text = notificationText,
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onPrimaryContainer
         )
     }

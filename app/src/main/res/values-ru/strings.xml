@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="portfolio">Портфолио</string>
+    <string name="text_getting_started">Нажмите на кнопку снизу чтобы добавить первую криптовалюту в портфолио</string>
+    <string name="add_coin">Добавить криптовалюту</string>
+    <string name="pick_time">Изменить</string>
+    <string name="delete">Удалить</string>
+    <string name="portfolio_notifications">Оповещения портфолио</string>
+    <string name="notifications">Оповещения</string>
+    <string name="quantity">Количество</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="refresh_data">Обновить данные</string>
+    <string name="open_notification_screen">Открыть экран оповещений</string>
+    <string name="enable_dark_mode">Включить темную тему</string>
+    <string name="search">Поиск</string>
+    <string name="add">Добавить</string>
+    <string name="notification_toast_template">Оповещение появится через %1$d : %2$d</string>
+    <string name="next_notification_template">Следующее оповещение через %1$d : %2$d</string>
+    <string name="portfolio_update">Обновление портфолио</string>
+    <string name="notification_template">Всего: %1$s         за 24 часа: %2$s</string>
+</resources>

@@ -38,13 +38,13 @@ fun DisplayableNoticePortfolioItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 16.dp)
+            .padding(horizontal = 8.dp, vertical = 14.dp)
             .border(
                 shape = RoundedCornerShape(16.dp),
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 width = 1.dp
             )
-            .padding(16.dp),
+            .padding(14.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround
     ) {

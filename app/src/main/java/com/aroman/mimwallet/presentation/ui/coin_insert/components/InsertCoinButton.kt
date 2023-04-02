@@ -35,7 +35,7 @@ fun InsertCoinButton(
                 .fillMaxWidth()
                 .heightIn(min = 40.dp)
         ) {
-            Text(text = stringResource(R.string.add) + { selectedCoins.map { it.name + " " } })
+            Text(text = "${stringResource(R.string.add)}   ${selectedCoins.map { it.name + " " }}")
         }
     } else {
         Spacer(modifier = Modifier.height(48.dp))
