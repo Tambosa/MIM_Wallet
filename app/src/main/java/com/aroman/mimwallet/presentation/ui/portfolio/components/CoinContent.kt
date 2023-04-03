@@ -6,17 +6,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,13 +23,12 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.PortfolioState
+import com.aroman.mimwallet.presentation.ui.shared_compose_components.RoundedButton
 import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel
 import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel.TimePeriod
 
@@ -173,34 +171,98 @@ private fun EditCoinCountDialog(
     viewModel: WalletViewModel
 ) {
     var saveEnabled by remember { mutableStateOf(true) }
-    var newCount by remember { mutableStateOf(oldCount) }
+    var newCount by remember { mutableStateOf(oldCount.toString()) }
+    saveEnabled = newCount.toDouble() != 0.0
     AlertDialog(
         onDismissRequest = { onDismissRequest() },
         title = { Text(text = clickedCoin.name) },
         text = {
-            Column {
-                OutlinedTextField(
-                    label = { Text(text = stringResource(id = R.string.quantity)) },
-                    value = newCount.toString(),
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier.padding(10.dp),
+                    style = MaterialTheme.typography.titleLarge,
+                    text = newCount
+                )
+                val buttonModifier = Modifier.padding(vertical = 15.dp, horizontal = 25.dp)
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 12.dp),
-                    onValueChange = {
-                        newCount = it.toDoubleOrNull() ?: 0.0
-                        saveEnabled = newCount >= 0.0
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Decimal,
-                        imeAction = ImeAction.Done
-                    )
-                )
+                        .padding(vertical = 5.dp),
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    RoundedButton(symbol = "1", modifier = buttonModifier) {
+                        newCount = if (newCount == "0") "1" else newCount + "1"
+                    }
+                    RoundedButton(symbol = "2", modifier = buttonModifier) {
+                        newCount = if (newCount == "0") "2" else newCount + "2"
+                    }
+                    RoundedButton(symbol = "3", modifier = buttonModifier) {
+                        newCount = if (newCount == "0") "3" else newCount + "3"
+                    }
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 5.dp),
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    RoundedButton(symbol = "4", modifier = buttonModifier) {
+                        newCount = if (newCount == "0") "4" else newCount + "4"
+                    }
+                    RoundedButton(symbol = "5", modifier = buttonModifier) {
+                        newCount = if (newCount == "0") "5" else newCount + "5"
+                    }
+                    RoundedButton(symbol = "6", modifier = buttonModifier) {
+                        newCount = if (newCount == "0") "6" else newCount + "6"
+                    }
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 5.dp),
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    RoundedButton(symbol = "7", modifier = buttonModifier) {
+                        newCount = if (newCount == "0") "7" else newCount + "7"
+                    }
+                    RoundedButton(symbol = "8", modifier = buttonModifier) {
+                        newCount = if (newCount == "0") "8" else newCount + "8"
+                    }
+                    RoundedButton(symbol = "9", modifier = buttonModifier) {
+                        newCount = if (newCount == "0") "9" else newCount + "9"
+                    }
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 5.dp),
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    RoundedButton(symbol = ".", modifier = buttonModifier) {
+                        if (!newCount.contains(".")) newCount += "."
+                    }
+                    RoundedButton(symbol = "0", modifier = buttonModifier) {
+                        if (newCount != "0") newCount += "0"
+                    }
+                    RoundedButton(
+                        symbol = "C",
+                        modifier = buttonModifier,
+                        color = (MaterialTheme.colorScheme.tertiaryContainer),
+                        textColor = MaterialTheme.colorScheme.onTertiaryContainer
+                    ) {
+                        newCount = if (newCount.length == 1) "0" else newCount.dropLast(1)
+                    }
+                }
             }
         },
         confirmButton = {
-            Button(
+            TextButton(
                 modifier = Modifier.padding(8.dp),
                 onClick = {
-                    clickedCoin.count = newCount
+                    clickedCoin.count = newCount.toDouble()
                     viewModel.insertCoin(clickedCoin)
                     onDismissRequest()
                 },
@@ -210,7 +272,7 @@ private fun EditCoinCountDialog(
             }
         },
         dismissButton = {
-            Button(
+            TextButton(
                 modifier = Modifier.padding(8.dp),
                 onClick = {
                     viewModel.deleteCoin(clickedCoin)
@@ -218,7 +280,10 @@ private fun EditCoinCountDialog(
                     onDismissRequest()
                 },
             ) {
-                Text(text = stringResource(id = R.string.delete))
+                Text(
+                    text = stringResource(id = R.string.delete),
+                    color = Color.Red
+                )
             }
         }
     )
