@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,8 +23,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.presentation.ui.coin_insert.components.InsertCoinButton
-import com.aroman.mimwallet.presentation.ui.shared_compose_components.LoadingBox
 import com.aroman.mimwallet.presentation.ui.coin_insert.components.SelectableCoinItem
+import com.aroman.mimwallet.presentation.ui.shared_compose_components.LoadingBox
 import com.aroman.mimwallet.presentation.ui.viewmodels.CoinMapViewModel
 
 
@@ -63,6 +64,9 @@ fun CoinInsertScreen(
                     placeholder = {
                         Text(text = stringResource(R.string.search))
                     },
+                    colors = TextFieldDefaults.textFieldColors(
+                        textColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    ),
                     maxLines = 1
                 )
                 InsertCoinButton(
