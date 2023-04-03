@@ -186,12 +186,16 @@ private fun EditCoinCountDialog(
                     style = MaterialTheme.typography.titleLarge,
                     text = newCount
                 )
-                val buttonModifier = Modifier.padding(vertical = 15.dp, horizontal = 25.dp)
+                val buttonModifier =
+                    Modifier
+                        .aspectRatio(1f)
+                        .weight(1f)
+                val buttonSpacing = 15.dp
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 5.dp),
-                    horizontalArrangement = Arrangement.SpaceAround
+                    horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
                 ) {
                     RoundedButton(symbol = "1", modifier = buttonModifier) {
                         newCount = if (newCount == "0") "1" else newCount + "1"
@@ -207,7 +211,7 @@ private fun EditCoinCountDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 5.dp),
-                    horizontalArrangement = Arrangement.SpaceAround
+                    horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
                 ) {
                     RoundedButton(symbol = "4", modifier = buttonModifier) {
                         newCount = if (newCount == "0") "4" else newCount + "4"
@@ -223,7 +227,7 @@ private fun EditCoinCountDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 5.dp),
-                    horizontalArrangement = Arrangement.SpaceAround
+                    horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
                 ) {
                     RoundedButton(symbol = "7", modifier = buttonModifier) {
                         newCount = if (newCount == "0") "7" else newCount + "7"
@@ -239,7 +243,7 @@ private fun EditCoinCountDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 5.dp),
-                    horizontalArrangement = Arrangement.SpaceAround
+                    horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
                 ) {
                     RoundedButton(symbol = ".", modifier = buttonModifier) {
                         if (!newCount.contains(".")) newCount += "."
