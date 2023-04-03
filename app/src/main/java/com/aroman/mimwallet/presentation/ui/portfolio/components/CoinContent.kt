@@ -194,7 +194,7 @@ private fun EditCoinCountDialog(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 5.dp),
+                        .padding(5.dp),
                     horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
                 ) {
                     RoundedButton(symbol = "1", modifier = buttonModifier) {
@@ -210,7 +210,7 @@ private fun EditCoinCountDialog(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 5.dp),
+                        .padding(5.dp),
                     horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
                 ) {
                     RoundedButton(symbol = "4", modifier = buttonModifier) {
@@ -226,7 +226,7 @@ private fun EditCoinCountDialog(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 5.dp),
+                        .padding(5.dp),
                     horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
                 ) {
                     RoundedButton(symbol = "7", modifier = buttonModifier) {
@@ -242,7 +242,7 @@ private fun EditCoinCountDialog(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 5.dp),
+                        .padding(5.dp),
                     horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
                 ) {
                     RoundedButton(symbol = ".", modifier = buttonModifier) {
