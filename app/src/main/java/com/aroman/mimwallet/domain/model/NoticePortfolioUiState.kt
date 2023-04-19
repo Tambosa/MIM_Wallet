@@ -1,6 +1,6 @@
 package com.aroman.mimwallet.domain.model
 
-data class NoticePortfolioState(
+data class NoticePortfolioUiState(
     val noticeList: List<NoticePortfolio>,
     val nextTimerInMillis: Long?
 )

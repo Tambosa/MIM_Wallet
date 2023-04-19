@@ -65,7 +65,7 @@ class ComposeActivity : AppCompatActivity() {
                         route = Screen.PortfolioNotifications.route
                     ) {
                         PortfolioNotificationsScreen(
-                            noticePortfolioState = noticePortfolioState,
+                            noticePortfolioUiState = noticePortfolioState,
                             onEvent = noticePortfolioViewModel::onEvent
                         )
                     }

@@ -26,7 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager.CHANNEL_ID
-import com.aroman.mimwallet.domain.model.NoticePortfolioState
+import com.aroman.mimwallet.domain.model.NoticePortfolioUiState
 import com.aroman.mimwallet.domain.model.NoticePortfolioUiEvent
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.DisplayableInsertNoticePortfolio
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.DisplayableNoticePortfolioItem
@@ -37,7 +37,7 @@ import com.aroman.mimwallet.utils.isNotificationAllowed
 
 @Composable
 fun PortfolioNotificationsScreen(
-    noticePortfolioState: NoticePortfolioState,
+    noticePortfolioUiState: NoticePortfolioUiState,
     onEvent: (NoticePortfolioUiEvent) -> Unit
 ) {
     val context = LocalContext.current
@@ -63,12 +63,12 @@ fun PortfolioNotificationsScreen(
         )
     )
     LaunchedEffect(Unit) {
-        onEvent(NoticePortfolioUiEvent.ShowData(noticePortfolioState))
+        onEvent(NoticePortfolioUiEvent.ShowData(noticePortfolioUiState))
     }
     Surface(
         modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.primaryContainer
     ) {
-        if (noticePortfolioState.noticeList.isEmpty()) {
+        if (noticePortfolioUiState.noticeList.isEmpty()) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
@@ -80,7 +80,7 @@ fun PortfolioNotificationsScreen(
         } else {
             Column {
                 PortfolioNotificationsHeader(
-                    nextTimerInMillis = noticePortfolioState.nextTimerInMillis,
+                    nextTimerInMillis = noticePortfolioUiState.nextTimerInMillis,
                     isExpanded = isFirstItemVisible,
                     cardAlpha = cardAlpha
                 )
@@ -89,14 +89,14 @@ fun PortfolioNotificationsScreen(
                     state = lazyListState,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    items(count = noticePortfolioState.noticeList.size,
-                        key = { index -> noticePortfolioState.noticeList[index].id },
+                    items(count = noticePortfolioUiState.noticeList.size,
+                        key = { index -> noticePortfolioUiState.noticeList[index].id },
                         itemContent = { index ->
                             DisplayableNoticePortfolioItem(
-                                noticePortfolioState.noticeList[index],
+                                noticePortfolioUiState.noticeList[index],
                                 onEvent
                             )
-                            if (index == noticePortfolioState.noticeList.size - 1) {
+                            if (index == noticePortfolioUiState.noticeList.size - 1) {
                                 DisplayableInsertNoticePortfolio(onEvent)
                             }
                         })

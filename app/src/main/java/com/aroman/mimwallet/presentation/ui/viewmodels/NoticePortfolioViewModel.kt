@@ -4,7 +4,7 @@ import android.icu.util.Calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aroman.mimwallet.domain.model.NoticePortfolio
-import com.aroman.mimwallet.domain.model.NoticePortfolioState
+import com.aroman.mimwallet.domain.model.NoticePortfolioUiState
 import com.aroman.mimwallet.domain.model.NoticePortfolioUiEvent
 import com.aroman.mimwallet.domain.repository.NoticePortfolioRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,14 +22,14 @@ class NoticePortfolioViewModel @Inject constructor(
     private val noticePortfolioRepo: NoticePortfolioRepository
 ) : ViewModel() {
 
-    private val _noticePortfolioState = MutableStateFlow(
-        NoticePortfolioState(
+    private val _noticePortfolioUiState = MutableStateFlow(
+        NoticePortfolioUiState(
             listOf(),
             null
         )
     )
 
-    val noticePortfolioState = _noticePortfolioState.asStateFlow()
+    val noticePortfolioState = _noticePortfolioUiState.asStateFlow()
 
     init {
         tickerFlow().launchIn(viewModelScope)
@@ -95,12 +95,12 @@ class NoticePortfolioViewModel @Inject constructor(
     }
 
     private suspend fun updateNoticeListValue() {
-        _noticePortfolioState.value =
-            _noticePortfolioState.value.copy(noticeList = noticePortfolioRepo.getAll())
+        _noticePortfolioUiState.value =
+            _noticePortfolioUiState.value.copy(noticeList = noticePortfolioRepo.getAll())
     }
 
     private fun updateTimer() {
-        _noticePortfolioState.value = _noticePortfolioState.value.copy(
+        _noticePortfolioUiState.value = _noticePortfolioUiState.value.copy(
             nextTimerInMillis = noticePortfolioState.value.noticeList
                 .filter { it.isActive }
                 .minOfOrNull {
