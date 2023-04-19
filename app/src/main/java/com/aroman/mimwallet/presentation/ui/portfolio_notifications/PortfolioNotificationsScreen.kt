@@ -3,6 +3,7 @@ package com.aroman.mimwallet.presentation.ui.portfolio_notifications
 import android.Manifest
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager.CHANNEL_ID
 import com.aroman.mimwallet.domain.model.NoticePortfolio
+import com.aroman.mimwallet.domain.model.NoticePortfolioState
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.DisplayableInsertNoticePortfolio
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.DisplayableNoticePortfolioItem
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.NotificationsTitle
@@ -36,13 +38,13 @@ import com.aroman.mimwallet.utils.isNotificationAllowed
 
 @Composable
 fun PortfolioNotificationsScreen(
-    noticePortfolioList: List<NoticePortfolio>,
-    nextTimerInMillis: Long?,
+    noticePortfolioState: NoticePortfolioState,
     getNoticePortfolioList: () -> Unit,
     insertNoticePortfolio: (NoticePortfolio) -> Unit,
     updateNoticePortfolio: (NoticePortfolio) -> Unit,
     deleteNoticePortfolio: (Context, NoticePortfolio) -> Unit,
 ) {
+    Log.d("@@@", "PortfolioNotificationsScreen: $noticePortfolioState")
     val context = LocalContext.current
     var hasNotificationPermission by remember(isNotificationAllowed(context))
     InitNotificationPermissions(context, hasNotificationPermission) {
@@ -74,7 +76,7 @@ fun PortfolioNotificationsScreen(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.primaryContainer
     ) {
-        if (noticePortfolioList.isEmpty()) {
+        if (noticePortfolioState.noticeList.isEmpty()) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
@@ -86,7 +88,7 @@ fun PortfolioNotificationsScreen(
         } else {
             Column {
                 PortfolioNotificationsHeader(
-                    nextTimerInMillis = nextTimerInMillis,
+                    nextTimerInMillis = noticePortfolioState.nextTimerInMillis,
                     isExpanded = isFirstItemVisible,
                     cardAlpha = cardAlpha
                 )
@@ -96,15 +98,15 @@ fun PortfolioNotificationsScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     items(
-                        count = noticePortfolioList.size,
-                        key = { index -> noticePortfolioList[index].id },
+                        count = noticePortfolioState.noticeList.size,
+                        key = { index -> noticePortfolioState.noticeList[index].id },
                         itemContent = { index ->
                             DisplayableNoticePortfolioItem(
-                                noticePortfolioList[index],
+                                noticePortfolioState.noticeList[index],
                                 updateNoticePortfolio,
                                 deleteNoticePortfolio
                             )
-                            if (index == noticePortfolioList.size - 1) {
+                            if (index == noticePortfolioState.noticeList.size - 1) {
                                 DisplayableInsertNoticePortfolio(insertNoticePortfolio)
                             }
                         }

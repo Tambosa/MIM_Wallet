@@ -46,10 +46,8 @@ class ComposeActivity : AppCompatActivity() {
         setContent {
             val isDarkTheme =
                 themeViewModel.isDarkTheme.collectAsState(initial = isSystemInDarkTheme())
+            val noticePortfolioState by noticePortfolioViewModel.noticePortfolioState.collectAsState()
 
-
-            val noticePortfolioList by noticePortfolioViewModel.noticePortfolioList.collectAsState()
-            val nextTimerInMillis by noticePortfolioViewModel.nextTimerInMillis.collectAsState()
             AppTheme(useDarkTheme = isDarkTheme.value) {
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = Screen.Portfolio.route) {
@@ -67,12 +65,11 @@ class ComposeActivity : AppCompatActivity() {
                         route = Screen.PortfolioNotifications.route
                     ) {
                         PortfolioNotificationsScreen(
-                            noticePortfolioList,
-                            nextTimerInMillis,
-                            noticePortfolioViewModel::getNoticePortfolioList,
-                            noticePortfolioViewModel::insertNoticePortfolio,
-                            noticePortfolioViewModel::updateNoticePortfolio,
-                            noticePortfolioViewModel::deleteNoticePortfolio
+                            noticePortfolioState = noticePortfolioState,
+                            getNoticePortfolioList = noticePortfolioViewModel::getNoticePortfolioList,
+                            insertNoticePortfolio = noticePortfolioViewModel::insertNoticePortfolio,
+                            updateNoticePortfolio = noticePortfolioViewModel::updateNoticePortfolio,
+                            deleteNoticePortfolio = noticePortfolioViewModel::deleteNoticePortfolio
                         )
                     }
                 }
