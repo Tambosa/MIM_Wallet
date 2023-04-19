@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.presentation.ui.coin_insert.components.InsertCoinButton
@@ -31,7 +30,7 @@ import com.aroman.mimwallet.presentation.ui.viewmodels.CoinMapViewModel
 @Composable
 fun CoinInsertScreen(
     navController: NavController,
-    coinMapViewModel: CoinMapViewModel = hiltViewModel()
+    coinMapViewModel: CoinMapViewModel
 ) {
     LaunchedEffect(true) {
         coinMapViewModel.resetSelectedCoins()

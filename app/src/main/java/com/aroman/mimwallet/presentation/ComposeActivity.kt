@@ -17,6 +17,7 @@ import com.aroman.mimwallet.presentation.ui.coin_insert.CoinInsertScreen
 import com.aroman.mimwallet.presentation.ui.portfolio.PortfolioScreen
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.PortfolioNotificationsScreen
 import com.aroman.mimwallet.presentation.ui.theme.AppTheme
+import com.aroman.mimwallet.presentation.ui.viewmodels.CoinMapViewModel
 import com.aroman.mimwallet.presentation.ui.viewmodels.NoticePortfolioViewModel
 import com.aroman.mimwallet.presentation.ui.viewmodels.ThemeViewModel
 import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel
@@ -28,6 +29,7 @@ class ComposeActivity : AppCompatActivity() {
     private val themeViewModel by viewModels<ThemeViewModel>()
     private val walletViewModel by viewModels<WalletViewModel>()
     private val noticePortfolioViewModel by viewModels<NoticePortfolioViewModel>()
+    private val coinMapViewModel by viewModels<CoinMapViewModel>()
 
     private var keepSplash = true
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +61,7 @@ class ComposeActivity : AppCompatActivity() {
                     composable(
                         route = Screen.CoinDetails.route,
                     ) {
-                        CoinInsertScreen(navController)
+                        CoinInsertScreen(navController, coinMapViewModel)
                     }
                     composable(
                         route = Screen.PortfolioNotifications.route

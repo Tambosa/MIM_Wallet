@@ -40,7 +40,6 @@ class CoinMapViewModel @Inject constructor(
             if (text.isBlank()) {
                 coins
             } else {
-                delay(100)
                 coins.filter { it.doesMatchSearchQuery(text) }
             }
         }
