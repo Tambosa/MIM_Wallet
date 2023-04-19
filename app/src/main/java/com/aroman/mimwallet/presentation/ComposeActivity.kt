@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
@@ -16,6 +17,7 @@ import com.aroman.mimwallet.presentation.ui.coin_insert.CoinInsertScreen
 import com.aroman.mimwallet.presentation.ui.portfolio.PortfolioScreen
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.PortfolioNotificationsScreen
 import com.aroman.mimwallet.presentation.ui.theme.AppTheme
+import com.aroman.mimwallet.presentation.ui.viewmodels.NoticePortfolioViewModel
 import com.aroman.mimwallet.presentation.ui.viewmodels.ThemeViewModel
 import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +27,7 @@ import kotlinx.coroutines.delay
 class ComposeActivity : AppCompatActivity() {
     private val themeViewModel by viewModels<ThemeViewModel>()
     private val walletViewModel by viewModels<WalletViewModel>()
+    private val noticePortfolioViewModel by viewModels<NoticePortfolioViewModel>()
 
     private var keepSplash = true
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +44,10 @@ class ComposeActivity : AppCompatActivity() {
         setContent {
             val isDarkTheme =
                 themeViewModel.isDarkTheme.collectAsState(initial = isSystemInDarkTheme())
+
+
+            val noticePortfolioList by noticePortfolioViewModel.noticePortfolioList.collectAsState()
+            val nextTimerInMillis by noticePortfolioViewModel.nextTimerInMillis.collectAsState()
             AppTheme(useDarkTheme = isDarkTheme.value) {
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = Screen.Portfolio.route) {
@@ -57,7 +64,14 @@ class ComposeActivity : AppCompatActivity() {
                     composable(
                         route = Screen.PortfolioNotifications.route
                     ) {
-                        PortfolioNotificationsScreen()
+                        PortfolioNotificationsScreen(
+                            noticePortfolioList,
+                            nextTimerInMillis,
+                            noticePortfolioViewModel::getNoticePortfolioList,
+                            noticePortfolioViewModel::insertNoticePortfolio,
+                            noticePortfolioViewModel::updateNoticePortfolio,
+                            noticePortfolioViewModel::deleteNoticePortfolio
+                        )
                     }
                 }
             }

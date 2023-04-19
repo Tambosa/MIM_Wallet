@@ -16,23 +16,32 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager.CHANNEL_ID
+import com.aroman.mimwallet.domain.model.NoticePortfolio
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.DisplayableInsertNoticePortfolio
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.DisplayableNoticePortfolioItem
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.NotificationsTitle
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.PortfolioNotificationsHeader
-import com.aroman.mimwallet.presentation.ui.viewmodels.NoticePortfolioViewModel
 import com.aroman.mimwallet.utils.createNotificationChannel
 import com.aroman.mimwallet.utils.isNotificationAllowed
 
 @Composable
 fun PortfolioNotificationsScreen(
-    noticePortfolioViewModel: NoticePortfolioViewModel = hiltViewModel()
+    noticePortfolioList: List<NoticePortfolio>,
+    nextTimerInMillis: Long?,
+    getNoticePortfolioList: () -> Unit,
+    insertNoticePortfolio: (NoticePortfolio) -> Unit,
+    updateNoticePortfolio: (NoticePortfolio) -> Unit,
+    deleteNoticePortfolio: (Context, NoticePortfolio) -> Unit,
 ) {
     val context = LocalContext.current
     var hasNotificationPermission by remember(isNotificationAllowed(context))
@@ -58,10 +67,8 @@ fun PortfolioNotificationsScreen(
             easing = LinearOutSlowInEasing
         )
     )
-    val noticePortfolioList by noticePortfolioViewModel.noticePortfolioList.collectAsState()
-    val nextTimerInMillis by noticePortfolioViewModel.nextTimerInMillis.collectAsState()
     LaunchedEffect(Unit) {
-        noticePortfolioViewModel.getNoticePortfolioList()
+        getNoticePortfolioList()
     }
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -74,7 +81,7 @@ fun PortfolioNotificationsScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 NotificationsTitle()
-                DisplayableInsertNoticePortfolio(viewModel = noticePortfolioViewModel)
+                DisplayableInsertNoticePortfolio(insertNoticePortfolio)
             }
         } else {
             Column {
@@ -94,10 +101,11 @@ fun PortfolioNotificationsScreen(
                         itemContent = { index ->
                             DisplayableNoticePortfolioItem(
                                 noticePortfolioList[index],
-                                noticePortfolioViewModel
+                                updateNoticePortfolio,
+                                deleteNoticePortfolio
                             )
                             if (index == noticePortfolioList.size - 1) {
-                                DisplayableInsertNoticePortfolio(viewModel = noticePortfolioViewModel)
+                                DisplayableInsertNoticePortfolio(insertNoticePortfolio)
                             }
                         }
                     )

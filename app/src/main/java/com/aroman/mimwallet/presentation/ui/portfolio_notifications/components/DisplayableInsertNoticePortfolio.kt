@@ -1,6 +1,10 @@
 package com.aroman.mimwallet.presentation.ui.portfolio_notifications.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -11,10 +15,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.NoticePortfolio
-import com.aroman.mimwallet.presentation.ui.viewmodels.NoticePortfolioViewModel
 
 @Composable
-fun DisplayableInsertNoticePortfolio(viewModel: NoticePortfolioViewModel) {
+fun DisplayableInsertNoticePortfolio(insertNoticePortfolio: (NoticePortfolio) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -23,7 +26,7 @@ fun DisplayableInsertNoticePortfolio(viewModel: NoticePortfolioViewModel) {
     ) {
         IconButton(
             onClick = {
-                viewModel.insertNoticePortfolio(
+                insertNoticePortfolio(
                     NoticePortfolio(
                         hour = 12,
                         minute = 0,

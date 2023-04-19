@@ -1,5 +1,6 @@
 package com.aroman.mimwallet.presentation.ui.portfolio_notifications.components
 
+import android.content.Context
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -18,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager
 import com.aroman.mimwallet.domain.model.NoticePortfolio
-import com.aroman.mimwallet.presentation.ui.viewmodels.NoticePortfolioViewModel
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.clock.ClockDialog
 import com.maxkeppeler.sheets.clock.models.ClockConfig
@@ -31,7 +31,8 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 fun DisplayableNoticePortfolioItem(
     noticePortfolio: NoticePortfolio,
-    noticePortfolioViewModel: NoticePortfolioViewModel
+    updateNoticePortfolio: (NoticePortfolio) -> Unit,
+    deleteNoticePortfolio: (Context, NoticePortfolio) -> Unit,
 ) {
     val clockDialogState = rememberUseCaseState()
     val context = LocalContext.current
@@ -85,10 +86,10 @@ fun DisplayableNoticePortfolioItem(
                 }
                 checkedState = it
                 noticePortfolio.isActive = checkedState
-                noticePortfolioViewModel.updateNoticePortfolio(noticePortfolio)
+                updateNoticePortfolio(noticePortfolio)
             })
         IconButton(onClick = {
-            noticePortfolioViewModel.deleteNoticePortfolio(context, noticePortfolio)
+            deleteNoticePortfolio(context, noticePortfolio)
         }) {
             Icon(Icons.Filled.Delete, stringResource(id = R.string.delete))
         }
@@ -104,7 +105,7 @@ fun DisplayableNoticePortfolioItem(
                 pickedTime = LocalTime.of(hours, minutes)
                 noticePortfolio.hour = hours
                 noticePortfolio.minute = minutes
-                noticePortfolioViewModel.updateNoticePortfolio(noticePortfolio)
+                updateNoticePortfolio(noticePortfolio)
                 if (noticePortfolio.isActive) {
                     PortfolioNotificationManager.startReminder(
                         context = context,
