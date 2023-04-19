@@ -15,25 +15,29 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.NoticePortfolio
+import com.aroman.mimwallet.domain.model.NoticePortfolioUiEvent
 
 @Composable
-fun DisplayableInsertNoticePortfolio(insertNoticePortfolio: (NoticePortfolio) -> Unit) {
+fun DisplayableInsertNoticePortfolio(
+    onEvent: (NoticePortfolioUiEvent) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 12.dp, end = 12.dp),
         horizontalArrangement = Arrangement.Center
     ) {
-        IconButton(
-            onClick = {
-                insertNoticePortfolio(
+        IconButton(onClick = {
+            onEvent(
+                NoticePortfolioUiEvent.AddItem(
                     NoticePortfolio(
                         hour = 12,
                         minute = 0,
                         isActive = false
                     )
                 )
-            }) {
+            )
+        }) {
             Icon(
                 modifier = Modifier.size(100.dp),
                 painter = painterResource(id = R.drawable.ic_baseline_add_circle_outline_24),

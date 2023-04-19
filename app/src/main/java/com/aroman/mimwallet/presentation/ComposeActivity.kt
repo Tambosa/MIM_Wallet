@@ -66,10 +66,7 @@ class ComposeActivity : AppCompatActivity() {
                     ) {
                         PortfolioNotificationsScreen(
                             noticePortfolioState = noticePortfolioState,
-                            getNoticePortfolioList = noticePortfolioViewModel::getNoticePortfolioList,
-                            insertNoticePortfolio = noticePortfolioViewModel::insertNoticePortfolio,
-                            updateNoticePortfolio = noticePortfolioViewModel::updateNoticePortfolio,
-                            deleteNoticePortfolio = noticePortfolioViewModel::deleteNoticePortfolio
+                            onEvent = noticePortfolioViewModel::onEvent
                         )
                     }
                 }

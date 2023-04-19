@@ -3,7 +3,6 @@ package com.aroman.mimwallet.presentation.ui.portfolio_notifications
 import android.Manifest
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -27,8 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager.CHANNEL_ID
-import com.aroman.mimwallet.domain.model.NoticePortfolio
 import com.aroman.mimwallet.domain.model.NoticePortfolioState
+import com.aroman.mimwallet.domain.model.NoticePortfolioUiEvent
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.DisplayableInsertNoticePortfolio
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.DisplayableNoticePortfolioItem
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.NotificationsTitle
@@ -39,12 +38,8 @@ import com.aroman.mimwallet.utils.isNotificationAllowed
 @Composable
 fun PortfolioNotificationsScreen(
     noticePortfolioState: NoticePortfolioState,
-    getNoticePortfolioList: () -> Unit,
-    insertNoticePortfolio: (NoticePortfolio) -> Unit,
-    updateNoticePortfolio: (NoticePortfolio) -> Unit,
-    deleteNoticePortfolio: (Context, NoticePortfolio) -> Unit,
+    onEvent: (NoticePortfolioUiEvent) -> Unit
 ) {
-    Log.d("@@@", "PortfolioNotificationsScreen: $noticePortfolioState")
     val context = LocalContext.current
     var hasNotificationPermission by remember(isNotificationAllowed(context))
     InitNotificationPermissions(context, hasNotificationPermission) {
@@ -63,18 +58,15 @@ fun PortfolioNotificationsScreen(
         }
     }
     val cardAlpha by animateFloatAsState(
-        targetValue = if (isFirstItemVisible) 1f else 0f,
-        animationSpec = tween(
-            durationMillis = 300,
-            easing = LinearOutSlowInEasing
+        targetValue = if (isFirstItemVisible) 1f else 0f, animationSpec = tween(
+            durationMillis = 300, easing = LinearOutSlowInEasing
         )
     )
     LaunchedEffect(Unit) {
-        getNoticePortfolioList()
+        onEvent(NoticePortfolioUiEvent.ShowData(noticePortfolioState))
     }
     Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.primaryContainer
+        modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.primaryContainer
     ) {
         if (noticePortfolioState.noticeList.isEmpty()) {
             Column(
@@ -83,7 +75,7 @@ fun PortfolioNotificationsScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 NotificationsTitle()
-                DisplayableInsertNoticePortfolio(insertNoticePortfolio)
+                DisplayableInsertNoticePortfolio(onEvent)
             }
         } else {
             Column {
@@ -97,20 +89,17 @@ fun PortfolioNotificationsScreen(
                     state = lazyListState,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    items(
-                        count = noticePortfolioState.noticeList.size,
+                    items(count = noticePortfolioState.noticeList.size,
                         key = { index -> noticePortfolioState.noticeList[index].id },
                         itemContent = { index ->
                             DisplayableNoticePortfolioItem(
                                 noticePortfolioState.noticeList[index],
-                                updateNoticePortfolio,
-                                deleteNoticePortfolio
+                                onEvent
                             )
                             if (index == noticePortfolioState.noticeList.size - 1) {
-                                DisplayableInsertNoticePortfolio(insertNoticePortfolio)
+                                DisplayableInsertNoticePortfolio(onEvent)
                             }
-                        }
-                    )
+                        })
                 }
             }
         }
@@ -123,10 +112,9 @@ private fun InitNotificationPermissions(
     isAllowed: Boolean,
     hasNotificationPermission: (Boolean) -> Unit,
 ) {
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { result -> hasNotificationPermission(result) }
-    )
+    val permissionLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission(),
+            onResult = { result -> hasNotificationPermission(result) })
     LaunchedEffect(Unit) {
         createNotificationChannel(CHANNEL_ID, context)
         if (!isAllowed) {

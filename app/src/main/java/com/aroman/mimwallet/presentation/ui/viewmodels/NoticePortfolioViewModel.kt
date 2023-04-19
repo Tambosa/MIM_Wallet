@@ -1,12 +1,11 @@
 package com.aroman.mimwallet.presentation.ui.viewmodels
 
-import android.content.Context
 import android.icu.util.Calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager
 import com.aroman.mimwallet.domain.model.NoticePortfolio
 import com.aroman.mimwallet.domain.model.NoticePortfolioState
+import com.aroman.mimwallet.domain.model.NoticePortfolioUiEvent
 import com.aroman.mimwallet.domain.repository.NoticePortfolioRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -44,14 +43,34 @@ class NoticePortfolioViewModel @Inject constructor(
         }
     }
 
-    fun getNoticePortfolioList() {
+    fun onEvent(event: NoticePortfolioUiEvent) {
+        when (event) {
+            is NoticePortfolioUiEvent.ShowData -> {
+                getNoticePortfolioList()
+            }
+
+            is NoticePortfolioUiEvent.AddItem -> {
+                insertNoticePortfolio(event.noticePortfolio)
+            }
+
+            is NoticePortfolioUiEvent.UpdateItem -> {
+                updateNoticePortfolio(event.noticePortfolio)
+            }
+
+            is NoticePortfolioUiEvent.DeleteItem -> {
+                deleteNoticePortfolio(event.noticePortfolio)
+            }
+        }
+    }
+
+    private fun getNoticePortfolioList() {
         viewModelScope.launch {
             updateNoticeListValue()
             updateTimer()
         }
     }
 
-    fun insertNoticePortfolio(noticePortfolio: NoticePortfolio) {
+    private fun insertNoticePortfolio(noticePortfolio: NoticePortfolio) {
         viewModelScope.launch {
             noticePortfolioRepo.saveNotice(noticePortfolio)
             updateNoticeListValue()
@@ -59,7 +78,7 @@ class NoticePortfolioViewModel @Inject constructor(
         }
     }
 
-    fun updateNoticePortfolio(noticePortfolio: NoticePortfolio) {
+    private fun updateNoticePortfolio(noticePortfolio: NoticePortfolio) {
         viewModelScope.launch {
             noticePortfolioRepo.updateNotice(noticePortfolio)
             updateNoticeListValue()
@@ -67,12 +86,8 @@ class NoticePortfolioViewModel @Inject constructor(
         }
     }
 
-    fun deleteNoticePortfolio(context: Context, noticePortfolio: NoticePortfolio) {
+    private fun deleteNoticePortfolio(noticePortfolio: NoticePortfolio) {
         viewModelScope.launch {
-            PortfolioNotificationManager.stopReminder(
-                context = context,
-                reminderId = noticePortfolio.id
-            )
             noticePortfolioRepo.deleteNotice(noticePortfolio)
             updateNoticeListValue()
             updateTimer()
