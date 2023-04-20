@@ -27,16 +27,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.domain.model.PortfolioState
+import com.aroman.mimwallet.domain.model.PortfolioUiState
 import com.aroman.mimwallet.presentation.ui.shared_compose_components.RoundedButton
 import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel
-import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel.TimePeriod
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun CoinContent(
-    portfolio: PortfolioState,
-    timePeriodSelection: TimePeriod,
+    portfolio: PortfolioUiState,
     navController: NavController,
     viewModel: WalletViewModel,
 ) {
@@ -67,12 +65,12 @@ fun CoinContent(
                             }
                             TotalPrice(
                                 portfolio = portfolio,
-                                timePeriodSelection = timePeriodSelection
+                                timePeriodSelection = portfolio.timePeriod
                             )
                         }
                         TimePeriodSelection(
                             walletViewModel = viewModel,
-                            timePeriodSelection = timePeriodSelection
+                            timePeriodSelection = portfolio.timePeriod
                         )
                     }
                     val currentItem by rememberUpdatedState(portfolio.coinList[index])
@@ -83,6 +81,7 @@ fun CoinContent(
                                     viewModel.deleteCoin(currentItem)
                                     true
                                 }
+
                                 else -> false
                             }
                         }
@@ -110,7 +109,7 @@ fun CoinContent(
                                     )
                                     .padding(start = 12.dp, end = 12.dp),
                                 coin = portfolio.coinList[index],
-                                timePeriodSelection = timePeriodSelection,
+                                timePeriodSelection = portfolio.timePeriod,
                             )
                         }
                     )
@@ -267,7 +266,7 @@ private fun EditCoinCountDialog(
                 modifier = Modifier.padding(8.dp),
                 onClick = {
                     clickedCoin.count = newCount.toDouble()
-                    viewModel.insertCoin(clickedCoin)
+                    viewModel.updateCoin(clickedCoin)
                     onDismissRequest()
                 },
                 enabled = saveEnabled

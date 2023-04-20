@@ -3,13 +3,15 @@ package com.aroman.mimwallet.presentation.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aroman.mimwallet.R
-import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.domain.model.PortfolioState
+import com.aroman.mimwallet.domain.model.PortfolioUiState
 import com.aroman.mimwallet.domain.repository.PortfolioRepository
 import com.aroman.mimwallet.domain.use_case.get_portfolio.GetPortfolioUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,23 +19,19 @@ import javax.inject.Inject
 class WalletViewModel @Inject constructor(
     private val getPortfolioUseCase: GetPortfolioUseCase,
     private val localRepo: PortfolioRepository
-) :
-    ViewModel() {
+) : ViewModel() {
 
-    private val _portfolio = MutableStateFlow<ViewState<PortfolioState>>(ViewState.Loading())
+    private val _portfolio = MutableStateFlow(PortfolioUiState(listOf(), isCache = false))
     val portfolio = _portfolio.asStateFlow()
-    val isLoading = portfolio.map { it is ViewState.Loading }
-
-    private val _timePeriod = MutableStateFlow(TimePeriod.TWENTY_FOUR_HOURS)
-    val timePeriod = _timePeriod.asStateFlow()
 
     fun getPortfolio() {
+        _portfolio.value = _portfolio.value.copy(isLoading = true)
         getPortfolioUseCase().onEach { result ->
-            _portfolio.value = result
+            _portfolio.value = result.copy(isLoading = false)
         }.launchIn(viewModelScope)
     }
 
-    fun insertCoin(coin: DisplayableCoin) {
+    fun updateCoin(coin: DisplayableCoin) {
         viewModelScope.launch {
             localRepo.saveCoin(coin)
             getPortfolio()
@@ -47,9 +45,9 @@ class WalletViewModel @Inject constructor(
         }
     }
 
-    fun setTimePeriod(value: TimePeriod) {
+    fun setTimePeriod(timePeriod: TimePeriod) {
         viewModelScope.launch {
-            _timePeriod.emit(value)
+            _portfolio.value = _portfolio.value.copy(timePeriod = timePeriod)
         }
     }
 

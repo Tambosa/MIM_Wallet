@@ -1,6 +1,8 @@
 package com.aroman.mimwallet.domain.model
 
-data class PortfolioState(
+import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel.TimePeriod
+
+data class PortfolioUiState(
     val coinList: List<DisplayableCoin>,
     var totalPrice: Double = 0.0,
     var totalPercentChange1h: Double = 0.0,
@@ -9,4 +11,7 @@ data class PortfolioState(
     var totalPercentChange30d: Double = 0.0,
     var totalPercentChange60d: Double = 0.0,
     var totalPercentChange90d: Double = 0.0,
+    var timePeriod: TimePeriod = TimePeriod.TWENTY_FOUR_HOURS,
+    var isLoading: Boolean = false,
+    var isCache: Boolean
 )

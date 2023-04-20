@@ -10,15 +10,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.animation.doOnEnd
 import androidx.core.graphics.applyCanvas
 import androidx.navigation.NavController
-import com.aroman.mimwallet.common.ViewState
-import com.aroman.mimwallet.domain.model.PortfolioState
 import com.aroman.mimwallet.presentation.ui.portfolio.components.CoinContent
 import com.aroman.mimwallet.presentation.ui.portfolio.components.Header
 import com.aroman.mimwallet.presentation.ui.viewmodels.ThemeViewModel
@@ -34,13 +35,6 @@ fun PortfolioScreen(
         walletViewModel.getPortfolio()
     }
     val portfolioState by walletViewModel.portfolio.collectAsState()
-    val timePeriodSelection by walletViewModel.timePeriod.collectAsState()
-    val isLoading by walletViewModel.isLoading.collectAsState(true)
-
-    var portfolio by remember { mutableStateOf(PortfolioState(listOf())) }
-    if (portfolioState is ViewState.Success) {
-        portfolio = (portfolioState as ViewState.Success<PortfolioState>).successData
-    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -53,7 +47,7 @@ fun PortfolioScreen(
                 themeViewModel = themeViewModel,
                 walletViewModel = walletViewModel,
                 navController = navController,
-                isLoading = isLoading,
+                isLoading = portfolioState.isLoading,
                 onThemeChange = {
                     setScreenshot(view, resources)
                 }
@@ -61,8 +55,7 @@ fun PortfolioScreen(
             CoinContent(
                 viewModel = walletViewModel,
                 navController = navController,
-                portfolio = portfolio,
-                timePeriodSelection = timePeriodSelection,
+                portfolio = portfolioState
             )
         }
     }

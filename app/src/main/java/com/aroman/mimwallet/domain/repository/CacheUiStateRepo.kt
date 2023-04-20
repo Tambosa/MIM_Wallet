@@ -1,10 +1,10 @@
 package com.aroman.mimwallet.domain.repository
 
-import com.aroman.mimwallet.domain.model.PortfolioState
+import com.aroman.mimwallet.domain.model.PortfolioUiState
 
 interface CacheUiStateRepo {
 
-    suspend fun savePortfolioState(portfolio: PortfolioState)
+    suspend fun savePortfolioState(portfolio: PortfolioUiState)
 
-    suspend fun getPortfolioState(): PortfolioState?
+    suspend fun getPortfolioState(): PortfolioUiState?
 }

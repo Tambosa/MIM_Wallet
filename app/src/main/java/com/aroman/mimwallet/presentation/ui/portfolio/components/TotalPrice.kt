@@ -11,7 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.aroman.mimwallet.domain.model.PortfolioState
+import com.aroman.mimwallet.domain.model.PortfolioUiState
 import com.aroman.mimwallet.presentation.ui.theme.Typography
 import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel
 import java.math.RoundingMode
@@ -19,7 +19,7 @@ import java.text.DecimalFormat
 
 @Composable
 fun TotalPrice(
-    portfolio: PortfolioState,
+    portfolio: PortfolioUiState,
     timePeriodSelection: WalletViewModel.TimePeriod,
 ) {
     Row(
