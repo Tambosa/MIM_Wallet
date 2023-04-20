@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -33,7 +34,6 @@ fun PortfolioScreen(
     LaunchedEffect(true) {
         onEvent(PortfolioUiEvent.ShowData(state))
     }
-
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.primaryContainer
@@ -41,11 +41,14 @@ fun PortfolioScreen(
         Column(modifier = Modifier.fillMaxWidth()) {
             val view = LocalView.current
             val resources = LocalContext.current.resources
-            Header(
-                onThemeChange = {
+            val onThemeChangeWithScreenshot = remember {
+                {
                     onThemeChange()
                     setScreenshot(view, resources)
-                },
+                }
+            }
+            Header(
+                onThemeChange = onThemeChangeWithScreenshot,
                 state = state,
                 onEvent = onEvent,
                 navController = navController,

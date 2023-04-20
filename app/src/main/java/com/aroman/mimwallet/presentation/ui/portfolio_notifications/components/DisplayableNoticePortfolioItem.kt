@@ -78,8 +78,7 @@ fun DisplayableNoticePortfolioItem(
                 )
             }
             checkedState = it
-            noticePortfolio.isActive = checkedState
-            onEvent(NoticePortfolioUiEvent.UpdateItem(noticePortfolio))
+            onEvent(NoticePortfolioUiEvent.UpdateItem(noticePortfolio.copy(isActive = checkedState)))
         })
         IconButton(onClick = {
             PortfolioNotificationManager.stopReminder(
@@ -95,14 +94,19 @@ fun DisplayableNoticePortfolioItem(
         ), selection = ClockSelection.HoursMinutes { hours, minutes ->
             PortfolioNotificationManager.stopReminder(context, noticePortfolio.id)
             pickedTime = LocalTime.of(hours, minutes)
-            noticePortfolio.hour = hours
-            noticePortfolio.minute = minutes
-            onEvent(NoticePortfolioUiEvent.UpdateItem(noticePortfolio))
+            onEvent(
+                NoticePortfolioUiEvent.UpdateItem(
+                    noticePortfolio.copy(
+                        hour = hours,
+                        minute = minutes
+                    )
+                )
+            )
             if (noticePortfolio.isActive) {
                 PortfolioNotificationManager.startReminder(
                     context = context,
-                    reminderTimeHours = noticePortfolio.hour,
-                    reminderTimeMinutes = noticePortfolio.minute,
+                    reminderTimeHours = hours,
+                    reminderTimeMinutes = minutes,
                     reminderId = noticePortfolio.id
                 )
             }

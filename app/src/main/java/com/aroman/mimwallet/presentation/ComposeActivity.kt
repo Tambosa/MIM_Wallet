@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
@@ -45,8 +46,11 @@ class ComposeActivity : AppCompatActivity() {
         }
         setContent {
             val isDarkTheme = themeViewModel.isDarkTheme.collectAsState(isSystemInDarkTheme())
+            val onThemeChange = remember { themeViewModel::inverseTheme }
             val noticePortfolioState by noticePortfolioViewModel.noticePortfolioState.collectAsState()
+            val onNoticePortfolioUiEvent = remember { noticePortfolioViewModel::onEvent }
             val portfolioState by portfolioViewModel.portfolio.collectAsState()
+            val onPortfolioUiEvent = remember { portfolioViewModel::onEvent }
 
             AppTheme(useDarkTheme = isDarkTheme.value) {
                 val navController = rememberNavController()
@@ -56,9 +60,9 @@ class ComposeActivity : AppCompatActivity() {
                     ) {
                         PortfolioScreen(
                             navController = navController,
-                            onThemeChange = themeViewModel::inverseTheme,
+                            onThemeChange = onThemeChange,
                             state = portfolioState,
-                            onEvent = portfolioViewModel::onEvent
+                            onEvent = onPortfolioUiEvent
                         )
                     }
                     composable(
@@ -71,7 +75,7 @@ class ComposeActivity : AppCompatActivity() {
                     ) {
                         PortfolioNotificationsScreen(
                             noticePortfolioUiState = noticePortfolioState,
-                            onEvent = noticePortfolioViewModel::onEvent
+                            onEvent = onNoticePortfolioUiEvent
                         )
                     }
                 }
