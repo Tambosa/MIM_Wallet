@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.DisplayableCoin
+import com.aroman.mimwallet.domain.model.PortfolioUiEvent
 import com.aroman.mimwallet.domain.model.PortfolioUiState
 import com.aroman.mimwallet.domain.repository.PortfolioRepository
 import com.aroman.mimwallet.domain.use_case.get_portfolio.GetPortfolioUseCase
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class WalletViewModel @Inject constructor(
+class PortfolioViewModel @Inject constructor(
     private val getPortfolioUseCase: GetPortfolioUseCase,
     private val localRepo: PortfolioRepository
 ) : ViewModel() {
@@ -24,28 +25,48 @@ class WalletViewModel @Inject constructor(
     private val _portfolio = MutableStateFlow(PortfolioUiState(listOf(), isCache = false))
     val portfolio = _portfolio.asStateFlow()
 
-    fun getPortfolio() {
+    fun onEvent(event: PortfolioUiEvent) {
+        when (event) {
+            is PortfolioUiEvent.ShowData -> {
+                getPortfolio()
+            }
+
+            is PortfolioUiEvent.UpdateCoin -> {
+                updateCoin(event.coin)
+            }
+
+            is PortfolioUiEvent.DeleteCoin -> {
+                deleteCoin(event.coin)
+            }
+
+            is PortfolioUiEvent.ChangeTimePeriod -> {
+                changeTimePeriod(event.timePeriod)
+            }
+        }
+    }
+
+    private fun getPortfolio() {
         _portfolio.value = _portfolio.value.copy(isLoading = true)
         getPortfolioUseCase().onEach { result ->
             _portfolio.value = result.copy(isLoading = false)
         }.launchIn(viewModelScope)
     }
 
-    fun updateCoin(coin: DisplayableCoin) {
+    private fun updateCoin(coin: DisplayableCoin) {
         viewModelScope.launch {
             localRepo.saveCoin(coin)
             getPortfolio()
         }
     }
 
-    fun deleteCoin(coin: DisplayableCoin) {
+    private fun deleteCoin(coin: DisplayableCoin) {
         viewModelScope.launch {
             localRepo.deleteCoin(coin)
             getPortfolio()
         }
     }
 
-    fun setTimePeriod(timePeriod: TimePeriod) {
+    private fun changeTimePeriod(timePeriod: TimePeriod) {
         viewModelScope.launch {
             _portfolio.value = _portfolio.value.copy(timePeriod = timePeriod)
         }

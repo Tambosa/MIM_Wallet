@@ -19,15 +19,15 @@ import com.aroman.mimwallet.presentation.ui.portfolio_notifications.PortfolioNot
 import com.aroman.mimwallet.presentation.ui.theme.AppTheme
 import com.aroman.mimwallet.presentation.ui.viewmodels.CoinMapViewModel
 import com.aroman.mimwallet.presentation.ui.viewmodels.NoticePortfolioViewModel
+import com.aroman.mimwallet.presentation.ui.viewmodels.PortfolioViewModel
 import com.aroman.mimwallet.presentation.ui.viewmodels.ThemeViewModel
-import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
 class ComposeActivity : AppCompatActivity() {
     private val themeViewModel by viewModels<ThemeViewModel>()
-    private val walletViewModel by viewModels<WalletViewModel>()
+    private val portfolioViewModel by viewModels<PortfolioViewModel>()
     private val noticePortfolioViewModel by viewModels<NoticePortfolioViewModel>()
     private val coinMapViewModel by viewModels<CoinMapViewModel>()
 
@@ -44,9 +44,9 @@ class ComposeActivity : AppCompatActivity() {
             }
         }
         setContent {
-            val isDarkTheme =
-                themeViewModel.isDarkTheme.collectAsState(initial = isSystemInDarkTheme())
+            val isDarkTheme = themeViewModel.isDarkTheme.collectAsState(isSystemInDarkTheme())
             val noticePortfolioState by noticePortfolioViewModel.noticePortfolioState.collectAsState()
+            val portfolioState by portfolioViewModel.portfolio.collectAsState()
 
             AppTheme(useDarkTheme = isDarkTheme.value) {
                 val navController = rememberNavController()
@@ -54,7 +54,12 @@ class ComposeActivity : AppCompatActivity() {
                     composable(
                         route = Screen.Portfolio.route
                     ) {
-                        PortfolioScreen(navController, themeViewModel, walletViewModel)
+                        PortfolioScreen(
+                            navController = navController,
+                            onThemeChange = themeViewModel::inverseTheme,
+                            state = portfolioState,
+                            onEvent = portfolioViewModel::onEvent
+                        )
                     }
                     composable(
                         route = Screen.CoinDetails.route,

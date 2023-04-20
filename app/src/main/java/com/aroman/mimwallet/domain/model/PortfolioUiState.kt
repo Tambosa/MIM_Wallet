@@ -1,6 +1,6 @@
 package com.aroman.mimwallet.domain.model
 
-import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel.TimePeriod
+import com.aroman.mimwallet.presentation.ui.viewmodels.PortfolioViewModel.TimePeriod
 
 data class PortfolioUiState(
     val coinList: List<DisplayableCoin>,

@@ -9,15 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.aroman.mimwallet.domain.model.PortfolioUiEvent
 import com.aroman.mimwallet.presentation.ui.shared_compose_components.CircularChip
-import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel
+import com.aroman.mimwallet.presentation.ui.viewmodels.PortfolioViewModel
 
 @Composable
 fun TimePeriodSelection(
-    walletViewModel: WalletViewModel,
-    timePeriodSelection: WalletViewModel.TimePeriod
+    onEvent: (PortfolioUiEvent) -> Unit, timePeriodSelection: PortfolioViewModel.TimePeriod
 ) {
-    val timePeriodList = WalletViewModel.TimePeriod.values().asList()
+    val timePeriodList = PortfolioViewModel.TimePeriod.values().asList()
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -28,15 +28,19 @@ fun TimePeriodSelection(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             items(
-                count = WalletViewModel.TimePeriod.values().size,
+                count = PortfolioViewModel.TimePeriod.values().size,
                 itemContent = { index ->
                     CircularChip(
                         name = stringResource(id = timePeriodList[index].value),
                         isSelected = timePeriodList[index] == timePeriodSelection,
-                        onSelectionChanged = { walletViewModel.setTimePeriod(timePeriodList[index]) }
-                    )
-                }
-            )
+                        onSelectionChanged = {
+                            onEvent(
+                                PortfolioUiEvent.ChangeTimePeriod(
+                                    timePeriodList[index]
+                                )
+                            )
+                        })
+                })
         }
     }
 }

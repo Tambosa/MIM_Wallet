@@ -12,29 +12,27 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.animation.doOnEnd
 import androidx.core.graphics.applyCanvas
 import androidx.navigation.NavController
+import com.aroman.mimwallet.domain.model.PortfolioUiEvent
+import com.aroman.mimwallet.domain.model.PortfolioUiState
 import com.aroman.mimwallet.presentation.ui.portfolio.components.CoinContent
 import com.aroman.mimwallet.presentation.ui.portfolio.components.Header
-import com.aroman.mimwallet.presentation.ui.viewmodels.ThemeViewModel
-import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel
 
 @Composable
 fun PortfolioScreen(
     navController: NavController,
-    themeViewModel: ThemeViewModel,
-    walletViewModel: WalletViewModel,
+    onThemeChange: () -> Unit,
+    state: PortfolioUiState,
+    onEvent: (PortfolioUiEvent) -> Unit,
 ) {
     LaunchedEffect(true) {
-        walletViewModel.getPortfolio()
+        onEvent(PortfolioUiEvent.ShowData(state))
     }
-    val portfolioState by walletViewModel.portfolio.collectAsState()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -44,18 +42,18 @@ fun PortfolioScreen(
             val view = LocalView.current
             val resources = LocalContext.current.resources
             Header(
-                themeViewModel = themeViewModel,
-                walletViewModel = walletViewModel,
-                navController = navController,
-                isLoading = portfolioState.isLoading,
                 onThemeChange = {
+                    onThemeChange()
                     setScreenshot(view, resources)
-                }
+                },
+                state = state,
+                onEvent = onEvent,
+                navController = navController,
             )
             CoinContent(
-                viewModel = walletViewModel,
-                navController = navController,
-                portfolio = portfolioState
+                state = state,
+                onEvent = onEvent,
+                navController = navController
             )
         }
     }

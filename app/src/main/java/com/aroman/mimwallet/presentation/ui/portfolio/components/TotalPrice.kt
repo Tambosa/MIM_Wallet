@@ -13,14 +13,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.domain.model.PortfolioUiState
 import com.aroman.mimwallet.presentation.ui.theme.Typography
-import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel
+import com.aroman.mimwallet.presentation.ui.viewmodels.PortfolioViewModel
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
 @Composable
 fun TotalPrice(
     portfolio: PortfolioUiState,
-    timePeriodSelection: WalletViewModel.TimePeriod,
+    timePeriodSelection: PortfolioViewModel.TimePeriod,
 ) {
     Row(
         modifier = Modifier
@@ -45,12 +45,12 @@ fun TotalPrice(
         val totalPercentAnim = remember { Animatable(0f) }
         totalPercent = with(portfolio) {
             when (timePeriodSelection) {
-                WalletViewModel.TimePeriod.ONE_HOUR -> totalPercentChange1h
-                WalletViewModel.TimePeriod.TWENTY_FOUR_HOURS -> totalPercentChange24h
-                WalletViewModel.TimePeriod.SEVEN_DAYS -> totalPercentChange7d
-                WalletViewModel.TimePeriod.THIRTY_DAYS -> totalPercentChange30d
-                WalletViewModel.TimePeriod.SIXTY_DAYS -> totalPercentChange60d
-                WalletViewModel.TimePeriod.NINETY_DAYS -> totalPercentChange90d
+                PortfolioViewModel.TimePeriod.ONE_HOUR -> totalPercentChange1h
+                PortfolioViewModel.TimePeriod.TWENTY_FOUR_HOURS -> totalPercentChange24h
+                PortfolioViewModel.TimePeriod.SEVEN_DAYS -> totalPercentChange7d
+                PortfolioViewModel.TimePeriod.THIRTY_DAYS -> totalPercentChange30d
+                PortfolioViewModel.TimePeriod.SIXTY_DAYS -> totalPercentChange60d
+                PortfolioViewModel.TimePeriod.NINETY_DAYS -> totalPercentChange90d
             }
         }
 

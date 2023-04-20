@@ -27,16 +27,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.DisplayableCoin
+import com.aroman.mimwallet.domain.model.PortfolioUiEvent
 import com.aroman.mimwallet.domain.model.PortfolioUiState
 import com.aroman.mimwallet.presentation.ui.shared_compose_components.RoundedButton
-import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun CoinContent(
-    portfolio: PortfolioUiState,
+    state: PortfolioUiState,
+    onEvent: (PortfolioUiEvent) -> Unit,
     navController: NavController,
-    viewModel: WalletViewModel,
 ) {
     var openDialog by remember { mutableStateOf(false) }
     var oldCount by remember { mutableStateOf(0.0) }
@@ -46,39 +46,39 @@ fun CoinContent(
         contentPadding = PaddingValues(vertical = 15.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        if (portfolio.coinList.isEmpty()) {
+        if (state.coinList.isEmpty()) {
             items(1,
                 itemContent = {
                     DisplayableHint()
                     DisplayableInsertCoinButton(navController)
                 })
         }
-        if (portfolio.coinList.isNotEmpty()) {
+        if (state.coinList.isNotEmpty()) {
             items(
-                count = portfolio.coinList.size,
-                key = { index -> portfolio.coinList[index].id },
+                count = state.coinList.size,
+                key = { index -> state.coinList[index].id },
                 itemContent = { index ->
                     if (index == 0) {
-                        if (portfolio.totalPrice != 0.0) {
-                            key(portfolio.coinList) {
-                                PieChart(coins = portfolio.coinList)
+                        if (state.totalPrice != 0.0) {
+                            key(state.coinList) {
+                                PieChart(coins = state.coinList)
                             }
                             TotalPrice(
-                                portfolio = portfolio,
-                                timePeriodSelection = portfolio.timePeriod
+                                portfolio = state,
+                                timePeriodSelection = state.timePeriod
                             )
                         }
                         TimePeriodSelection(
-                            walletViewModel = viewModel,
-                            timePeriodSelection = portfolio.timePeriod
+                            onEvent = onEvent,
+                            timePeriodSelection = state.timePeriod
                         )
                     }
-                    val currentItem by rememberUpdatedState(portfolio.coinList[index])
+                    val currentItem by rememberUpdatedState(state.coinList[index])
                     val dismissState = rememberDismissState(
                         confirmStateChange = {
                             when (it) {
                                 DismissValue.DismissedToStart -> {
-                                    viewModel.deleteCoin(currentItem)
+                                    onEvent(PortfolioUiEvent.DeleteCoin(currentItem))
                                     true
                                 }
 
@@ -100,7 +100,7 @@ fun CoinContent(
                                 modifier = Modifier
                                     .clickable {
                                         openDialog = true
-                                        clickedCoin = portfolio.coinList[index]
+                                        clickedCoin = state.coinList[index]
                                         oldCount = clickedCoin.count
                                     }
                                     .background(
@@ -108,12 +108,12 @@ fun CoinContent(
                                         color = MaterialTheme.colorScheme.primaryContainer
                                     )
                                     .padding(start = 12.dp, end = 12.dp),
-                                coin = portfolio.coinList[index],
-                                timePeriodSelection = portfolio.timePeriod,
+                                coin = state.coinList[index],
+                                timePeriodSelection = state.timePeriod,
                             )
                         }
                     )
-                    if (index == portfolio.coinList.size - 1) {
+                    if (index == state.coinList.size - 1) {
                         DisplayableInsertCoinButton(navController)
                     }
                 }
@@ -125,7 +125,7 @@ fun CoinContent(
             onDismissRequest = { openDialog = false },
             clickedCoin = clickedCoin,
             oldCount = oldCount,
-            viewModel = viewModel
+            onEvent = onEvent,
         )
     }
 }
@@ -167,7 +167,7 @@ private fun EditCoinCountDialog(
     onDismissRequest: () -> Unit,
     clickedCoin: DisplayableCoin,
     oldCount: Double,
-    viewModel: WalletViewModel
+    onEvent: (PortfolioUiEvent) -> Unit,
 ) {
     var saveEnabled by remember { mutableStateOf(true) }
     var newCount by remember { mutableStateOf(oldCount.toString()) }
@@ -266,7 +266,7 @@ private fun EditCoinCountDialog(
                 modifier = Modifier.padding(8.dp),
                 onClick = {
                     clickedCoin.count = newCount.toDouble()
-                    viewModel.updateCoin(clickedCoin)
+                    onEvent(PortfolioUiEvent.UpdateCoin(clickedCoin))
                     onDismissRequest()
                 },
                 enabled = saveEnabled
@@ -278,8 +278,7 @@ private fun EditCoinCountDialog(
             TextButton(
                 modifier = Modifier.padding(8.dp),
                 onClick = {
-                    viewModel.deleteCoin(clickedCoin)
-                    viewModel.getPortfolio()
+                    onEvent(PortfolioUiEvent.DeleteCoin(clickedCoin))
                     onDismissRequest()
                 },
             ) {
