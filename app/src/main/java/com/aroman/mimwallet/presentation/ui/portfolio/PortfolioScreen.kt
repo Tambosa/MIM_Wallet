@@ -5,14 +5,19 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.view.View
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -23,7 +28,9 @@ import com.aroman.mimwallet.domain.model.PortfolioUiEvent
 import com.aroman.mimwallet.domain.model.PortfolioUiState
 import com.aroman.mimwallet.presentation.ui.portfolio.components.CoinContent
 import com.aroman.mimwallet.presentation.ui.portfolio.components.Header
+import com.aroman.mimwallet.presentation.ui.portfolio.components.PullRefreshCryptoIndicator
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PortfolioScreen(
     navController: NavController,
@@ -34,9 +41,14 @@ fun PortfolioScreen(
     LaunchedEffect(true) {
         onEvent(PortfolioUiEvent.ShowData(state))
     }
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.primaryContainer
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = state.isLoading,
+        onRefresh = { onEvent(PortfolioUiEvent.ShowData(state)) })
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .pullRefresh(pullRefreshState),
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             val view = LocalView.current
@@ -49,8 +61,6 @@ fun PortfolioScreen(
             }
             Header(
                 onThemeChange = onThemeChangeWithScreenshot,
-                state = state,
-                onEvent = onEvent,
                 navController = navController,
             )
             CoinContent(
@@ -59,6 +69,7 @@ fun PortfolioScreen(
                 navController = navController
             )
         }
+        PullRefreshCryptoIndicator(Modifier.align(Alignment.Center), state)
     }
 }
 

@@ -6,9 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
@@ -53,30 +57,39 @@ class ComposeActivity : AppCompatActivity() {
             val onPortfolioUiEvent = remember { portfolioViewModel::onEvent }
 
             AppTheme(useDarkTheme = isDarkTheme.value) {
-                val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = Screen.Portfolio.route) {
-                    composable(
-                        route = Screen.Portfolio.route
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.primaryContainer
+                ) {
+
+                    val navController = rememberNavController()
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screen.Portfolio.route
                     ) {
-                        PortfolioScreen(
-                            navController = navController,
-                            onThemeChange = onThemeChange,
-                            state = portfolioState,
-                            onEvent = onPortfolioUiEvent
-                        )
-                    }
-                    composable(
-                        route = Screen.CoinDetails.route,
-                    ) {
-                        CoinInsertScreen(navController, coinMapViewModel)
-                    }
-                    composable(
-                        route = Screen.PortfolioNotifications.route
-                    ) {
-                        PortfolioNotificationsScreen(
-                            noticePortfolioUiState = noticePortfolioState,
-                            onEvent = onNoticePortfolioUiEvent
-                        )
+                        composable(
+                            route = Screen.Portfolio.route
+                        ) {
+                            PortfolioScreen(
+                                navController = navController,
+                                onThemeChange = onThemeChange,
+                                state = portfolioState,
+                                onEvent = onPortfolioUiEvent
+                            )
+                        }
+                        composable(
+                            route = Screen.CoinDetails.route,
+                        ) {
+                            CoinInsertScreen(navController, coinMapViewModel)
+                        }
+                        composable(
+                            route = Screen.PortfolioNotifications.route
+                        ) {
+                            PortfolioNotificationsScreen(
+                                noticePortfolioUiState = noticePortfolioState,
+                                onEvent = onNoticePortfolioUiEvent
+                            )
+                        }
                     }
                 }
             }
