@@ -10,8 +10,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -32,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager.CHANNEL_ID
 import com.aroman.mimwallet.domain.model.NoticePortfolioUiEvent
@@ -73,7 +76,7 @@ fun PortfolioNotificationsScreen(
                     title = {
                         Column(modifier = Modifier.fillMaxWidth()) {
                             Text(
-                                text = stringResource(id = R.string.portfolio_notifications),
+                                text = stringResource(id = R.string.notifications),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 modifier = Modifier
@@ -123,6 +126,7 @@ fun PortfolioNotificationsScreen(
                                 )
                                 if (index == noticePortfolioUiState.noticeList.size - 1) {
                                     DisplayableInsertNoticePortfolio(onEvent)
+                                    Spacer(modifier = Modifier.height(50.dp))
                                 }
                             })
                     }
