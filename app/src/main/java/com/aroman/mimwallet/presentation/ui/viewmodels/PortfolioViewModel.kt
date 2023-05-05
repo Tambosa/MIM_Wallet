@@ -48,7 +48,9 @@ class PortfolioViewModel @Inject constructor(
     private fun getPortfolio() {
         _portfolio.value = _portfolio.value.copy(isLoading = true)
         getPortfolioUseCase().onEach { result ->
-            _portfolio.value = result.copy(isLoading = false)
+            _portfolio.value = result.copy(
+                isLoading = false,
+                coinList = result.coinList.sortedByDescending { it.count * it.price })
         }.launchIn(viewModelScope)
     }
 
