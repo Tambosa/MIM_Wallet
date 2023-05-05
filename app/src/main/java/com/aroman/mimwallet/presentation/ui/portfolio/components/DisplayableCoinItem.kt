@@ -52,7 +52,7 @@ fun DisplayableCoinItem(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "${coin.count} ${coin.symbol}",
+                text = "${coin.count.toBigDecimal().toPlainString()} ${coin.symbol}",
                 style = Typography.bodySmall
             )
             val percentFormat = DecimalFormat("0.##'%'").apply {
