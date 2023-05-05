@@ -43,6 +43,9 @@ fun CoinContent(
     var clickedCoin by remember { mutableStateOf(DisplayableCoin(1, "Bitcoin", "BTC")) }
 
     LazyColumn(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .fillMaxHeight(),
         contentPadding = PaddingValues(vertical = 15.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {

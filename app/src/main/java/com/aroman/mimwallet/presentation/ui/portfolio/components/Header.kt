@@ -19,13 +19,18 @@ import androidx.navigation.NavController
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.presentation.Screen
 import com.aroman.mimwallet.presentation.ui.theme.Typography
+import com.aroman.mimwallet.utils.applyElevationOverlay
 
 @Composable
 fun Header(
     onThemeChange: () -> Unit,
     navController: NavController,
 ) {
-    Surface(color = MaterialTheme.colorScheme.primaryContainer) {
+    Surface(
+        color = MaterialTheme.colorScheme.primaryContainer.applyElevationOverlay(6.dp),
+        shadowElevation = 6.dp,
+        modifier = Modifier.padding(bottom = 1.dp)
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
