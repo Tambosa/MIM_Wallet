@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,49 +18,42 @@ import androidx.navigation.NavController
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.presentation.Screen
 import com.aroman.mimwallet.presentation.ui.theme.Typography
-import com.aroman.mimwallet.utils.applyElevationOverlay
 
 @Composable
-fun Header(
+fun TopAppBarContent(
     onThemeChange: () -> Unit,
     navController: NavController,
 ) {
-    Surface(
-        color = MaterialTheme.colorScheme.primaryContainer.applyElevationOverlay(6.dp),
-        shadowElevation = 6.dp,
-        modifier = Modifier.padding(bottom = 1.dp)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                start = 12.dp, end = 12.dp
+            ), horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = 12.dp, end = 12.dp, top = 20.dp
-                ), horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = stringResource(id = R.string.portfolio),
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                style = Typography.titleLarge
+        Text(
+            text = stringResource(id = R.string.portfolio),
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            style = Typography.titleLarge
+        )
+        IconButton(onClick = {
+            navController.navigate(Screen.PortfolioNotifications.route)
+        }) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_baseline_notifications_24),
+                tint = MaterialTheme.colorScheme.primary,
+                contentDescription = stringResource(id = R.string.open_notification_screen),
             )
-            IconButton(onClick = {
-                navController.navigate(Screen.PortfolioNotifications.route)
-            }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_baseline_notifications_24),
-                    tint = MaterialTheme.colorScheme.primary,
-                    contentDescription = stringResource(id = R.string.open_notification_screen),
+        }
+        IconButton(onClick = { onThemeChange() }) {
+            Icon(
+                painter = if (isSystemInDarkTheme()) painterResource(
+                    id = R.drawable.ic_baseline_nights_stay_24
                 )
-            }
-            IconButton(onClick = { onThemeChange() }) {
-                Icon(
-                    painter = if (isSystemInDarkTheme()) painterResource(
-                        id = R.drawable.ic_baseline_nights_stay_24
-                    )
-                    else painterResource(id = R.drawable.ic_baseline_wb_sunny_24),
-                    tint = MaterialTheme.colorScheme.primary,
-                    contentDescription = stringResource(id = R.string.enable_dark_mode),
-                )
-            }
+                else painterResource(id = R.drawable.ic_baseline_wb_sunny_24),
+                tint = MaterialTheme.colorScheme.primary,
+                contentDescription = stringResource(id = R.string.enable_dark_mode),
+            )
         }
     }
 }

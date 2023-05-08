@@ -13,10 +13,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,10 +36,10 @@ import androidx.navigation.NavController
 import com.aroman.mimwallet.domain.model.PortfolioUiEvent
 import com.aroman.mimwallet.domain.model.PortfolioUiState
 import com.aroman.mimwallet.presentation.ui.portfolio.components.CoinContent
-import com.aroman.mimwallet.presentation.ui.portfolio.components.Header
 import com.aroman.mimwallet.presentation.ui.portfolio.components.PullRefreshCryptoIndicator
+import com.aroman.mimwallet.presentation.ui.portfolio.components.TopAppBarContent
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PortfolioScreen(
     navController: NavController,
@@ -52,41 +56,58 @@ fun PortfolioScreen(
     val animatedOffset by animateFloatAsState(
         targetValue = if (state.isLoading) 1f else (pullRefreshState.progress)
     )
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
-        PullRefreshCryptoIndicator(state = state)
+    val view = LocalView.current
+    val resources = LocalContext.current.resources
+    val onThemeChangeWithScreenshot = remember {
+        {
+            onThemeChange()
+            setScreenshot(view, resources)
+        }
     }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .pullRefresh(pullRefreshState)
-            .offset(x = 0.dp, y = (animatedOffset * PULL_REFRESH_OFFSET).dp),
-    ) {
+    Scaffold(
+        modifier = Modifier,
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        topBar = {
+            TopAppBar(
+                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                elevation = 5.dp
+            ) {
+                TopAppBarContent(
+                    onThemeChange = onThemeChangeWithScreenshot,
+                    navController = navController,
+                )
+            }
+        }) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primaryContainer)
+                .fillMaxSize()
+                .padding(top = it.calculateTopPadding()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
         ) {
-            val view = LocalView.current
-            val resources = LocalContext.current.resources
-            val onThemeChangeWithScreenshot = remember {
-                {
-                    onThemeChange()
-                    setScreenshot(view, resources)
-                }
-            }
-            Header(
-                onThemeChange = onThemeChangeWithScreenshot,
-                navController = navController,
-            )
-            CoinContent(
+            PullRefreshCryptoIndicator(
                 state = state,
-                onEvent = onEvent,
-                navController = navController
+                pullRefreshProgress = pullRefreshState.progress
             )
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pullRefresh(pullRefreshState)
+                .padding(top = it.calculateTopPadding())
+                .offset(x = 0.dp, y = (animatedOffset * PULL_REFRESH_OFFSET).dp),
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.primaryContainer)
+            ) {
+                CoinContent(
+                    state = state,
+                    onEvent = onEvent,
+                    navController = navController
+                )
+            }
         }
     }
 }
