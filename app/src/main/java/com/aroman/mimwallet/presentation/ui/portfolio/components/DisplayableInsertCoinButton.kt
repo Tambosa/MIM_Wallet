@@ -22,7 +22,7 @@ fun DisplayableInsertCoinButton(navController: NavController) {
         horizontalArrangement = Arrangement.Center
     ) {
         IconButton(
-            onClick = { navController.navigate(Screen.CoinDetails.route) }) {
+            onClick = { navController.navigate(Screen.CoinInsert.route) }) {
             Icon(
                 modifier = Modifier.size(100.dp),
                 painter = painterResource(id = R.drawable.ic_baseline_add_circle_outline_24),

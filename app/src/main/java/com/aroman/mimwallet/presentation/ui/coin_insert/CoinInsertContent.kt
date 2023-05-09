@@ -12,7 +12,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -28,15 +27,10 @@ import com.aroman.mimwallet.presentation.ui.viewmodels.CoinMapViewModel
 
 
 @Composable
-fun CoinInsertScreen(
+fun CoinInsertContent(
     navController: NavController,
     coinMapViewModel: CoinMapViewModel
 ) {
-    LaunchedEffect(true) {
-        coinMapViewModel.resetSelectedCoins()
-        coinMapViewModel.getCoins()
-    }
-
     val coins by coinMapViewModel.coins.collectAsState()
     val searchText by coinMapViewModel.searchText.collectAsState()
     val isLoading by coinMapViewModel.isLoading.collectAsState(true)
