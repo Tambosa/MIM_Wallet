@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
@@ -47,7 +48,7 @@ class ComposeActivity : AppCompatActivity() {
         }
         setContent {
             val isDarkTheme = themeViewModel.isDarkTheme.collectAsState(isSystemInDarkTheme())
-
+            val inverseTheme = remember { themeViewModel::inverseTheme }
             AppTheme(useDarkTheme = isDarkTheme.value) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -60,7 +61,7 @@ class ComposeActivity : AppCompatActivity() {
                         startDestination = Screen.Portfolio.route
                     ) {
                         composable(route = Screen.Portfolio.route) {
-                            PortfolioScreen(navController)
+                            PortfolioScreen(navController, inverseTheme)
                         }
                         composable(route = Screen.CoinInsert.route) {
                             CoinInsertScreen(navController)
