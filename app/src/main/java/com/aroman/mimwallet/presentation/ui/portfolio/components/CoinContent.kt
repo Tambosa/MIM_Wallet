@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.domain.model.PortfolioUiEvent
-import com.aroman.mimwallet.domain.model.PortfolioUiState
+import com.aroman.mimwallet.domain.model.ui.PortfolioUiEvent
+import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable

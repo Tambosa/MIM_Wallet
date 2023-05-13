@@ -1,7 +1,7 @@
 package com.aroman.mimwallet.domain.use_case.get_portfolio
 
 import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.domain.model.PortfolioUiState
+import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
 import com.aroman.mimwallet.domain.repository.CacheUiStateRepo
 import com.aroman.mimwallet.domain.repository.CoinRepository
 import com.aroman.mimwallet.domain.repository.PortfolioRepository

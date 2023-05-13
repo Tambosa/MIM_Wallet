@@ -1,11 +1,14 @@
 package com.aroman.mimwallet.presentation.ui.coin_insert
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.MaterialTheme
@@ -17,31 +20,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.presentation.ui.coin_insert.components.InsertCoinButton
 import com.aroman.mimwallet.presentation.ui.coin_insert.components.SelectableCoinItem
 import com.aroman.mimwallet.presentation.ui.shared_compose_components.LoadingBox
-import com.aroman.mimwallet.presentation.ui.viewmodels.CoinMapViewModel
+import com.aroman.mimwallet.presentation.ui.viewmodels.CoinInsertViewModel
 
 
 @Composable
 fun CoinInsertContent(
     navController: NavController,
-    coinMapViewModel: CoinMapViewModel
+    coinInsertViewModel: CoinInsertViewModel
 ) {
-    val coins by coinMapViewModel.coins.collectAsState()
-    val searchText by coinMapViewModel.searchText.collectAsState()
-    val isLoading by coinMapViewModel.isLoading.collectAsState(true)
-    val isSearching by coinMapViewModel.isSearching.collectAsState()
-    val selectedCoins by coinMapViewModel.selectedCoins.collectAsState()
+    val state by coinInsertViewModel.state.collectAsState()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.primaryContainer
     ) {
-        if (isLoading) {
+        if (state.isLoading) {
             LoadingBox()
         } else {
             Column(
@@ -50,24 +50,26 @@ fun CoinInsertContent(
                     .padding(horizontal = 12.dp, vertical = 12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                Spacer(modifier = Modifier.height(20.dp))
                 TextField(
-                    value = searchText,
-                    onValueChange = coinMapViewModel::onSearchTextChange,
+                    value = state.searchQuery.value,
+                    onValueChange = coinInsertViewModel::onSearchQuery,
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = {
                         Text(text = stringResource(R.string.search))
                     },
                     colors = TextFieldDefaults.textFieldColors(
-                        textColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        textColor = MaterialTheme.colorScheme.onPrimaryContainer
                     ),
-                    maxLines = 1
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
                 )
                 InsertCoinButton(
-                    selectedCoins = selectedCoins,
-                    coinMapViewModel = coinMapViewModel,
+                    selectedCoins = state.selectedCoins,
+                    coinInsertViewModel = coinInsertViewModel,
                     navController = navController
                 )
-                if (isSearching) {
+                if (state.isFiltering) {
                     LoadingBox()
                 } else {
                     LazyColumn(
@@ -75,8 +77,11 @@ fun CoinInsertContent(
                             .fillMaxWidth()
                             .weight(1f),
                     ) {
-                        items(coins!!) { coin ->
-                            SelectableCoinItem(coin, coinMapViewModel)
+                        val filteredCoins = state.coinList.filter {
+                            it.doesMatchSearchQuery(state.searchQuery.value)
+                        }
+                        items(filteredCoins) { coin ->
+                            SelectableCoinItem(coin, coinInsertViewModel)
                         }
                     }
                 }

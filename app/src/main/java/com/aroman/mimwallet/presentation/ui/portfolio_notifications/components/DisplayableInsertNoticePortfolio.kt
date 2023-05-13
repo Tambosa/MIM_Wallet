@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.NoticePortfolio
-import com.aroman.mimwallet.domain.model.NoticePortfolioUiEvent
+import com.aroman.mimwallet.domain.model.ui.NoticePortfolioUiEvent
 
 @Composable
 fun DisplayableInsertNoticePortfolio(

@@ -4,8 +4,8 @@ import android.icu.util.Calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aroman.mimwallet.domain.model.NoticePortfolio
-import com.aroman.mimwallet.domain.model.NoticePortfolioUiState
-import com.aroman.mimwallet.domain.model.NoticePortfolioUiEvent
+import com.aroman.mimwallet.domain.model.ui.NoticePortfolioUiState
+import com.aroman.mimwallet.domain.model.ui.NoticePortfolioUiEvent
 import com.aroman.mimwallet.domain.repository.NoticePortfolioRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay

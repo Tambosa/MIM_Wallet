@@ -37,8 +37,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager.CHANNEL_ID
-import com.aroman.mimwallet.domain.model.NoticePortfolioUiEvent
-import com.aroman.mimwallet.domain.model.NoticePortfolioUiState
+import com.aroman.mimwallet.domain.model.ui.NoticePortfolioUiEvent
+import com.aroman.mimwallet.domain.model.ui.NoticePortfolioUiState
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.DisplayableInsertNoticePortfolio
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.DisplayableNoticePortfolioItem
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.NextNotificationTimer

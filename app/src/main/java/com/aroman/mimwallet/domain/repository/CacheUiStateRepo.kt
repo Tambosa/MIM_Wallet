@@ -1,6 +1,6 @@
 package com.aroman.mimwallet.domain.repository
 
-import com.aroman.mimwallet.domain.model.PortfolioUiState
+import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
 
 interface CacheUiStateRepo {
 

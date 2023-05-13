@@ -33,8 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.animation.doOnEnd
 import androidx.core.graphics.applyCanvas
 import androidx.navigation.NavController
-import com.aroman.mimwallet.domain.model.PortfolioUiEvent
-import com.aroman.mimwallet.domain.model.PortfolioUiState
+import com.aroman.mimwallet.domain.model.ui.PortfolioUiEvent
+import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
 import com.aroman.mimwallet.presentation.ui.portfolio.components.CoinContent
 import com.aroman.mimwallet.presentation.ui.portfolio.components.PullRefreshCryptoIndicator
 import com.aroman.mimwallet.presentation.ui.portfolio.components.TopAppBarContent

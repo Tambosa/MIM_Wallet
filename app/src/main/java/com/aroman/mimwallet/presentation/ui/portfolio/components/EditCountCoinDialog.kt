@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.domain.model.PortfolioUiEvent
+import com.aroman.mimwallet.domain.model.ui.PortfolioUiEvent
 import com.aroman.mimwallet.presentation.ui.shared_compose_components.RoundedButton
 
 @Composable

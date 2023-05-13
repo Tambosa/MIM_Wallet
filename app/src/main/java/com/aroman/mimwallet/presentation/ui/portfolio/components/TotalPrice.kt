@@ -11,7 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.aroman.mimwallet.domain.model.PortfolioUiState
+import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
 import com.aroman.mimwallet.presentation.ui.theme.Typography
 import com.aroman.mimwallet.presentation.ui.viewmodels.PortfolioViewModel
 import java.math.RoundingMode

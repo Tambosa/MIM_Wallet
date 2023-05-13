@@ -4,7 +4,7 @@ import com.aroman.mimwallet.data.local.dao.UiPortfolioStateDao
 import com.aroman.mimwallet.data.local.tables.UiPortfolioStateCoinListEntity
 import com.aroman.mimwallet.data.local.tables.UiPortfolioStateEntity
 import com.aroman.mimwallet.data.local.tables.toPortfolioState
-import com.aroman.mimwallet.domain.model.PortfolioUiState
+import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
 import com.aroman.mimwallet.domain.repository.CacheUiStateRepo
 
 class CacheUiStateRepoImpl(private val dao: UiPortfolioStateDao) : CacheUiStateRepo {

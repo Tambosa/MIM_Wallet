@@ -3,7 +3,7 @@ package com.aroman.mimwallet.data.local.tables
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.aroman.mimwallet.data.local.RoomConst
-import com.aroman.mimwallet.domain.model.PortfolioUiState
+import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
 
 @Entity(tableName = RoomConst.TABLE_PORTFOLIO_CACHE)
 data class UiPortfolioStateEntity(

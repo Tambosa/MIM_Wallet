@@ -13,12 +13,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.presentation.ui.viewmodels.CoinMapViewModel
+import com.aroman.mimwallet.presentation.ui.viewmodels.CoinInsertViewModel
 
 @Composable
 fun InsertCoinButton(
     selectedCoins: List<DisplayableCoin>,
-    coinMapViewModel: CoinMapViewModel,
+    coinInsertViewModel: CoinInsertViewModel,
     navController: NavController
 ) {
     if (selectedCoins.isNotEmpty()) {
@@ -27,7 +27,7 @@ fun InsertCoinButton(
             onClick = {
                 selectedCoins.forEach {
                     it.count = 1.0
-                    coinMapViewModel.insertCoin(it)
+                    coinInsertViewModel.insertCoin(it)
                 }
                 navController.popBackStack()
             },

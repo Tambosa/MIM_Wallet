@@ -1,5 +1,6 @@
-package com.aroman.mimwallet.domain.model
+package com.aroman.mimwallet.domain.model.ui
 
+import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.presentation.ui.viewmodels.PortfolioViewModel.TimePeriod
 
 sealed class PortfolioUiEvent {

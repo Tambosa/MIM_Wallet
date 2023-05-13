@@ -5,16 +5,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.aroman.mimwallet.presentation.ui.coin_insert.CoinInsertContent
-import com.aroman.mimwallet.presentation.ui.viewmodels.CoinMapViewModel
+import com.aroman.mimwallet.presentation.ui.viewmodels.CoinInsertViewModel
 
 @Composable
 fun CoinInsertScreen(
     navController: NavController,
-    coinMapViewModel: CoinMapViewModel = hiltViewModel()
+    coinInsertViewModel: CoinInsertViewModel = hiltViewModel()
 ) {
     LaunchedEffect(true) {
-        coinMapViewModel.resetSelectedCoins()
-        coinMapViewModel.getCoins()
+        coinInsertViewModel.resetSelectedCoins()
+        coinInsertViewModel.getCoinList()
     }
-    CoinInsertContent(navController = navController, coinMapViewModel = coinMapViewModel)
+    CoinInsertContent(navController = navController, coinInsertViewModel = coinInsertViewModel)
 }
