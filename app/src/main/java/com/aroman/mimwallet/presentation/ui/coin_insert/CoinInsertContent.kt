@@ -15,8 +15,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,19 +22,19 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aroman.mimwallet.R
+import com.aroman.mimwallet.domain.model.ui.CoinInsertUiEvent
+import com.aroman.mimwallet.domain.model.ui.CoinInsertUiState
 import com.aroman.mimwallet.presentation.ui.coin_insert.components.InsertCoinButton
 import com.aroman.mimwallet.presentation.ui.coin_insert.components.SelectableCoinItem
 import com.aroman.mimwallet.presentation.ui.shared_compose_components.LoadingBox
-import com.aroman.mimwallet.presentation.ui.viewmodels.CoinInsertViewModel
 
 
 @Composable
 fun CoinInsertContent(
     navController: NavController,
-    coinInsertViewModel: CoinInsertViewModel
+    state: CoinInsertUiState,
+    onEvent: (CoinInsertUiEvent) -> Unit,
 ) {
-    val state by coinInsertViewModel.state.collectAsState()
-
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.primaryContainer
@@ -53,7 +51,7 @@ fun CoinInsertContent(
                 Spacer(modifier = Modifier.height(20.dp))
                 TextField(
                     value = state.searchQuery.value,
-                    onValueChange = coinInsertViewModel::onSearchQuery,
+                    onValueChange = { onEvent(CoinInsertUiEvent.Search(it)) },
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = {
                         Text(text = stringResource(R.string.search))
@@ -66,7 +64,7 @@ fun CoinInsertContent(
                 )
                 InsertCoinButton(
                     selectedCoins = state.selectedCoins,
-                    coinInsertViewModel = coinInsertViewModel,
+                    onEvent = onEvent,
                     navController = navController
                 )
                 if (state.isFiltering) {
@@ -81,7 +79,7 @@ fun CoinInsertContent(
                             it.doesMatchSearchQuery(state.searchQuery.value)
                         }
                         items(filteredCoins) { coin ->
-                            SelectableCoinItem(coin, coinInsertViewModel)
+                            SelectableCoinItem(coin, onEvent)
                         }
                     }
                 }

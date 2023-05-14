@@ -8,12 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.presentation.ui.viewmodels.CoinInsertViewModel
+import com.aroman.mimwallet.domain.model.ui.CoinInsertUiEvent
 
 @Composable
 fun SelectableCoinItem(
     coin: DisplayableCoin,
-    coinInsertViewModel: CoinInsertViewModel
+    onEvent: (CoinInsertUiEvent) -> Unit
 ) {
     Text(
         text = "${coin.name}: ${coin.symbol}",
@@ -21,7 +21,7 @@ fun SelectableCoinItem(
             .fillMaxWidth()
             .padding(vertical = 12.dp)
             .clickable {
-                coinInsertViewModel.updateSelectedCoins(coin)
+                onEvent(CoinInsertUiEvent.UpdateSelectedCoins(coin))
             }
     )
 }

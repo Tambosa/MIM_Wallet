@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aroman.mimwallet.domain.model.DisplayableCoin
+import com.aroman.mimwallet.domain.model.ui.CoinInsertUiEvent
 import com.aroman.mimwallet.domain.model.ui.CoinInsertUiState
 import com.aroman.mimwallet.domain.repository.PortfolioRepository
 import com.aroman.mimwallet.domain.use_case.get_coins.GetCoinsUseCase
@@ -29,17 +30,41 @@ class CoinInsertViewModel @Inject constructor(
         )
     )
 
-    fun getCoinList() {
+    fun onEvent(event: CoinInsertUiEvent) {
+        when (event) {
+            is CoinInsertUiEvent.ShowData -> {
+                getCoinList()
+            }
+
+            is CoinInsertUiEvent.Search -> {
+                onSearchQuery(event.query)
+            }
+
+            is CoinInsertUiEvent.UpdateSelectedCoins -> {
+                updateSelectedCoins(event.coin)
+            }
+
+            is CoinInsertUiEvent.ResetSelectedCoins -> {
+                resetSelectedCoins()
+            }
+
+            is CoinInsertUiEvent.InsertCoin -> {
+                insertCoin(event.coin)
+            }
+        }
+    }
+
+    private fun getCoinList() {
         getCoinsUseCase().onEach { result ->
             state.value = result
         }.launchIn(viewModelScope)
     }
 
-    fun onSearchQuery(newSearchQuery: String) {
+    private fun onSearchQuery(newSearchQuery: String) {
         state.value.searchQuery.value = newSearchQuery
     }
 
-    fun updateSelectedCoins(coin: DisplayableCoin) {
+    private fun updateSelectedCoins(coin: DisplayableCoin) {
         if (state.value.selectedCoins.contains(coin)) {
             state.value = state.value.copy(selectedCoins = state.value.selectedCoins.minus(coin))
         } else {
@@ -47,11 +72,11 @@ class CoinInsertViewModel @Inject constructor(
         }
     }
 
-    fun resetSelectedCoins() {
+    private fun resetSelectedCoins() {
         state.value = state.value.copy(selectedCoins = listOf())
     }
 
-    fun insertCoin(coin: DisplayableCoin) {
+    private fun insertCoin(coin: DisplayableCoin) {
         viewModelScope.launch {
             localRepo.saveCoin(coin)
         }
