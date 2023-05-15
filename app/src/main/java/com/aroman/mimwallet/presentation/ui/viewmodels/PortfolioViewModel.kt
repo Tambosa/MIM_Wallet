@@ -42,6 +42,10 @@ class PortfolioViewModel @Inject constructor(
             is PortfolioUiEvent.ChangeTimePeriod -> {
                 changeTimePeriod(event.timePeriod)
             }
+
+            is PortfolioUiEvent.ShowDialog -> {
+                _portfolio.value = portfolio.value.copy(isEditCountDialogShown = event.isVisible)
+            }
         }
     }
 

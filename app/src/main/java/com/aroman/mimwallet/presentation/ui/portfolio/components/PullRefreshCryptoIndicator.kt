@@ -13,12 +13,11 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.aroman.mimwallet.R
-import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
 
 @Composable
 fun PullRefreshCryptoIndicator(
     modifier: Modifier = Modifier,
-    state: PortfolioUiState,
+    isLoading: Boolean,
     pullRefreshProgress: Float
 ) {
     Column(
@@ -30,7 +29,7 @@ fun PullRefreshCryptoIndicator(
         val progress by animateLottieCompositionAsState(
             composition = lottieComposition,
             iterations = LottieConstants.IterateForever,
-            isPlaying = state.isLoading
+            isPlaying = isLoading
         )
         LottieAnimation(
             modifier = modifier.rotate(pullRefreshProgress * 180f),

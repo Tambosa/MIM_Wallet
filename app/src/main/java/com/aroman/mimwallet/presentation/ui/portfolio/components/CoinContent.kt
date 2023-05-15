@@ -37,10 +37,9 @@ fun CoinContent(
     onEvent: (PortfolioUiEvent) -> Unit,
     navController: NavController,
 ) {
-    var openDialog by remember { mutableStateOf(false) }
     var oldCount by remember { mutableStateOf(0.0) }
     var clickedCoin by remember { mutableStateOf(DisplayableCoin(1, "Bitcoin", "BTC")) }
-    val contentBlur by animateFloatAsState(targetValue = if (openDialog) 1f else 0f)
+    val contentBlur by animateFloatAsState(targetValue = if (state.isEditCountDialogShown) 1f else 0f)
     LazyColumn(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.primaryContainer)
@@ -102,7 +101,7 @@ fun CoinContent(
                             DisplayableCoinItem(
                                 modifier = Modifier
                                     .clickable {
-                                        openDialog = true
+                                        onEvent(PortfolioUiEvent.ShowDialog(true))
                                         clickedCoin = state.coinList[index]
                                         oldCount = clickedCoin.count
                                     }
@@ -124,11 +123,11 @@ fun CoinContent(
         }
     }
     val configuration = LocalConfiguration.current
-    if (openDialog) {
+    if (state.isEditCountDialogShown) {
         when (configuration.orientation) {
             Configuration.ORIENTATION_PORTRAIT ->
-                EditCoinCountPortretDialog(
-                    onDismissRequest = { openDialog = false },
+                EditCoinCountPortraitDialog(
+                    onDismissRequest = { onEvent(PortfolioUiEvent.ShowDialog(false)) },
                     clickedCoin = clickedCoin,
                     oldCount = oldCount,
                     onEvent = onEvent,
@@ -136,7 +135,7 @@ fun CoinContent(
 
             else ->
                 EditCoinCountLandscapeDialog(
-                    onDismissRequest = { openDialog = false },
+                    onDismissRequest = { onEvent(PortfolioUiEvent.ShowDialog(false)) },
                     clickedCoin = clickedCoin,
                     oldCount = oldCount,
                     onEvent = onEvent,

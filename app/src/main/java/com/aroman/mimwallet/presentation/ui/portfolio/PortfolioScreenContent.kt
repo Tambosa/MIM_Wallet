@@ -21,7 +21,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -45,12 +44,9 @@ fun PortfolioScreenContent(
     state: PortfolioUiState,
     onEvent: (PortfolioUiEvent) -> Unit,
 ) {
-    LaunchedEffect(true) {
-        onEvent(PortfolioUiEvent.ShowData(state))
-    }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = state.isLoading,
-        onRefresh = { onEvent(PortfolioUiEvent.ShowData(state)) })
+        onRefresh = { onEvent(PortfolioUiEvent.ShowData) })
     val animatedOffset by animateFloatAsState(
         targetValue = if (state.isLoading) 1f else (pullRefreshState.progress)
     )
@@ -80,7 +76,7 @@ fun PortfolioScreenContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = it.calculateTopPadding() / 2),
-            state = state,
+            isLoading = state.isLoading,
             pullRefreshProgress = pullRefreshState.progress
         )
         Box(

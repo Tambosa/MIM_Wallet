@@ -47,15 +47,16 @@ class GetPortfolioUseCase @Inject constructor(
                         )
                     )
                 }
-                val portfolio = PortfolioUiState(resultList, isCache = false).apply {
-                    totalPrice = calculateTotalPrice(this)
-                    totalPercentChange1h = calculatePercentDiffer(this, "1h")
-                    totalPercentChange24h = calculatePercentDiffer(this, "24h")
-                    totalPercentChange7d = calculatePercentDiffer(this, "7d")
-                    totalPercentChange30d = calculatePercentDiffer(this, "30d")
-                    totalPercentChange60d = calculatePercentDiffer(this, "60d")
-                    totalPercentChange90d = calculatePercentDiffer(this, "90d")
-                }
+                val portfolio = PortfolioUiState(
+                    resultList, isCache = false,
+                    totalPrice = calculateTotalPrice(resultList),
+                    totalPercentChange1h = calculatePercentDiffer(resultList, "1h"),
+                    totalPercentChange24h = calculatePercentDiffer(resultList, "24h"),
+                    totalPercentChange7d = calculatePercentDiffer(resultList, "7d"),
+                    totalPercentChange30d = calculatePercentDiffer(resultList, "30d"),
+                    totalPercentChange60d = calculatePercentDiffer(resultList, "60d"),
+                    totalPercentChange90d = calculatePercentDiffer(resultList, "90d"),
+                )
                 cacheRepo.savePortfolioState(portfolio)
                 emit(portfolio)
             } else emit(PortfolioUiState(emptyList(), isCache = false))
@@ -64,17 +65,17 @@ class GetPortfolioUseCase @Inject constructor(
         }
     }
 
-    private fun calculateTotalPrice(portfolio: PortfolioUiState): Double {
+    private fun calculateTotalPrice(coinList: List<DisplayableCoin>): Double {
         var totalPrice = 0.0
-        for (coin in portfolio.coinList) {
+        for (coin in coinList) {
             totalPrice += coin.count * coin.price
         }
         return totalPrice
     }
 
-    private fun calculatePercentDiffer(portfolio: PortfolioUiState, s: String): Double {
+    private fun calculatePercentDiffer(resultList: List<DisplayableCoin>, s: String): Double {
         var oldTotalPrice = 0.0
-        for (coin in portfolio.coinList) {
+        for (coin in resultList) {
             val differ = (coin.count * coin.price * (when (s) {
                 "1h" -> coin.percentChange1h
                 "7d" -> coin.percentChange7d
@@ -85,6 +86,6 @@ class GetPortfolioUseCase @Inject constructor(
             } / 100))
             oldTotalPrice += ((coin.count * coin.price) + differ)
         }
-        return ((oldTotalPrice - portfolio.totalPrice) / portfolio.totalPrice) * 100
+        return ((oldTotalPrice - calculateTotalPrice(resultList)) / calculateTotalPrice(resultList)) * 100
     }
 }
