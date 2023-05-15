@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
@@ -50,6 +51,7 @@ fun PortfolioScreenContent(
     val animatedOffset by animateFloatAsState(
         targetValue = if (state.isLoading) 1f else (pullRefreshState.progress)
     )
+    val contentBlur by animateFloatAsState(targetValue = if (state.isEditCountDialogShown) 1f else 0f)
     val view = LocalView.current
     val resources = LocalContext.current.resources
     val onThemeChangeWithScreenshot = remember {
@@ -59,7 +61,7 @@ fun PortfolioScreenContent(
         }
     }
     Scaffold(
-        modifier = Modifier,
+        modifier = Modifier.blur(radius = (contentBlur * 8).dp),
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         topBar = {
             TopAppBar(

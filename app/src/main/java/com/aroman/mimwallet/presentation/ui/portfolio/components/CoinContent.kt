@@ -17,7 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -39,12 +38,10 @@ fun CoinContent(
 ) {
     var oldCount by remember { mutableStateOf(0.0) }
     var clickedCoin by remember { mutableStateOf(DisplayableCoin(1, "Bitcoin", "BTC")) }
-    val contentBlur by animateFloatAsState(targetValue = if (state.isEditCountDialogShown) 1f else 0f)
     LazyColumn(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.primaryContainer)
-            .fillMaxHeight()
-            .blur(radius = (contentBlur * 16).dp),
+            .fillMaxHeight(),
         contentPadding = PaddingValues(vertical = 15.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
