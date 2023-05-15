@@ -26,7 +26,7 @@ import com.aroman.mimwallet.domain.model.ui.PortfolioUiEvent
 import com.aroman.mimwallet.presentation.ui.shared_compose_components.RoundedButton
 
 @Composable
-fun EditCoinCountDialog(
+fun EditCoinCountPortretDialog(
     onDismissRequest: () -> Unit,
     clickedCoin: DisplayableCoin,
     oldCount: Double,

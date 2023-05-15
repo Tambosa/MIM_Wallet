@@ -1,5 +1,6 @@
 package com.aroman.mimwallet.presentation.ui.portfolio.components
 
+import android.content.res.Configuration
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -20,6 +21,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -121,13 +123,26 @@ fun CoinContent(
             )
         }
     }
+    val configuration = LocalConfiguration.current
     if (openDialog) {
-        EditCoinCountDialog(
-            onDismissRequest = { openDialog = false },
-            clickedCoin = clickedCoin,
-            oldCount = oldCount,
-            onEvent = onEvent,
-        )
+        when (configuration.orientation) {
+            Configuration.ORIENTATION_PORTRAIT ->
+                EditCoinCountPortretDialog(
+                    onDismissRequest = { openDialog = false },
+                    clickedCoin = clickedCoin,
+                    oldCount = oldCount,
+                    onEvent = onEvent,
+                )
+
+            else ->
+                EditCoinCountLandscapeDialog(
+                    onDismissRequest = { openDialog = false },
+                    clickedCoin = clickedCoin,
+                    oldCount = oldCount,
+                    onEvent = onEvent,
+                )
+        }
+
     }
 }
 
