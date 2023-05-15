@@ -1,7 +1,10 @@
 package com.aroman.mimwallet.presentation.ui.portfolio.components
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import com.airbnb.lottie.compose.LottieAnimation
@@ -18,15 +21,21 @@ fun PullRefreshCryptoIndicator(
     state: PortfolioUiState,
     pullRefreshProgress: Float
 ) {
-    val lottieComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.cryptoloader))
-    val progress by animateLottieCompositionAsState(
-        composition = lottieComposition,
-        iterations = LottieConstants.IterateForever,
-        isPlaying = state.isLoading
-    )
-    LottieAnimation(
-        modifier = modifier.rotate(pullRefreshProgress * 180f),
-        composition = lottieComposition,
-        progress = { progress },
-    )
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
+        val lottieComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.cryptoloader))
+        val progress by animateLottieCompositionAsState(
+            composition = lottieComposition,
+            iterations = LottieConstants.IterateForever,
+            isPlaying = state.isLoading
+        )
+        LottieAnimation(
+            modifier = modifier.rotate(pullRefreshProgress * 180f),
+            composition = lottieComposition,
+            progress = { progress },
+        )
+    }
 }

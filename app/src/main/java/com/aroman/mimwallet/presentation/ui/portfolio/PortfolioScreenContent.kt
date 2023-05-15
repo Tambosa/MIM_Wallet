@@ -7,7 +7,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.view.View
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -78,18 +76,13 @@ fun PortfolioScreenContent(
                 )
             }
         }) {
-        Column(
+        PullRefreshCryptoIndicator(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = it.calculateTopPadding()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
-        ) {
-            PullRefreshCryptoIndicator(
-                state = state,
-                pullRefreshProgress = pullRefreshState.progress
-            )
-        }
+                .fillMaxWidth()
+                .padding(top = it.calculateTopPadding() / 2),
+            state = state,
+            pullRefreshProgress = pullRefreshState.progress
+        )
         Box(
             modifier = Modifier
                 .fillMaxSize()
