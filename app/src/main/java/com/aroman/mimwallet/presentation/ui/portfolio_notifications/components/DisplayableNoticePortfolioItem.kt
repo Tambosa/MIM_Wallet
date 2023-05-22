@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager
 import com.aroman.mimwallet.domain.model.NoticePortfolio
-import com.aroman.mimwallet.presentation.ui.viewmodels.NoticePortfolioViewModel
+import com.aroman.mimwallet.domain.model.ui.NoticePortfolioUiEvent
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.clock.ClockDialog
 import com.maxkeppeler.sheets.clock.models.ClockConfig
@@ -31,7 +31,7 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 fun DisplayableNoticePortfolioItem(
     noticePortfolio: NoticePortfolio,
-    noticePortfolioViewModel: NoticePortfolioViewModel
+    onEvent: (NoticePortfolioUiEvent) -> Unit
 ) {
     val clockDialogState = rememberUseCaseState()
     val context = LocalContext.current
@@ -52,8 +52,7 @@ fun DisplayableNoticePortfolioItem(
         var pickedTime by remember {
             mutableStateOf(
                 LocalTime.of(
-                    noticePortfolio.hour,
-                    noticePortfolio.minute
+                    noticePortfolio.hour, noticePortfolio.minute
                 )
             )
         }
@@ -63,57 +62,54 @@ fun DisplayableNoticePortfolioItem(
             Text(text = stringResource(id = R.string.pick_time))
         }
         Text(
-            text = DateTimeFormatter
-                .ofPattern("HH:mm")
-                .format(pickedTime),
+            text = DateTimeFormatter.ofPattern("HH:mm").format(pickedTime),
         )
-        Switch(
-            checked = checkedState,
-            onCheckedChange = {
-                if (it) {
-                    PortfolioNotificationManager.startReminder(
-                        context = context,
-                        reminderTimeHours = noticePortfolio.hour,
-                        reminderTimeMinutes = noticePortfolio.minute,
-                        reminderId = noticePortfolio.id
-                    )
-                } else {
-                    PortfolioNotificationManager.stopReminder(
-                        context = context,
-                        reminderId = noticePortfolio.id
-                    )
-                }
-                checkedState = it
-                noticePortfolio.isActive = checkedState
-                noticePortfolioViewModel.updateNoticePortfolio(noticePortfolio)
-            })
+        Switch(checked = checkedState, onCheckedChange = {
+            if (it) {
+                PortfolioNotificationManager.startReminder(
+                    context = context,
+                    reminderTimeHours = noticePortfolio.hour,
+                    reminderTimeMinutes = noticePortfolio.minute,
+                    reminderId = noticePortfolio.id
+                )
+            } else {
+                PortfolioNotificationManager.stopReminder(
+                    context = context, reminderId = noticePortfolio.id
+                )
+            }
+            checkedState = it
+            onEvent(NoticePortfolioUiEvent.UpdateItem(noticePortfolio.copy(isActive = checkedState)))
+        })
         IconButton(onClick = {
-            noticePortfolioViewModel.deleteNoticePortfolio(context, noticePortfolio)
+            PortfolioNotificationManager.stopReminder(
+                context = context, reminderId = noticePortfolio.id
+            )
+            onEvent(NoticePortfolioUiEvent.DeleteItem(noticePortfolio))
         }) {
             Icon(Icons.Filled.Delete, stringResource(id = R.string.delete))
         }
 
-        ClockDialog(
-            state = clockDialogState,
-            config = ClockConfig(
-                defaultTime = pickedTime,
-                is24HourFormat = true
-            ),
-            selection = ClockSelection.HoursMinutes { hours, minutes ->
-                PortfolioNotificationManager.stopReminder(context, noticePortfolio.id)
-                pickedTime = LocalTime.of(hours, minutes)
-                noticePortfolio.hour = hours
-                noticePortfolio.minute = minutes
-                noticePortfolioViewModel.updateNoticePortfolio(noticePortfolio)
-                if (noticePortfolio.isActive) {
-                    PortfolioNotificationManager.startReminder(
-                        context = context,
-                        reminderTimeHours = noticePortfolio.hour,
-                        reminderTimeMinutes = noticePortfolio.minute,
-                        reminderId = noticePortfolio.id
+        ClockDialog(state = clockDialogState, config = ClockConfig(
+            defaultTime = pickedTime, is24HourFormat = true
+        ), selection = ClockSelection.HoursMinutes { hours, minutes ->
+            PortfolioNotificationManager.stopReminder(context, noticePortfolio.id)
+            pickedTime = LocalTime.of(hours, minutes)
+            onEvent(
+                NoticePortfolioUiEvent.UpdateItem(
+                    noticePortfolio.copy(
+                        hour = hours,
+                        minute = minutes
                     )
-                }
+                )
+            )
+            if (noticePortfolio.isActive) {
+                PortfolioNotificationManager.startReminder(
+                    context = context,
+                    reminderTimeHours = hours,
+                    reminderTimeMinutes = minutes,
+                    reminderId = noticePortfolio.id
+                )
             }
-        )
+        })
     }
 }

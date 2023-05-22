@@ -11,12 +11,7 @@ import com.aroman.mimwallet.data.local.tables.UiPortfolioStateCoinListEntity
 import com.aroman.mimwallet.data.local.tables.UiPortfolioStateEntity
 
 @Database(
-    entities = arrayOf(
-        CoinRoomEntity::class,
-        NoticePortfolioRoomEntity::class,
-        UiPortfolioStateEntity::class,
-        UiPortfolioStateCoinListEntity::class,
-    ),
+    entities = [CoinRoomEntity::class, NoticePortfolioRoomEntity::class, UiPortfolioStateEntity::class, UiPortfolioStateCoinListEntity::class],
     version = 1,
     exportSchema = false,
 )

@@ -4,11 +4,11 @@ import com.aroman.mimwallet.data.local.dao.UiPortfolioStateDao
 import com.aroman.mimwallet.data.local.tables.UiPortfolioStateCoinListEntity
 import com.aroman.mimwallet.data.local.tables.UiPortfolioStateEntity
 import com.aroman.mimwallet.data.local.tables.toPortfolioState
-import com.aroman.mimwallet.domain.model.PortfolioState
+import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
 import com.aroman.mimwallet.domain.repository.CacheUiStateRepo
 
 class CacheUiStateRepoImpl(private val dao: UiPortfolioStateDao) : CacheUiStateRepo {
-    override suspend fun savePortfolioState(portfolio: PortfolioState) {
+    override suspend fun savePortfolioState(portfolio: PortfolioUiState) {
         dao.clearPortfolioCache()
         dao.clearPortfolioCoinCache()
         val timestamp = System.currentTimeMillis()
@@ -44,7 +44,7 @@ class CacheUiStateRepoImpl(private val dao: UiPortfolioStateDao) : CacheUiStateR
         }
     }
 
-    override suspend fun getPortfolioState(): PortfolioState? {
+    override suspend fun getPortfolioState(): PortfolioUiState? {
         val portfolioState = dao.getLatest()
         var coinList: List<UiPortfolioStateCoinListEntity> = emptyList()
         portfolioState?.let { state ->

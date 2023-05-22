@@ -16,14 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.presentation.ui.theme.Typography
-import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel
+import com.aroman.mimwallet.presentation.ui.viewmodels.PortfolioViewModel
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
 @Composable
 fun DisplayableCoinItem(
     coin: DisplayableCoin,
-    timePeriodSelection: WalletViewModel.TimePeriod,
+    timePeriodSelection: PortfolioViewModel.TimePeriod,
     modifier: Modifier
 ) {
     Column(modifier = modifier) {
@@ -52,19 +52,19 @@ fun DisplayableCoinItem(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "${coin.count} ${coin.symbol}",
+                text = "${coin.count.toBigDecimal().toPlainString()} ${coin.symbol}",
                 style = Typography.bodySmall
             )
             val percentFormat = DecimalFormat("0.##'%'").apply {
                 roundingMode = RoundingMode.CEILING
             }
             val percentChange = when (timePeriodSelection) {
-                WalletViewModel.TimePeriod.ONE_HOUR -> coin.percentChange1h
-                WalletViewModel.TimePeriod.TWENTY_FOUR_HOURS -> coin.percentChange24h
-                WalletViewModel.TimePeriod.SEVEN_DAYS -> coin.percentChange7d
-                WalletViewModel.TimePeriod.THIRTY_DAYS -> coin.percentChange30d
-                WalletViewModel.TimePeriod.SIXTY_DAYS -> coin.percentChange60d
-                WalletViewModel.TimePeriod.NINETY_DAYS -> coin.percentChange90d
+                PortfolioViewModel.TimePeriod.ONE_HOUR -> coin.percentChange1h
+                PortfolioViewModel.TimePeriod.TWENTY_FOUR_HOURS -> coin.percentChange24h
+                PortfolioViewModel.TimePeriod.SEVEN_DAYS -> coin.percentChange7d
+                PortfolioViewModel.TimePeriod.THIRTY_DAYS -> coin.percentChange30d
+                PortfolioViewModel.TimePeriod.SIXTY_DAYS -> coin.percentChange60d
+                PortfolioViewModel.TimePeriod.NINETY_DAYS -> coin.percentChange90d
             }
             Text(
                 text = percentFormat.format(percentChange),

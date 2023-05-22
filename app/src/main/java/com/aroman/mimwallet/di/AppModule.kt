@@ -47,11 +47,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCoinRepository(
-        api: CoinMarketCapApi,
-        @ApplicationContext context: Context
-    ): CoinRepository {
-        return CoinRepositoryImpl(api, context)
+    fun provideCoinRepository(api: CoinMarketCapApi): CoinRepository {
+        return CoinRepositoryImpl(api)
     }
 
     @Provides

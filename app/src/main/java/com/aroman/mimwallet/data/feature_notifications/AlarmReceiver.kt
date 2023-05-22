@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import com.aroman.mimwallet.R
-import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager.CHANNEL_ID
 import com.aroman.mimwallet.domain.repository.NoticePortfolioRepository
 import com.aroman.mimwallet.domain.use_case.get_portfolio.GetPortfolioUseCase
@@ -41,11 +40,11 @@ class AlarmReceiver : BroadcastReceiver() {
         val reminderTimeMinutes = intent.extras?.getInt("reminderTimeMinutes")
 
         getPortfolioUseCase().onEach { result ->
-            if (result is ViewState.Success) {
-                val totalPrice = String.format("$%.2f", result.successData.totalPrice)
+            if (!result.isCache) {
+                val totalPrice = String.format("$%.2f", result.totalPrice)
                 val percent = DecimalFormat("0.##'%'").apply {
                     roundingMode = RoundingMode.CEILING
-                }.format(result.successData.totalPercentChange24h)
+                }.format(result.totalPercentChange24h)
 
                 notificationManager.sendNotification(
                     applicationContext = context,
