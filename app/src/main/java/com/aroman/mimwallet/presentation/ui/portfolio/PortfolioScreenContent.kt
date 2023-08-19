@@ -17,6 +17,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -36,7 +37,7 @@ import com.aroman.mimwallet.presentation.ui.portfolio.components.CoinContent
 import com.aroman.mimwallet.presentation.ui.portfolio.components.PullRefreshCryptoIndicator
 import com.aroman.mimwallet.presentation.ui.portfolio.components.TopAppBarContent
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PortfolioScreenContent(
     navController: NavController,
