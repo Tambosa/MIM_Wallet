@@ -39,7 +39,7 @@ fun CoinContent(
     onEvent: (PortfolioUiEvent) -> Unit,
     navController: NavController,
 ) {
-    var oldCount by remember { mutableStateOf(0.0) }
+    var oldCount by remember { mutableDoubleStateOf(0.0) }
     var clickedCoin by remember { mutableStateOf(DisplayableCoin(1, "Bitcoin", "BTC")) }
     LazyColumn(
         modifier = Modifier
