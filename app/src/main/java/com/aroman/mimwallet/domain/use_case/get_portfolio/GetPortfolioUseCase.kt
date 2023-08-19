@@ -1,16 +1,12 @@
 package com.aroman.mimwallet.domain.use_case.get_portfolio
 
-import android.util.Log
-import com.aroman.mimwallet.common.ViewState
 import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.domain.model.PortfolioState
+import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
 import com.aroman.mimwallet.domain.repository.CacheUiStateRepo
 import com.aroman.mimwallet.domain.repository.CoinRepository
 import com.aroman.mimwallet.domain.repository.PortfolioRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.HttpException
-import java.io.IOException
 import javax.inject.Inject
 
 class GetPortfolioUseCase @Inject constructor(
@@ -19,21 +15,15 @@ class GetPortfolioUseCase @Inject constructor(
     private val cacheRepo: CacheUiStateRepo,
 ) {
     private var isColdStart: Boolean = true
-    operator fun invoke(): Flow<ViewState<PortfolioState>> = flow {
+    operator fun invoke(): Flow<PortfolioUiState> = flow {
         try {
-            val invokedTimer = System.currentTimeMillis()
             if (isColdStart) {
                 val cachedPortfolio = cacheRepo.getPortfolioState()
                 if (cachedPortfolio != null) {
-                    emit(ViewState.Success(cachedPortfolio))
-                    Log.d(
-                        "@@@",
-                        "time to emit cache ${(System.currentTimeMillis() - invokedTimer) * 0.001} seconds "
-                    )
+                    emit(cachedPortfolio.copy(isCache = true))
                 }
                 isColdStart = false
             }
-            emit(ViewState.Loading())
             val localCoins = localRepo.getAll()
             if (localCoins.isNotEmpty()) {
                 val coinSymbols =
@@ -57,46 +47,35 @@ class GetPortfolioUseCase @Inject constructor(
                         )
                     )
                 }
-                val portfolio = PortfolioState(resultList)
-                portfolio.apply {
-                    totalPrice = calculateTotalPrice(portfolio)
-                    totalPercentChange1h = calculatePercentDiffer(portfolio, "1h")
-                    totalPercentChange24h = calculatePercentDiffer(portfolio, "24h")
-                    totalPercentChange7d = calculatePercentDiffer(portfolio, "7d")
-                    totalPercentChange30d = calculatePercentDiffer(portfolio, "30d")
-                    totalPercentChange60d = calculatePercentDiffer(portfolio, "60d")
-                    totalPercentChange90d = calculatePercentDiffer(portfolio, "90d")
-                }
+                val portfolio = PortfolioUiState(
+                    resultList, isCache = false,
+                    totalPrice = calculateTotalPrice(resultList),
+                    totalPercentChange1h = calculatePercentDiffer(resultList, "1h"),
+                    totalPercentChange24h = calculatePercentDiffer(resultList, "24h"),
+                    totalPercentChange7d = calculatePercentDiffer(resultList, "7d"),
+                    totalPercentChange30d = calculatePercentDiffer(resultList, "30d"),
+                    totalPercentChange60d = calculatePercentDiffer(resultList, "60d"),
+                    totalPercentChange90d = calculatePercentDiffer(resultList, "90d"),
+                )
                 cacheRepo.savePortfolioState(portfolio)
-                emit(ViewState.Success(portfolio))
-                Log.d(
-                    "@@@",
-                    "time to emit server data ${(System.currentTimeMillis() - invokedTimer) * 0.001} seconds "
-                )
-            } else emit(ViewState.Success(PortfolioState(emptyList())))
-        } catch (e: HttpException) {
-            emit(ViewState.Error(e.localizedMessage ?: "Unknown Error"))
-        } catch (e: IOException) {
-            emit(
-                ViewState.Error(
-                    e.message
-                        ?: "GetCoinsUseCase: Couldn't reach server. Check your internet connection"
-                )
-            )
+                emit(portfolio)
+            } else emit(PortfolioUiState(emptyList(), isCache = false))
+        } catch (e: Throwable) {
+            //nothing
         }
     }
 
-    private fun calculateTotalPrice(portfolio: PortfolioState): Double {
+    private fun calculateTotalPrice(coinList: List<DisplayableCoin>): Double {
         var totalPrice = 0.0
-        for (coin in portfolio.coinList) {
+        for (coin in coinList) {
             totalPrice += coin.count * coin.price
         }
         return totalPrice
     }
 
-    private fun calculatePercentDiffer(portfolio: PortfolioState, s: String): Double {
+    private fun calculatePercentDiffer(resultList: List<DisplayableCoin>, s: String): Double {
         var oldTotalPrice = 0.0
-        for (coin in portfolio.coinList) {
+        for (coin in resultList) {
             val differ = (coin.count * coin.price * (when (s) {
                 "1h" -> coin.percentChange1h
                 "7d" -> coin.percentChange7d
@@ -107,6 +86,6 @@ class GetPortfolioUseCase @Inject constructor(
             } / 100))
             oldTotalPrice += ((coin.count * coin.price) + differ)
         }
-        return ((oldTotalPrice - portfolio.totalPrice) / portfolio.totalPrice) * 100
+        return ((oldTotalPrice - calculateTotalPrice(resultList)) / calculateTotalPrice(resultList)) * 100
     }
 }

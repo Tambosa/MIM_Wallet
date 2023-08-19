@@ -3,7 +3,7 @@ package com.aroman.mimwallet.data.local.tables
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.aroman.mimwallet.data.local.RoomConst
-import com.aroman.mimwallet.domain.model.PortfolioState
+import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
 
 @Entity(tableName = RoomConst.TABLE_PORTFOLIO_CACHE)
 data class UiPortfolioStateEntity(
@@ -19,7 +19,7 @@ data class UiPortfolioStateEntity(
 )
 
 fun UiPortfolioStateEntity.toPortfolioState(coinList: List<UiPortfolioStateCoinListEntity>) =
-    PortfolioState(
+    PortfolioUiState(
         coinList = coinList.map { it.toDisplayableCoin() },
         totalPrice = totalPrice,
         totalPercentChange1h = totalPercentChange1h,
@@ -28,4 +28,5 @@ fun UiPortfolioStateEntity.toPortfolioState(coinList: List<UiPortfolioStateCoinL
         totalPercentChange30d = totalPercentChange30d,
         totalPercentChange60d = totalPercentChange60d,
         totalPercentChange90d = totalPercentChange90d,
+        isCache = false
     )

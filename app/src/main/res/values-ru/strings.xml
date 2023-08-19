@@ -5,11 +5,8 @@
     <string name="add_coin">Добавить криптовалюту</string>
     <string name="pick_time">Изменить</string>
     <string name="delete">Удалить</string>
-    <string name="portfolio_notifications">Оповещения портфолио</string>
     <string name="notifications">Оповещения</string>
-    <string name="quantity">Количество</string>
     <string name="confirm">Подтвердить</string>
-    <string name="refresh_data">Обновить данные</string>
     <string name="open_notification_screen">Открыть экран оповещений</string>
     <string name="enable_dark_mode">Включить темную тему</string>
     <string name="search">Поиск</string>

@@ -1,90 +1,89 @@
 package com.aroman.mimwallet.presentation.ui.portfolio.components
 
+import android.content.res.Configuration
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissState
+import androidx.compose.material.DismissValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.domain.model.PortfolioState
-import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel
-import com.aroman.mimwallet.presentation.ui.viewmodels.WalletViewModel.TimePeriod
+import com.aroman.mimwallet.domain.model.ui.PortfolioUiEvent
+import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun CoinContent(
-    portfolio: PortfolioState,
-    timePeriodSelection: TimePeriod,
+    state: PortfolioUiState,
+    onEvent: (PortfolioUiEvent) -> Unit,
     navController: NavController,
-    viewModel: WalletViewModel,
 ) {
-    var openDialog by remember { mutableStateOf(false) }
     var oldCount by remember { mutableStateOf(0.0) }
     var clickedCoin by remember { mutableStateOf(DisplayableCoin(1, "Bitcoin", "BTC")) }
-
     LazyColumn(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .fillMaxHeight(),
         contentPadding = PaddingValues(vertical = 15.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        if (portfolio.coinList.isEmpty()) {
+        if (state.coinList.isEmpty()) {
             items(1,
                 itemContent = {
                     DisplayableHint()
                     DisplayableInsertCoinButton(navController)
                 })
         }
-        if (portfolio.coinList.isNotEmpty()) {
+        if (state.coinList.isNotEmpty()) {
             items(
-                count = portfolio.coinList.size,
-                key = { index -> portfolio.coinList[index].id },
+                count = state.coinList.size,
+                key = { index -> state.coinList[index].id },
                 itemContent = { index ->
                     if (index == 0) {
-                        if (portfolio.totalPrice != 0.0) {
-                            key(portfolio.coinList) {
-                                PieChart(coins = portfolio.coinList)
+                        if (state.totalPrice != 0.0) {
+                            key(state.coinList) {
+                                PieChart(coins = state.coinList)
                             }
                             TotalPrice(
-                                portfolio = portfolio,
-                                timePeriodSelection = timePeriodSelection
+                                portfolio = state,
+                                timePeriodSelection = state.timePeriod
                             )
                         }
                         TimePeriodSelection(
-                            walletViewModel = viewModel,
-                            timePeriodSelection = timePeriodSelection
+                            onEvent = onEvent,
+                            timePeriodSelection = state.timePeriod
                         )
                     }
-                    val currentItem by rememberUpdatedState(portfolio.coinList[index])
+                    val currentItem by rememberUpdatedState(state.coinList[index])
                     val dismissState = rememberDismissState(
                         confirmStateChange = {
                             when (it) {
                                 DismissValue.DismissedToStart -> {
-                                    viewModel.deleteCoin(currentItem)
+                                    onEvent(PortfolioUiEvent.DeleteCoin(currentItem))
                                     true
                                 }
+
                                 else -> false
                             }
                         }
@@ -102,8 +101,8 @@ fun CoinContent(
                             DisplayableCoinItem(
                                 modifier = Modifier
                                     .clickable {
-                                        openDialog = true
-                                        clickedCoin = portfolio.coinList[index]
+                                        onEvent(PortfolioUiEvent.ShowDialog(true))
+                                        clickedCoin = state.coinList[index]
                                         oldCount = clickedCoin.count
                                     }
                                     .background(
@@ -111,25 +110,38 @@ fun CoinContent(
                                         color = MaterialTheme.colorScheme.primaryContainer
                                     )
                                     .padding(start = 12.dp, end = 12.dp),
-                                coin = portfolio.coinList[index],
-                                timePeriodSelection = timePeriodSelection,
+                                coin = state.coinList[index],
+                                timePeriodSelection = state.timePeriod,
                             )
                         }
                     )
-                    if (index == portfolio.coinList.size - 1) {
+                    if (index == state.coinList.size - 1) {
                         DisplayableInsertCoinButton(navController)
                     }
                 }
             )
         }
     }
-    if (openDialog) {
-        EditCoinCountDialog(
-            onDismissRequest = { openDialog = false },
-            clickedCoin = clickedCoin,
-            oldCount = oldCount,
-            viewModel = viewModel
-        )
+    val configuration = LocalConfiguration.current
+    if (state.isEditCountDialogShown) {
+        when (configuration.orientation) {
+            Configuration.ORIENTATION_PORTRAIT ->
+                EditCoinCountPortraitDialog(
+                    onDismissRequest = { onEvent(PortfolioUiEvent.ShowDialog(false)) },
+                    clickedCoin = clickedCoin,
+                    oldCount = oldCount,
+                    onEvent = onEvent,
+                )
+
+            else ->
+                EditCoinCountLandscapeDialog(
+                    onDismissRequest = { onEvent(PortfolioUiEvent.ShowDialog(false)) },
+                    clickedCoin = clickedCoin,
+                    oldCount = oldCount,
+                    onEvent = onEvent,
+                )
+        }
+
     }
 }
 
@@ -165,61 +177,3 @@ private fun SwipeBackground(dismissState: DismissState) {
     }
 }
 
-@Composable
-private fun EditCoinCountDialog(
-    onDismissRequest: () -> Unit,
-    clickedCoin: DisplayableCoin,
-    oldCount: Double,
-    viewModel: WalletViewModel
-) {
-    var saveEnabled by remember { mutableStateOf(true) }
-    var newCount by remember { mutableStateOf(oldCount) }
-    AlertDialog(
-        onDismissRequest = { onDismissRequest() },
-        title = { Text(text = clickedCoin.name) },
-        text = {
-            Column {
-                OutlinedTextField(
-                    label = { Text(text = stringResource(id = R.string.quantity)) },
-                    value = newCount.toString(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 12.dp),
-                    onValueChange = {
-                        newCount = it.toDoubleOrNull() ?: 0.0
-                        saveEnabled = newCount >= 0.0
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Decimal,
-                        imeAction = ImeAction.Done
-                    )
-                )
-            }
-        },
-        confirmButton = {
-            Button(
-                modifier = Modifier.padding(8.dp),
-                onClick = {
-                    clickedCoin.count = newCount
-                    viewModel.insertCoin(clickedCoin)
-                    onDismissRequest()
-                },
-                enabled = saveEnabled
-            ) {
-                Text(text = stringResource(id = R.string.confirm))
-            }
-        },
-        dismissButton = {
-            Button(
-                modifier = Modifier.padding(8.dp),
-                onClick = {
-                    viewModel.deleteCoin(clickedCoin)
-                    viewModel.getPortfolio()
-                    onDismissRequest()
-                },
-            ) {
-                Text(text = stringResource(id = R.string.delete))
-            }
-        }
-    )
-}
