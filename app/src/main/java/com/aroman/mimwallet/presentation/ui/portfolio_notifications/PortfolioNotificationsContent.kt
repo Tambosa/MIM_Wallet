@@ -34,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager.CHANNEL_ID
 import com.aroman.mimwallet.domain.model.ui.NoticePortfolioUiEvent
@@ -42,6 +41,7 @@ import com.aroman.mimwallet.domain.model.ui.NoticePortfolioUiState
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.DisplayableInsertNoticePortfolio
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.DisplayableNoticePortfolioItem
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.NextNotificationTimer
+import com.aroman.mimwallet.presentation.ui.theme.spacing
 import com.aroman.mimwallet.utils.createNotificationChannel
 import com.aroman.mimwallet.utils.isNotificationAllowed
 
@@ -126,7 +126,7 @@ fun PortfolioNotificationsContent(
                                 )
                                 if (index == noticePortfolioUiState.noticeList.size - 1) {
                                     DisplayableInsertNoticePortfolio(onEvent)
-                                    Spacer(modifier = Modifier.height(50.dp))
+                                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.spacerMedium))
                                 }
                             })
                     }

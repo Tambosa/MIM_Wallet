@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.ui.CoinInsertUiEvent
@@ -27,6 +26,7 @@ import com.aroman.mimwallet.domain.model.ui.CoinInsertUiState
 import com.aroman.mimwallet.presentation.ui.coin_insert.components.InsertCoinButton
 import com.aroman.mimwallet.presentation.ui.coin_insert.components.SelectableCoinItem
 import com.aroman.mimwallet.presentation.ui.shared_compose_components.LoadingBox
+import com.aroman.mimwallet.presentation.ui.theme.spacing
 
 
 @Composable
@@ -45,10 +45,10 @@ fun CoinInsertContent(
             Column(
                 Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 12.dp, vertical = 12.dp),
+                    .padding(horizontal = MaterialTheme.spacing.paddingSmall, vertical = MaterialTheme.spacing.paddingSmall),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.spacerSmall))
                 TextField(
                     value = state.searchQuery.value,
                     onValueChange = { onEvent(CoinInsertUiEvent.Search(it)) },

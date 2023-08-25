@@ -31,6 +31,7 @@ import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.ui.PortfolioUiEvent
 import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
+import com.aroman.mimwallet.presentation.ui.theme.spacing
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -45,8 +46,8 @@ fun CoinContent(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.primaryContainer)
             .fillMaxHeight(),
-        contentPadding = PaddingValues(vertical = 15.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(vertical = MaterialTheme.spacing.paddingMedium),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingExtraSmall),
     ) {
         if (state.coinList.isEmpty()) {
             items(1,
@@ -109,7 +110,10 @@ fun CoinContent(
                                         shape = MaterialTheme.shapes.small,
                                         color = MaterialTheme.colorScheme.primaryContainer
                                     )
-                                    .padding(start = 12.dp, end = 12.dp),
+                                    .padding(
+                                        start = MaterialTheme.spacing.paddingSmall,
+                                        end = MaterialTheme.spacing.paddingSmall
+                                    ),
                                 coin = state.coinList[index],
                                 timePeriodSelection = state.timePeriod,
                             )

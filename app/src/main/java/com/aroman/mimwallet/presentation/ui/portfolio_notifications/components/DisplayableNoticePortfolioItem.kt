@@ -19,6 +19,7 @@ import com.aroman.mimwallet.R
 import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager
 import com.aroman.mimwallet.domain.model.NoticePortfolio
 import com.aroman.mimwallet.domain.model.ui.NoticePortfolioUiEvent
+import com.aroman.mimwallet.presentation.ui.theme.spacing
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.clock.ClockDialog
 import com.maxkeppeler.sheets.clock.models.ClockConfig
@@ -38,13 +39,13 @@ fun DisplayableNoticePortfolioItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 14.dp)
+            .padding(horizontal = MaterialTheme.spacing.paddingExtraSmall, vertical = MaterialTheme.spacing.paddingSmall)
             .border(
                 shape = RoundedCornerShape(16.dp),
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 width = 1.dp
             )
-            .padding(14.dp),
+            .padding(MaterialTheme.spacing.paddingSmall),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround
     ) {

@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.aroman.mimwallet.presentation.ui.theme.spacing
 
 @Composable
 fun CircularChip(
@@ -40,7 +41,10 @@ fun CircularChip(
                 text = name,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                modifier = Modifier.padding(
+                    horizontal = MaterialTheme.spacing.paddingMedium,
+                    vertical = MaterialTheme.spacing.paddingExtraSmall
+                )
             )
         }
     }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -20,10 +21,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.ui.PortfolioUiEvent
+import com.aroman.mimwallet.presentation.ui.theme.spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,7 +61,7 @@ fun EditCoinCountLandscapeDialog(
         },
         confirmButton = {
             TextButton(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier.padding(MaterialTheme.spacing.paddingExtraSmall),
                 onClick = {
                     clickedCoin.count = newCount.toDouble()
                     onEvent(PortfolioUiEvent.UpdateCoin(clickedCoin))
@@ -73,7 +74,7 @@ fun EditCoinCountLandscapeDialog(
         },
         dismissButton = {
             TextButton(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier.padding(MaterialTheme.spacing.paddingExtraSmall),
                 onClick = {
                     onEvent(PortfolioUiEvent.DeleteCoin(clickedCoin))
                     onDismissRequest()

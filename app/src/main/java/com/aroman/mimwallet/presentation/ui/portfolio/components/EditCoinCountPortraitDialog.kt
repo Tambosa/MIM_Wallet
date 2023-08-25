@@ -24,6 +24,7 @@ import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.ui.PortfolioUiEvent
 import com.aroman.mimwallet.presentation.ui.shared_compose_components.RoundedButton
+import com.aroman.mimwallet.presentation.ui.theme.spacing
 
 @Composable
 fun EditCoinCountPortraitDialog(
@@ -44,7 +45,7 @@ fun EditCoinCountPortraitDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    modifier = Modifier.padding(10.dp),
+                    modifier = Modifier.padding(MaterialTheme.spacing.paddingExtraSmall),
                     style = MaterialTheme.typography.titleLarge,
                     text = newCount
                 )
@@ -126,7 +127,7 @@ fun EditCoinCountPortraitDialog(
         },
         confirmButton = {
             TextButton(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier.padding(MaterialTheme.spacing.paddingExtraSmall),
                 onClick = {
                     clickedCoin.count = newCount.toDouble()
                     onEvent(PortfolioUiEvent.UpdateCoin(clickedCoin))
@@ -139,7 +140,7 @@ fun EditCoinCountPortraitDialog(
         },
         dismissButton = {
             TextButton(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier.padding(MaterialTheme.spacing.paddingExtraSmall),
                 onClick = {
                     onEvent(PortfolioUiEvent.DeleteCoin(clickedCoin))
                     onDismissRequest()

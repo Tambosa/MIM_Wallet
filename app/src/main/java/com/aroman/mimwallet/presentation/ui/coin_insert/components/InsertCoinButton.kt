@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,6 +15,7 @@ import androidx.navigation.NavController
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.ui.CoinInsertUiEvent
+import com.aroman.mimwallet.presentation.ui.theme.spacing
 
 @Composable
 fun InsertCoinButton(
@@ -38,6 +40,6 @@ fun InsertCoinButton(
             Text(text = "${stringResource(R.string.add)}   ${selectedCoins.map { it.name + " " }}")
         }
     } else {
-        Spacer(modifier = Modifier.height(48.dp))
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.spacerMedium))
     }
 }
