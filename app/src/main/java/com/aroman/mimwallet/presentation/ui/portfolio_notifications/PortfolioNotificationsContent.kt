@@ -41,9 +41,9 @@ import com.aroman.mimwallet.domain.model.ui.NoticePortfolioUiState
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.DisplayableInsertNoticePortfolio
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.DisplayableNoticePortfolioItem
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.components.NextNotificationTimer
-import com.aroman.mimwallet.presentation.ui.theme.spacing
 import com.aroman.mimwallet.utils.createNotificationChannel
 import com.aroman.mimwallet.utils.isNotificationAllowed
+import com.example.core_ui.theme.spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

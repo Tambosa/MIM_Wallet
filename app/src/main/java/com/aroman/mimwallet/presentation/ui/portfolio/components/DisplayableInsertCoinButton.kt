@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aroman.mimwallet.R
 import com.aroman.mimwallet.presentation.Screen
-import com.aroman.mimwallet.presentation.ui.theme.spacing
+import com.example.core_ui.theme.spacing
 
 @Composable
 fun DisplayableInsertCoinButton(navController: NavController) {

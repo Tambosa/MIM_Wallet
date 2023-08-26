@@ -42,7 +42,6 @@ android {
         jvmTarget = "17"
     }
     buildFeatures {
-        viewBinding = true
         compose = true
     }
     composeOptions {
@@ -52,6 +51,9 @@ android {
 }
 
 dependencies {
+    //modules
+    implementation(project(":core_ui"))
+
     //compose
     implementation(project.dependencies.platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation(project.dependencies.platform("androidx.compose:compose-bom:2023.08.00"))

@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.aroman.mimwallet.R
-import com.aroman.mimwallet.presentation.ui.theme.Typography
-import com.aroman.mimwallet.presentation.ui.theme.spacing
+import com.example.core_ui.theme.spacing
+import com.example.core_ui.theme.Typography
 
 @Composable
 fun DisplayableHint() {

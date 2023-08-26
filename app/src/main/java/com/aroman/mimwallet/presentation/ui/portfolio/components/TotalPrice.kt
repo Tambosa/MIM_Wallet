@@ -16,9 +16,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
-import com.aroman.mimwallet.presentation.ui.theme.Typography
-import com.aroman.mimwallet.presentation.ui.theme.spacing
 import com.aroman.mimwallet.presentation.ui.viewmodels.PortfolioViewModel
+import com.example.core_ui.theme.Typography
+import com.example.core_ui.theme.spacing
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
@@ -30,7 +30,11 @@ fun TotalPrice(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = MaterialTheme.spacing.paddingLarge, start = MaterialTheme.spacing.paddingSmall, end = MaterialTheme.spacing.paddingSmall),
+            .padding(
+                top = MaterialTheme.spacing.paddingLarge,
+                start = MaterialTheme.spacing.paddingSmall,
+                end = MaterialTheme.spacing.paddingSmall
+            ),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         var totalPrice by remember { mutableStateOf(0.0) }

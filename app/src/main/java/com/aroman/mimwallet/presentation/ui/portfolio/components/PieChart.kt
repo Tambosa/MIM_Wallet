@@ -18,10 +18,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.presentation.ui.theme.Typography
-import com.aroman.mimwallet.presentation.ui.theme.spacing
 import com.aroman.mimwallet.utils.pie_chart_view.PieData
 import com.aroman.mimwallet.utils.pie_chart_view.PieSlice
+import com.example.core_ui.theme.Typography
+import com.example.core_ui.theme.spacing
 
 @Composable
 fun PieChart(
@@ -111,7 +111,11 @@ private fun PieHint(pieSlice: PieSlice) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = MaterialTheme.spacing.paddingSmall, end = MaterialTheme.spacing.paddingSmall, top = MaterialTheme.spacing.paddingExtraSmall),
+            .padding(
+                start = MaterialTheme.spacing.paddingSmall,
+                end = MaterialTheme.spacing.paddingSmall,
+                top = MaterialTheme.spacing.paddingExtraSmall
+            ),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.paddingLarge)
     ) {
         Canvas(modifier = Modifier) {

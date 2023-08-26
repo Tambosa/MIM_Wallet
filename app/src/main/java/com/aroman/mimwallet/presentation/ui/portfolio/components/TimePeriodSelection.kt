@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.aroman.mimwallet.domain.model.ui.PortfolioUiEvent
 import com.aroman.mimwallet.presentation.ui.shared_compose_components.CircularChip
-import com.aroman.mimwallet.presentation.ui.theme.spacing
 import com.aroman.mimwallet.presentation.ui.viewmodels.PortfolioViewModel
+import com.example.core_ui.theme.spacing
 
 @Composable
 fun TimePeriodSelection(

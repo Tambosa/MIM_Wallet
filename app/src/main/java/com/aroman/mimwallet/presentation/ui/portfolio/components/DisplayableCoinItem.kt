@@ -15,10 +15,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.presentation.ui.theme.Typography
 import com.aroman.mimwallet.presentation.ui.viewmodels.PortfolioViewModel
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import com.example.core_ui.theme.Typography
 
 @Composable
 fun DisplayableCoinItem(

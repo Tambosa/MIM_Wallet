@@ -26,7 +26,7 @@ import com.aroman.mimwallet.domain.model.ui.CoinInsertUiState
 import com.aroman.mimwallet.presentation.ui.coin_insert.components.InsertCoinButton
 import com.aroman.mimwallet.presentation.ui.coin_insert.components.SelectableCoinItem
 import com.aroman.mimwallet.presentation.ui.shared_compose_components.LoadingBox
-import com.aroman.mimwallet.presentation.ui.theme.spacing
+import com.example.core_ui.theme.spacing
 
 
 @Composable
