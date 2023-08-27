@@ -1,4 +1,4 @@
-package com.aroman.mimwallet.data.remote.dto.coin_details_dto
+package com.example.core_network.dto.coin_details_dto
 
 import com.google.gson.annotations.SerializedName
 

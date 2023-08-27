@@ -1,7 +1,7 @@
-package com.aroman.mimwallet.data.remote
+package com.example.core_network
 
-import com.aroman.mimwallet.data.remote.dto.coin_details_dto.CoinDetailsDto
-import com.aroman.mimwallet.data.remote.dto.coin_dto.CoinDto
+import com.example.core_network.dto.coin_details_dto.CoinDetailsDto
+import com.example.core_network.dto.coin_dto.CoinDto
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query

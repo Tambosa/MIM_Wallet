@@ -1,6 +1,5 @@
-package com.aroman.mimwallet.data.remote.dto.coin_details_dto
+package com.example.core_network.dto.coin_details_dto
 
-import com.aroman.mimwallet.domain.model.CoinDetails
 import com.google.gson.annotations.SerializedName
 
 data class CoinDetailsObjectDto(
@@ -23,17 +22,4 @@ data class CoinDetailsObjectDto(
     @SerializedName("tags") val tags: List<String>,
     @SerializedName("total_supply") val totalSupply: Double,
     @SerializedName("tvl_ratio") val tvlRatio: Any
-)
-
-fun CoinDetailsObjectDto.toCoinDetails() = CoinDetails(
-    id = id,
-    name = name,
-    symbol = symbol,
-    price = quote.usd.price,
-    percentChange1h = quote.usd.percentChange1h,
-    percentChange24h = quote.usd.percentChange24h,
-    percentChange7d = quote.usd.percentChange7d,
-    percentChange30d = quote.usd.percentChange30d,
-    percentChange60d = quote.usd.percentChange60d,
-    percentChange90d = quote.usd.percentChange90d,
 )

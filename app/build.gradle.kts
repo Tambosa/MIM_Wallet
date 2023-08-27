@@ -53,6 +53,7 @@ android {
 dependencies {
     //modules
     implementation(project(":core_ui"))
+    implementation(project(":core_network"))
 
     //compose
     implementation(project.dependencies.platform(Libs.compose_bom))

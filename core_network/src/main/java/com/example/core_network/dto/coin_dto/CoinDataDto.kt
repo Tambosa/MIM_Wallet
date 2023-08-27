@@ -1,6 +1,5 @@
-package com.aroman.mimwallet.data.remote.dto.coin_dto
+package com.example.core_network.dto.coin_dto
 
-import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.google.gson.annotations.SerializedName
 
 data class CoinDataDto(
@@ -13,10 +12,4 @@ data class CoinDataDto(
     @SerializedName("rank") val rank: Int,
     @SerializedName("slug") val slug: String,
     @SerializedName("symbol") val symbol: String
-)
-
-fun CoinDataDto.toCoin() = DisplayableCoin(
-    id = id,
-    name = name,
-    symbol = symbol,
 )
