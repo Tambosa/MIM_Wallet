@@ -1,21 +1,23 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.android.kotlin)
-    alias(libs.plugins.google.ksp)
-    alias(libs.plugins.google.daggerHilt)
-    alias(libs.plugins.google.secret)
-    id("kotlin-kapt")
+    id(Plugins.android_application)
+    id(Plugins.android_kotlin)
+    id(Plugins.google_ksp)
+    id(Plugins.google_daggerHilt)
+    id(Plugins.google_secret)
+    id(Plugins.kotlin_kapt)
 }
 
 android {
-    compileSdk = 34
+    namespace = "com.aroman.mimwallet"
+
+    compileSdk = ConfigData.compileSdkVersion
 
     defaultConfig {
         applicationId = "com.aroman.mimwallet"
-        minSdk = 27
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = ConfigData.minSdkVersion
+        targetSdk = ConfigData.targetSdkVersion
+        versionCode = ConfigData.versionCode
+        versionName = ConfigData.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
@@ -24,7 +26,6 @@ android {
             }
         }
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -34,20 +35,19 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+    compileOptions {
+        sourceCompatibility = ConfigData.javaVerstion
+        targetCompatibility = ConfigData.javaVerstion
     }
-    namespace = "com.aroman.mimwallet"
+    kotlinOptions {
+        jvmTarget = ConfigData.jvmTarget
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = ConfigData.kotlinCompilerExtensionVersion
+    }
 }
 
 dependencies {
@@ -55,48 +55,48 @@ dependencies {
     implementation(project(":core_ui"))
 
     //compose
-    implementation(project.dependencies.platform(libs.compose.bom))
+    implementation(project.dependencies.platform(Libs.compose_bom))
 
-    implementation(libs.compose.runtime)
-    implementation(libs.compose.material3)
-    implementation(libs.compose.material)
-    implementation(libs.compose.activity)
-    implementation(libs.compose.navigation)
-    implementation(libs.compose.ui.tooling)
+    implementation(Libs.compose_runtime)
+    implementation(Libs.compose_material3)
+    implementation(Libs.compose_material)
+    implementation(Libs.compose_activity)
+    implementation(Libs.compose_navigation)
+    implementation(Libs.compose_ui_tooling)
 
     //3rd party compose
-    implementation(libs.core)
-    implementation(libs.clock)
-    implementation(libs.lottie.compose)
+    implementation(Libs.compose_dialogs)
+    implementation(Libs.compose_dialogs_clock)
+    implementation(Libs.lottie_compose)
 
     //retrofit
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.okhttp)
-    implementation(libs.logging.interceptor)
+    implementation(Libs.retrofit)
+    implementation(Libs.converter_gson)
+    implementation(Libs.okhttp)
+    implementation(Libs.logging_interceptor)
 
     //Dagger - Hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
-    kapt(libs.androidx.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(Libs.hilt_android)
+    kapt(Libs.hilt_android_compiler)
+    kapt(Libs.androidx_hilt_compiler)
+    implementation(Libs.androidx_hilt_navigation_compose)
 
     //Navigation
-    implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
+    implementation(Libs.androidx_navigation_fragment_ktx)
+    implementation(Libs.androidx_navigation_ui_ktx)
 
     //room
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
+    implementation(Libs.androidx_room_runtime)
+    implementation(Libs.androidx_room_ktx)
+    ksp(Libs.androidx_room_compiler)
 
     // Coroutine Lifecycle Scopes
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(Libs.androidx_lifecycle_viewmodel_ktx)
+    implementation(Libs.androidx_lifecycle_runtime_ktx)
 
-    implementation(libs.androidx.core.splashscreen)
+    implementation(Libs.androidx_core_splashscreen)
 
-    implementation(libs.androidx.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
+    implementation(Libs.androidx_ktx)
+    implementation(Libs.androidx_appcompat)
+    implementation(Libs.material)
 }

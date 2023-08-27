@@ -1,14 +1,15 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.android.kotlin)
+    id(Plugins.android_library)
+    id(Plugins.android_kotlin)
 }
 
 android {
     namespace = "com.example.core_ui"
-    compileSdk = 34
+
+    compileSdk = ConfigData.compileSdkVersion
 
     defaultConfig {
-        minSdk = 27
+        minSdk = ConfigData.minSdkVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -27,20 +28,20 @@ android {
         compose = true
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        sourceCompatibility = ConfigData.javaVerstion
+        targetCompatibility = ConfigData.javaVerstion
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = ConfigData.jvmTarget
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = ConfigData.kotlinCompilerExtensionVersion
     }
 }
 
 dependencies {
-    implementation(project.dependencies.platform(libs.compose.bom))
+    implementation(project.dependencies.platform(Libs.compose_bom))
 
-    implementation(libs.compose.runtime)
-    implementation(libs.compose.material3)
+    implementation(Libs.compose_runtime)
+    implementation(Libs.compose_material3)
 }
