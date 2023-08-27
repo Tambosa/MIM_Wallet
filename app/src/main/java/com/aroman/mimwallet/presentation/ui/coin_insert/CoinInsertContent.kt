@@ -45,7 +45,10 @@ fun CoinInsertContent(
             Column(
                 Modifier
                     .fillMaxSize()
-                    .padding(horizontal = MaterialTheme.spacing.paddingSmall, vertical = MaterialTheme.spacing.paddingSmall),
+                    .padding(
+                        horizontal = MaterialTheme.spacing.paddingSmall,
+                        vertical = MaterialTheme.spacing.paddingSmall
+                    ),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.spacerSmall))
