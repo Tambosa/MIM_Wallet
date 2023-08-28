@@ -1,21 +1,22 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("com.google.devtools.ksp")
-    id("com.google.dagger.hilt.android")
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id(Plugins.android_application)
+    id(Plugins.android_kotlin)
+    id(Plugins.google_ksp)
+    id(Plugins.google_daggerHilt)
+    id(Plugins.kotlin_kapt)
 }
 
 android {
-    compileSdk = 34
+    namespace = "com.aroman.mimwallet"
+
+    compileSdk = ConfigData.compileSdkVersion
 
     defaultConfig {
         applicationId = "com.aroman.mimwallet"
-        minSdk = 27
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = ConfigData.minSdkVersion
+        targetSdk = ConfigData.targetSdkVersion
+        versionCode = ConfigData.versionCode
+        versionName = ConfigData.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
@@ -24,7 +25,6 @@ android {
             }
         }
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -34,72 +34,71 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
     buildFeatures {
-        viewBinding = true
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+    compileOptions {
+        sourceCompatibility = ConfigData.javaVerstion
+        targetCompatibility = ConfigData.javaVerstion
     }
-    namespace = "com.aroman.mimwallet"
+    kotlinOptions {
+        jvmTarget = ConfigData.jvmTarget
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = ConfigData.kotlinCompilerExtensionVersion
+    }
 }
 
 dependencies {
-    //compose
-    implementation(project.dependencies.platform("androidx.compose:compose-bom:2023.08.00"))
-    androidTestImplementation(project.dependencies.platform("androidx.compose:compose-bom:2023.08.00"))
+    //modules
+    implementation(project(":core_ui"))
+    implementation(project(":data_network"))
+    implementation(project(":core_network"))
+    implementation(project(":feature_coin_insert"))
 
-    implementation("androidx.compose.runtime:runtime")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material")
-    implementation("androidx.activity:activity-compose")
-    implementation("androidx.navigation:navigation-compose")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    debugImplementation("androidx.compose.ui:ui-tooling")
+    //compose
+    implementation(project.dependencies.platform(Libs.compose_bom))
+
+    implementation(Libs.compose_runtime)
+    implementation(Libs.compose_material3)
+    implementation(Libs.compose_material)
+    implementation(Libs.compose_activity)
+    implementation(Libs.compose_navigation)
+    implementation(Libs.compose_ui_tooling)
+
     //3rd party compose
-    implementation("com.maxkeppeler.sheets-compose-dialogs:core:1.1.1")
-    implementation("com.maxkeppeler.sheets-compose-dialogs:clock:1.1.1")
-    implementation("com.airbnb.android:lottie-compose:6.0.0")
+    implementation(Libs.compose_dialogs)
+    implementation(Libs.compose_dialogs_clock)
+    implementation(Libs.lottie_compose)
 
     //retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.retrofit2:adapter-rxjava2:2.9.0")
-    implementation("com.squareup.okhttp3:okhttp:4.10.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
+    implementation(Libs.retrofit)
+    implementation(Libs.converter_gson)
+    implementation(Libs.okhttp)
+    implementation(Libs.logging_interceptor)
 
     //Dagger - Hilt
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
-    kapt("androidx.hilt:hilt-compiler:1.0.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0-alpha01")
+    implementation(Libs.hilt_android)
+    kapt(Libs.hilt_android_compiler)
+    kapt(Libs.androidx_hilt_compiler)
+    implementation(Libs.androidx_hilt_navigation_compose)
 
     //Navigation
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.0")
+    implementation(Libs.androidx_navigation_fragment_ktx)
+    implementation(Libs.androidx_navigation_ui_ktx)
 
     //room
-    implementation("androidx.room:room-runtime:2.5.2")
-    implementation("androidx.room:room-ktx:2.5.2")
-    ksp("androidx.room:room-compiler:2.5.2")
+    implementation(Libs.androidx_room_runtime)
+    implementation(Libs.androidx_room_ktx)
+    ksp(Libs.androidx_room_compiler)
 
     // Coroutine Lifecycle Scopes
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation(Libs.androidx_lifecycle_viewmodel_ktx)
+    implementation(Libs.androidx_lifecycle_runtime_ktx)
 
-    implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation(Libs.androidx_core_splashscreen)
 
-    implementation("androidx.core:core-ktx:1.10.1")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.9.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation(Libs.androidx_ktx)
+    implementation(Libs.androidx_appcompat)
+    implementation(Libs.material)
 }

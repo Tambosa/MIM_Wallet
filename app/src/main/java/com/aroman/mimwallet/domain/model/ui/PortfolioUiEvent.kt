@@ -1,7 +1,7 @@
 package com.aroman.mimwallet.domain.model.ui
 
-import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.presentation.ui.viewmodels.PortfolioViewModel.TimePeriod
+import com.example.data_network.domain.entity.DisplayableCoin
 
 sealed class PortfolioUiEvent {
     object ShowData : PortfolioUiEvent()

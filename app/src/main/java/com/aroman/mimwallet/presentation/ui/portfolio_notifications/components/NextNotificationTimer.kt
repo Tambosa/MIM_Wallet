@@ -11,8 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import com.aroman.mimwallet.R
+import com.example.core_ui.R
+import com.example.core_ui.theme.spacing
 import java.util.concurrent.TimeUnit
 
 @Composable
@@ -27,7 +27,10 @@ fun NextNotificationTimer(nextTimerInMillis: Long) {
         modifier = Modifier
             .background(MaterialTheme.colorScheme.primaryContainer)
             .fillMaxWidth()
-            .padding(top = 8.dp ,bottom = 12.dp),
+            .padding(
+                top = MaterialTheme.spacing.paddingExtraSmall,
+                bottom = MaterialTheme.spacing.paddingSmall
+            ),
         horizontalArrangement = Arrangement.Center
     ) {
         Text(

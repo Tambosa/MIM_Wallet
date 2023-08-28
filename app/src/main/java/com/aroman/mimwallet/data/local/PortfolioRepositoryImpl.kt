@@ -3,8 +3,8 @@ package com.aroman.mimwallet.data.local
 import com.aroman.mimwallet.data.local.dao.CoinDao
 import com.aroman.mimwallet.data.local.tables.CoinRoomEntity
 import com.aroman.mimwallet.data.local.tables.toCoin
-import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.domain.repository.PortfolioRepository
+import com.example.data_network.domain.entity.DisplayableCoin
+import com.example.data_network.domain.repository.PortfolioRepository
 
 class PortfolioRepositoryImpl(private val dao: CoinDao) : PortfolioRepository {
     override suspend fun getAll(): List<DisplayableCoin> = dao.getAllCoins().map { it.toCoin() }

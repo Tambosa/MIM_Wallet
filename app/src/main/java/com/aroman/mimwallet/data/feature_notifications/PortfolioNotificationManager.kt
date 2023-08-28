@@ -7,7 +7,7 @@ import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Handler
 import android.widget.Toast
-import com.aroman.mimwallet.R
+import com.example.core_ui.R
 import java.util.*
 import java.util.concurrent.TimeUnit
 

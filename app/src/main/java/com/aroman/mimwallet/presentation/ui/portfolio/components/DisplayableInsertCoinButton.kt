@@ -1,6 +1,10 @@
 package com.aroman.mimwallet.presentation.ui.portfolio.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -10,15 +14,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.aroman.mimwallet.R
+import com.example.core_ui.R
 import com.aroman.mimwallet.presentation.Screen
+import com.example.core_ui.theme.spacing
 
 @Composable
 fun DisplayableInsertCoinButton(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 12.dp, end = 12.dp),
+            .padding(
+                start = MaterialTheme.spacing.paddingSmall,
+                end = MaterialTheme.spacing.paddingSmall
+            ),
         horizontalArrangement = Arrangement.Center
     ) {
         IconButton(

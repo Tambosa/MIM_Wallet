@@ -41,10 +41,5 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-        <meta-data
-            android:name="com.aroman.mimwallet.API_KEY"
-            android:value="${CMC_API_KEY}" />
     </application>
-
 </manifest>

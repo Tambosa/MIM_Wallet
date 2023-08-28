@@ -6,6 +6,7 @@ import com.aroman.mimwallet.data.local.tables.UiPortfolioStateEntity
 import com.aroman.mimwallet.data.local.tables.toPortfolioState
 import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
 import com.aroman.mimwallet.domain.repository.CacheUiStateRepo
+import com.example.data_network.domain.entity.DisplayableCoin
 
 class CacheUiStateRepoImpl(private val dao: UiPortfolioStateDao) : CacheUiStateRepo {
     override suspend fun savePortfolioState(portfolio: PortfolioUiState) {
@@ -24,23 +25,23 @@ class CacheUiStateRepoImpl(private val dao: UiPortfolioStateDao) : CacheUiStateR
                 totalPercentChange90d = portfolio.totalPercentChange90d,
             )
         )
-        portfolio.coinList.forEach { coin ->
-            dao.savePortfolioCoin(
-                UiPortfolioStateCoinListEntity(
-                    timestamp = timestamp,
-                    id = coin.id,
-                    name = coin.name,
-                    symbol = coin.symbol,
-                    count = coin.count,
-                    price = coin.price,
-                    percentChange1h = coin.percentChange1h,
-                    percentChange24h = coin.percentChange24h,
-                    percentChange7d = coin.percentChange7d,
-                    percentChange30d = coin.percentChange30d,
-                    percentChange60d = coin.percentChange60d,
-                    percentChange90d = coin.percentChange90d,
-                )
-            )
+        portfolio.coinList.forEach { coin: DisplayableCoin ->
+//            dao.savePortfolioCoin(
+//                UiPortfolioStateCoinListEntity(
+//                    timestamp = timestamp,
+//                    id = coin.id,
+//                    name = coin.name,
+//                    symbol = coin.symbol,
+//                    count = coin.count,
+//                    price = coin.price,
+//                    percentChange1h = coin.percentChange1h,
+//                    percentChange24h = coin.percentChange24h,
+//                    percentChange7d = coin.percentChange7d,
+//                    percentChange30d = coin.percentChange30d,
+//                    percentChange60d = coin.percentChange60d,
+//                    percentChange90d = coin.percentChange90d,
+//                )
+//            )
         }
     }
 

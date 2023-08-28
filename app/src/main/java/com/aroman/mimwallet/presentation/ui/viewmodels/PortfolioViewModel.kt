@@ -2,12 +2,12 @@ package com.aroman.mimwallet.presentation.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aroman.mimwallet.R
-import com.aroman.mimwallet.domain.model.DisplayableCoin
+import com.example.core_ui.R
 import com.aroman.mimwallet.domain.model.ui.PortfolioUiEvent
 import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
-import com.aroman.mimwallet.domain.repository.PortfolioRepository
 import com.aroman.mimwallet.domain.use_case.get_portfolio.GetPortfolioUseCase
+import com.example.data_network.domain.entity.DisplayableCoin
+import com.example.data_network.domain.repository.PortfolioRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
