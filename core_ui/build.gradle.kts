@@ -40,8 +40,12 @@ android {
 }
 
 dependencies {
+    //compose
     implementation(project.dependencies.platform(Libs.compose_bom))
 
     implementation(Libs.compose_runtime)
     implementation(Libs.compose_material3)
+    implementation(Libs.compose_material)
+    implementation(Libs.compose_activity)
+    implementation(Libs.compose_ui_tooling)
 }

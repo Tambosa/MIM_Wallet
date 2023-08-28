@@ -1,8 +1,8 @@
-package com.aroman.mimwallet.domain.use_case.get_coins
+package com.example.feature_coin_insert.domain
 
 import androidx.compose.runtime.mutableStateOf
-import com.aroman.mimwallet.domain.model.ui.CoinInsertUiState
 import com.example.data_network.domain.repository.CoinRepository
+import com.example.feature_coin_insert.domain.ui.CoinInsertUiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

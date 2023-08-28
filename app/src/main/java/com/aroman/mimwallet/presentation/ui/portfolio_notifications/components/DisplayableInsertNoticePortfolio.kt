@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.aroman.mimwallet.R
+import com.example.core_ui.R
 import com.aroman.mimwallet.domain.model.NoticePortfolio
 import com.aroman.mimwallet.domain.model.ui.NoticePortfolioUiEvent
 import com.example.core_ui.theme.spacing

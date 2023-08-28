@@ -1,4 +1,4 @@
-package com.aroman.mimwallet.presentation.ui.coin_insert.components
+package com.example.feature_coin_insert.presentation.components
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,10 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.aroman.mimwallet.R
-import com.aroman.mimwallet.domain.model.ui.CoinInsertUiEvent
+import com.example.core_ui.R
 import com.example.core_ui.theme.spacing
 import com.example.data_network.domain.entity.DisplayableCoin
+import com.example.feature_coin_insert.domain.ui.CoinInsertUiEvent
 
 @Composable
 fun InsertCoinButton(

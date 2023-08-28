@@ -19,11 +19,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.aroman.mimwallet.presentation.ui.coin_insert.components.CoinInsertScreen
 import com.aroman.mimwallet.presentation.ui.portfolio.PortfolioScreen
 import com.aroman.mimwallet.presentation.ui.portfolio_notifications.PortfolioNotificationsScreen
 import com.aroman.mimwallet.presentation.ui.viewmodels.ThemeViewModel
 import com.example.core_ui.theme.AppTheme
+import com.example.feature_coin_insert.presentation.components.CoinInsertScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

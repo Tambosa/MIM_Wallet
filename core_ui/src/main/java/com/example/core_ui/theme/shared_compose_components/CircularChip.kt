@@ -1,4 +1,4 @@
-package com.aroman.mimwallet.presentation.ui.shared_compose_components
+package com.example.core_ui.theme.shared_compose_components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

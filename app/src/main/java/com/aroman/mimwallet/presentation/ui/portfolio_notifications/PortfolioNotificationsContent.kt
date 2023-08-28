@@ -34,7 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import com.aroman.mimwallet.R
+import com.example.core_ui.R
 import com.aroman.mimwallet.data.feature_notifications.PortfolioNotificationManager.CHANNEL_ID
 import com.aroman.mimwallet.domain.model.ui.NoticePortfolioUiEvent
 import com.aroman.mimwallet.domain.model.ui.NoticePortfolioUiState

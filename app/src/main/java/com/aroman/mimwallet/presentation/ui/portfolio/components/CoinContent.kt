@@ -27,7 +27,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.aroman.mimwallet.R
+import com.example.core_ui.R
 import com.aroman.mimwallet.domain.model.ui.PortfolioUiEvent
 import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
 import com.example.core_ui.theme.spacing

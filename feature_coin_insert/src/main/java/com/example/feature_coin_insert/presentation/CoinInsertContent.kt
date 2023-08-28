@@ -1,4 +1,4 @@
-package com.aroman.mimwallet.presentation.ui.coin_insert
+package com.example.feature_coin_insert.presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,13 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.navigation.NavController
-import com.aroman.mimwallet.R
-import com.aroman.mimwallet.domain.model.ui.CoinInsertUiEvent
-import com.aroman.mimwallet.domain.model.ui.CoinInsertUiState
-import com.aroman.mimwallet.presentation.ui.coin_insert.components.InsertCoinButton
-import com.aroman.mimwallet.presentation.ui.coin_insert.components.SelectableCoinItem
-import com.aroman.mimwallet.presentation.ui.shared_compose_components.LoadingBox
+import com.example.core_ui.R
+import com.example.core_ui.theme.shared_compose_components.LoadingBox
 import com.example.core_ui.theme.spacing
+import com.example.feature_coin_insert.domain.ui.CoinInsertUiEvent
+import com.example.feature_coin_insert.domain.ui.CoinInsertUiState
+import com.example.feature_coin_insert.presentation.components.InsertCoinButton
+import com.example.feature_coin_insert.presentation.components.SelectableCoinItem
 
 
 @Composable

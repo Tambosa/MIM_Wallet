@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.aroman.mimwallet.R
+import com.example.core_ui.R
 import com.example.core_ui.theme.spacing
 import com.example.core_ui.theme.Typography
 

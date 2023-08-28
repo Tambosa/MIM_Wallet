@@ -2,7 +2,7 @@ package com.aroman.mimwallet.presentation.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aroman.mimwallet.R
+import com.example.core_ui.R
 import com.aroman.mimwallet.domain.model.ui.PortfolioUiEvent
 import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
 import com.aroman.mimwallet.domain.use_case.get_portfolio.GetPortfolioUseCase

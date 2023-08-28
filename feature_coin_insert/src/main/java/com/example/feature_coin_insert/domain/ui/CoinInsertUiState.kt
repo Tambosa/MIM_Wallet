@@ -1,4 +1,4 @@
-package com.aroman.mimwallet.domain.model.ui
+package com.example.feature_coin_insert.domain.ui
 
 import androidx.compose.runtime.MutableState
 import com.example.data_network.domain.entity.DisplayableCoin
