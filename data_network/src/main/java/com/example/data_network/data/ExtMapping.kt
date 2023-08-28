@@ -1,9 +1,9 @@
-package com.aroman.mimwallet.data.remote
+package com.example.data_network.data
 
-import com.aroman.mimwallet.domain.model.CoinDetails
-import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.example.core_network.dto.coin_details_dto.CoinDetailsObjectDto
 import com.example.core_network.dto.coin_dto.CoinDataDto
+import com.example.data_network.domain.entity.CoinDetails
+import com.example.data_network.domain.entity.DisplayableCoin
 
 fun CoinDataDto.toCoin() = DisplayableCoin(
     id = id,

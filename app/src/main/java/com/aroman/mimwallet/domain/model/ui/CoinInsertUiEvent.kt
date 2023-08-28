@@ -1,6 +1,6 @@
 package com.aroman.mimwallet.domain.model.ui
 
-import com.aroman.mimwallet.domain.model.DisplayableCoin
+import com.example.data_network.domain.entity.DisplayableCoin
 
 sealed class CoinInsertUiEvent {
     object ShowData : CoinInsertUiEvent()

@@ -21,9 +21,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.aroman.mimwallet.R
-import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.ui.PortfolioUiEvent
 import com.example.core_ui.theme.spacing
+import com.example.data_network.domain.entity.DisplayableCoin
 
 @Composable
 fun EditCoinCountLandscapeDialog(

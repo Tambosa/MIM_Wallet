@@ -17,3 +17,4 @@ rootProject.name = "MIM Wallet"
 include (":app")
 include(":core_ui")
 include(":core_network")
+include(":data_network")

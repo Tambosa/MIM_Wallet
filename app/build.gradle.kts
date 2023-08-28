@@ -3,7 +3,6 @@ plugins {
     id(Plugins.android_kotlin)
     id(Plugins.google_ksp)
     id(Plugins.google_daggerHilt)
-    id(Plugins.google_secret)
     id(Plugins.kotlin_kapt)
 }
 
@@ -53,6 +52,7 @@ android {
 dependencies {
     //modules
     implementation(project(":core_ui"))
+    implementation(project(":data_network"))
     implementation(project(":core_network"))
 
     //compose

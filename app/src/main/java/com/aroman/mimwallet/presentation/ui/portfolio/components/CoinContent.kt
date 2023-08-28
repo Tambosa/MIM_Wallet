@@ -28,10 +28,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aroman.mimwallet.R
-import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.ui.PortfolioUiEvent
 import com.aroman.mimwallet.domain.model.ui.PortfolioUiState
 import com.example.core_ui.theme.spacing
+import com.example.data_network.domain.entity.DisplayableCoin
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable

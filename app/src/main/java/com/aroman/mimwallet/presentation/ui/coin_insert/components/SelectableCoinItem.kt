@@ -7,9 +7,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.ui.CoinInsertUiEvent
 import com.example.core_ui.theme.spacing
+import com.example.data_network.domain.entity.DisplayableCoin
 
 @Composable
 fun SelectableCoinItem(

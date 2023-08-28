@@ -1,6 +1,6 @@
-package com.aroman.mimwallet.domain.repository
+package com.example.data_network.domain.repository
 
-import com.aroman.mimwallet.domain.model.DisplayableCoin
+import com.example.data_network.domain.entity.DisplayableCoin
 
 interface PortfolioRepository {
     suspend fun getAll(): List<DisplayableCoin>

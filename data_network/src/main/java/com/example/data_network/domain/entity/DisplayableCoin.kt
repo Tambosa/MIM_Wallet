@@ -1,4 +1,4 @@
-package com.aroman.mimwallet.domain.model
+package com.example.data_network.domain.entity
 
 data class DisplayableCoin(
     val id: Int,

@@ -1,7 +1,7 @@
 package com.aroman.mimwallet.domain.model.ui
 
 import androidx.compose.runtime.MutableState
-import com.aroman.mimwallet.domain.model.DisplayableCoin
+import com.example.data_network.domain.entity.DisplayableCoin
 
 data class CoinInsertUiState(
     val coinList: List<DisplayableCoin>,

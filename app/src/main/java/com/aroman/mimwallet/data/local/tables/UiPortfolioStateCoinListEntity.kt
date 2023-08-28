@@ -3,7 +3,7 @@ package com.aroman.mimwallet.data.local.tables
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.aroman.mimwallet.data.local.RoomConst
-import com.aroman.mimwallet.domain.model.DisplayableCoin
+import com.example.data_network.domain.entity.DisplayableCoin
 
 @Entity(tableName = RoomConst.TABLE_PORTFOLIO_CACHE_COIN_LIST)
 data class UiPortfolioStateCoinListEntity(

@@ -21,10 +21,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aroman.mimwallet.R
-import com.aroman.mimwallet.domain.model.DisplayableCoin
 import com.aroman.mimwallet.domain.model.ui.PortfolioUiEvent
 import com.aroman.mimwallet.presentation.ui.shared_compose_components.RoundedButton
 import com.example.core_ui.theme.spacing
+import com.example.data_network.domain.entity.DisplayableCoin
 
 @Composable
 fun EditCoinCountPortraitDialog(

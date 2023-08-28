@@ -1,10 +1,10 @@
-package com.aroman.mimwallet.data.remote
+package com.example.data_network.data
 
-import com.aroman.mimwallet.BuildConfig
-import com.aroman.mimwallet.domain.model.CoinDetails
-import com.aroman.mimwallet.domain.model.DisplayableCoin
-import com.aroman.mimwallet.domain.repository.CoinRepository
 import com.example.core_network.CoinMarketCapApi
+import com.example.data_network.BuildConfig
+import com.example.data_network.domain.entity.CoinDetails
+import com.example.data_network.domain.entity.DisplayableCoin
+import com.example.data_network.domain.repository.CoinRepository
 import javax.inject.Inject
 
 class CoinRepositoryImpl @Inject constructor(
